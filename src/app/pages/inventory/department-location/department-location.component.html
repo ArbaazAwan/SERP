@@ -1,0 +1,275 @@
+<ngx-loading-bar [includeSpinner]="false" [height]="'3px'"></ngx-loading-bar>
+<app-confirm-dialog></app-confirm-dialog>
+
+<div class="main-container">
+  <div class="">
+    <app-store-project
+      [showInput2]="false"
+      [showInput1]="false"
+      [componentName]="componentName"
+      [hide]="false"
+    ></app-store-project>
+  </div>
+
+  <div class="">
+    <div class="row">
+      <form [formGroup]="form" novalidate>
+        <div class="card-wrapper">
+          <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>
+                  Department
+                  <span class="astrik">*</span>
+                </label>
+                <!-- <select
+                  class="form-select"
+                  (change)="changeDepartment($event)"
+                  formControlName="DepartmentCode"
+                  [(ngModel)]="dptLocationResponse$.DepartmentCode"
+                >
+                  <option
+                    *ngFor="let b of departmentResponse$"
+                    [ngValue]="b"
+                    [value]="b?.DepartmentCode"
+                  >
+                    {{ b.DepartmentName }}
+                  </option>
+                </select> -->
+
+                <p-dropdown
+                [options]="departmentResponse$"
+                [filter]="true"
+                formControlName="DepartmentCode"
+                [(ngModel)]="dptLocationResponse$.DepartmentCode"
+                optionLabel="DepartmentName"
+                optionValue="DepartmentCode"
+                filterBy="DepartmentName"
+                [showClear]="true"
+                placeholder="Select Department"
+                [panelStyle]="{ overflow: 'auto' }"
+                (onChange)="changeDepartment($event)"
+              >
+                <!-- <ng-template let-option pTemplate="item">
+                  <span>{{ option.key }}</span>
+                  <span>{{ option.value }}</span>
+                </ng-template> -->
+              </p-dropdown>
+
+                <div
+                  class="input-error"
+                  *ngIf="
+                    form.controls['DepartmentCode'].invalid &&
+                    form.controls['DepartmentCode'].touched
+                  "
+                >
+                  Field Required
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>
+                  Location Name
+                  <span class="astrik">*</span>
+                </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter Location Name "
+                  formControlName="LocationName"
+                  name="LocationName"
+                  [(ngModel)]="dptLocationResponse$.LocationName"
+                />
+                <div
+                  class="input-error"
+                  *ngIf="
+                    form.controls['LocationName'].invalid &&
+                    form.controls['LocationName'].touched
+                  "
+                >
+                  Field Required
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label> Rack No <span class="astrik">*</span> </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter Rack No "
+                  formControlName="LocationNumber"
+                  name="LocationNumber"
+                  [(ngModel)]="dptLocationResponse$.LocationNumber"
+                />
+                <div
+                  class="input-error"
+                  *ngIf="
+                    form.controls['LocationNumber'].invalid &&
+                    form.controls['LocationNumber'].touched
+                  "
+                >
+                  Field Required
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 align-self-center">
+              <div class="d-flex align-items-center gap-2">
+                <div class="checkbox" (click)="ConsiderForStock()">
+                  <input
+                    type="checkbox"
+                    class="form-checkbox"
+                    formControlName="ConsiderForStock"
+                    name="ConsiderForStock"
+                    [(ngModel)]="dptLocationResponse$.ConsiderForStock"
+                  />
+                  <label class="form-check-label"> Consider For Stock </label>
+                </div>
+                <div class="checkbox" (click)="IsActive()">
+                  <input
+                    type="checkbox"
+                    class="form-checkbox"
+                    formControlName="IsActive"
+                    name="IsActive"
+                    [(ngModel)]="dptLocationResponse$.IsActive"
+                  />
+                  <label class="form-check-label"> Active </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row align-items-stretch">
+            <div class="d-flex align-items-center gap-2">
+              <button
+                type="button"
+                id="btnsave"
+                Class="btn-save"
+                (click)="addorUpdate()"
+                [disabled]="isUpdate"
+              >
+                Save
+              </button>
+              <button
+                type="button"
+                id="btnsave"
+                Class="btn-update"
+                (click)="addorUpdate()"
+                [disabled]="!isUpdate"
+              >
+                Update
+              </button>
+              <button
+                type="button"
+                id="btnRefresh"
+                class="btn-refresh"
+                (click)="refresh()"
+              >
+                <img src="../../../../assets/icons/btn-refresh.svg" alt="" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-12 col-md-12 mt-3">
+        <div class="table-responsive card-wrapper custom-table">
+          <table
+            class="table table-striped table-borderless"
+            *ngIf="!isLoadingData"
+          >
+            <thead>
+              <tr>
+                <th scope="col">Department Name</th>
+                <th scope="col">Branch Name</th>
+                <th scope="col">Location Name</th>
+                <th scope="col">Location No</th>
+                <th scope="col">C.F.Stock</th>
+                <th scope="col">Active</th>
+                <th scope="col" class="text-center">Action</th>
+              </tr>
+            </thead>
+            <hr />
+            <tbody>
+              <tr
+                *ngFor="let item of dptTableResponse$; let odd = odd"
+                [ngClass]="{ 'odd-row': odd }"
+              >
+                <td>{{ item.DepartmentName }}</td>
+                <td>{{ item.BranchName }}</td>
+                <td>{{ item.LocationName }}</td>
+                <td>{{ item.LocationNumber }}</td>
+                <td>{{ item.ConsiderForStock | yesNo }}</td>
+                <td>
+                  <span
+                    [class]="
+                      item.IsActive == true ? 'success-badge' : 'danger-badge'
+                    "
+                    >{{ item.IsActive | yesNo }}</span
+                  >
+                </td>
+                <td>
+                  <div class="dropdown text-center">
+                    <button
+                      class="three-dots"
+                      type="button"
+                      id="table-action-menu"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      <i class="fa fa-ellipsis-v"></i>
+                    </button>
+                    <ul
+                      class="dropdown-menu"
+                      aria-labelledby="table-action-menu"
+                    >
+                      <li>
+                        <a
+                          class="dropdown-item edit cursor-hover cursor-pointer"
+                          (click)="getSelectedRow(item)"
+                          >Edit</a
+                        >
+                      </li>
+                      <li>
+                        <a
+                          class="dropdown-item delete cursor-hover cursor-pointer"
+                          (click)="delete()"
+                          >Delete</a
+                        >
+                      </li>
+                    </ul>
+                  </div>
+                </td>
+              </tr>
+              <div
+                class="no-table-data"
+                *ngIf="dptTableResponse$.length == 0; $"
+              >
+                <span>Please Select Department first</span>
+              </div>
+            </tbody>
+          </table>
+          <div *ngIf="isLoadingData">
+            <app-table-loader></app-table-loader>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Response-Error-Message  -->
+<div class="loading-newpopup" *ngIf="loadingerror">
+  <div class="newpopup">
+    <div class="Errormessage">
+      <p><strong>Error</strong></p>
+      <p>You are not authorized to perform this Operation</p>
+    </div>
+    <button class="btn btn-danger ErrorClosebtn" (click)="hideErrorPopup()">
+      Cancel
+    </button>
+  </div>
+</div>

@@ -1,0 +1,284 @@
+<div class="main-body-wrapper">
+  <div class="sidenav" [ngClass]="collapsed ? 'sidenav-collapsed' : ''">
+    <div class="logo-container">
+      <div class="dashboard-header-logo d-flex align-items-center flex-column">
+        <div class="sidebar-logo-wrapper">
+          <img
+            [src]="activeBrand?.BrandLogoSideNav"
+            [alt]="activeBrand?.BrandName"
+            class="logo"
+          />
+        </div>
+        <span class="logo-text" *ngIf="collapsed">{{ BranchName }}</span>
+      </div>
+    </div>
+
+    <div class="scrollwrap scrollwrap_delayed">
+      <ul class="sidenav-nav mt-2">
+        <li class="sidenav-nav-item" *ngFor="let data of accountitems">
+          <ng-container>
+            <a
+              class="sidenav-nav-link"
+              *ngIf="data.items && data.items.length > 0"
+            >
+              <img class="sidenav-link-icon" [src]="data.icon" />
+              <span class="sidenav-link-text" *ngIf="collapsed">
+                {{ data.label }}
+              </span>
+              <i
+                *ngIf="data.items && collapsed"
+                class="menu-collapse-icon"
+                [ngClass]="
+                  !data.expanded ? 'fal fa-angle-right' : 'fal fa-angle-down'
+                "
+              ></i>
+            </a>
+
+            <a
+              class="sidenav-nav-link"
+              *ngIf="!data.items || (data.items && data.items.length === 0)"
+              [routerLink]="data.routerLink"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }"
+            >
+              <img class="sidenav-link-icon" [src]="data.icon" />
+              <span class="sidenav-link-text" *ngIf="collapsed">
+                {{ data.label }}
+              </span>
+            </a>
+          </ng-container>
+          <div
+            class="sub-menu subMenu"
+            [style]="
+              (data.label === 'Accounts & GL'
+                ? 'max-height: calc(100vh - 161px) !important;'
+                : '') +
+              (data.label === 'Finance' ? 'top: 0px;' : '') +
+              (data.label === 'HR & PayRoll'
+                ? 'top: 0px; max-height:300px;
+        overflow-y: auto; overflow-x:hidden'
+                : '') +
+              (data.label === 'Reports' ? 'top: -174px;' : '') +
+              (data.label === 'Setup & Config' ? 'top: -300px;' : '')
+            "
+            [class]="
+              data.label === 'Finance' ||
+              data.label === 'Reports' ||
+              data.label === 'Setup & Config' ||
+              data.label === 'HR & PayRoll'
+                ? ''
+                : 'accounts_dropdown'
+            "
+            *ngIf="collapsed && data.items && data.items.length > 0"
+          >
+            <ul
+              *ngIf="collapsed && data.items && data.items.length > 0"
+              class="sublevel-nav"
+            >
+              <li
+                *ngFor="let secondMenu of data.items"
+                class="sublevel-nav-item hover-dropdown"
+              >
+                <a
+                  class="sublevel-nav-link"
+                  *ngIf="secondMenu.items && secondMenu.items.length > 0"
+                >
+                  <span class="sublevel-link-text">{{ secondMenu.label }}</span>
+                </a>
+                <i
+                  *ngIf="secondMenu.items && collapsed"
+                  class="fal fa-angle-right"
+                ></i>
+                <a
+                  class="sublevel-nav-link"
+                  *ngIf="
+                    !secondMenu.items ||
+                    (secondMenu.items && secondMenu.items.length === 0)
+                  "
+                  [routerLink]="secondMenu.routerLink"
+                  routerLinkActive="active-sublevel"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                >
+                  <span class="sublevel-link-text">{{ secondMenu.label }}</span>
+                </a>
+
+                <div
+                  class="sub-sub-menu second-level-menu"
+                  *ngIf="secondMenu.items && secondMenu.items.length > 0"
+                  [style]="
+                    secondMenu.label === 'Budget Management'
+                      ? 'bottom: -5px'
+                      : secondMenu.label === 'Approvals' ||
+                        secondMenu.label === 'Account/GL'
+                      ? 'bottom: -135px;'
+                      : secondMenu.label === 'Definition'
+                      ? 'bottom: -345px; max-height:300px; overflow: auto;
+                    position: fixed;
+                    top: 260px;
+                    left: 455px;'
+                      : secondMenu.label === 'Shift'
+                      ? 'position: fixed;
+                    top: 293px;
+
+                    left: 453px;
+                    max-height: 392px;
+                    height: 114px;'
+                      : secondMenu.label === 'Pre Sales'
+                      ? 'bottom: -3px;'
+                      : secondMenu.label === 'Finance'
+                      ? 'bottom:-7px;'
+                      : ''
+                  "
+                >
+                  <ul
+                    *ngIf="
+                      collapsed &&
+                      secondMenu.items &&
+                      secondMenu.items.length > 0
+                    "
+                    class="sublevel-nav"
+                  >
+                    <li
+                      *ngFor="let thirdMenu of secondMenu.items"
+                      class="sublevel-nav-item hover-dropdown"
+                    >
+                      <a
+                        class="sublevel-nav-link"
+                        *ngIf="thirdMenu.items && thirdMenu.items.length > 0"
+                      >
+                        <span class="sublevel-link-text">{{
+                          thirdMenu.label
+                        }}</span>
+                      </a>
+                      <i
+                        *ngIf="thirdMenu.items && collapsed"
+                        class="fal fa-angle-right"
+                      ></i>
+                      <a
+                        class="sublevel-nav-link"
+                        *ngIf="
+                          !thirdMenu.items ||
+                          (thirdMenu.items && thirdMenu.items.length === 0)
+                        "
+                        [routerLink]="thirdMenu.routerLink"
+                        routerLinkActive="active-sublevel"
+                        [routerLinkActiveOptions]="{ exact: true }"
+                      >
+                        <span class="sublevel-link-text">{{
+                          thirdMenu.label
+                        }}</span>
+                      </a>
+
+                      <div
+                        class="third-level-menu"
+                        *ngIf="thirdMenu.items && thirdMenu.items.length > 0"
+                        [style]="
+                          thirdMenu.label === 'Ledger' ? 'bottom: -100px' : ''
+                        "
+                      >
+                        <ul
+                          *ngIf="
+                            collapsed &&
+                            thirdMenu.items &&
+                            thirdMenu.items.length > 0
+                          "
+                          class="sublevel-nav"
+                        >
+                          <li
+                            *ngFor="let fourthMenu of thirdMenu.items"
+                            class="sublevel-nav-item hover-dropdown"
+                          >
+                            <a
+                              class="sublevel-nav-link"
+                              *ngIf="
+                                fourthMenu.items && fourthMenu.items.length > 0
+                              "
+                            >
+                              <span class="sublevel-link-text">{{
+                                fourthMenu.label
+                              }}</span>
+                            </a>
+                            <i
+                              *ngIf="fourthMenu.items && collapsed"
+                              class="fal fa-angle-right"
+                            ></i>
+                            <a
+                              class="sublevel-nav-link"
+                              *ngIf="
+                                !fourthMenu.items ||
+                                (fourthMenu.items &&
+                                  fourthMenu.items.length === 0)
+                              "
+                              [routerLink]="fourthMenu.routerLink"
+                              routerLinkActive="active-sublevel"
+                              [routerLinkActiveOptions]="{ exact: true }"
+                            >
+                              <span class="sublevel-link-text">{{
+                                fourthMenu.label
+                              }}</span>
+                            </a>
+                            <div
+                              class="second-last-level-menu"
+                              *ngIf="
+                                fourthMenu.items && fourthMenu.items.length > 0
+                              "
+                            >
+                              <ul
+                                *ngIf="
+                                  collapsed &&
+                                  fourthMenu.items &&
+                                  fourthMenu.items.length > 0
+                                "
+                                class="sublevel-nav"
+                              >
+                                <li
+                                  *ngFor="let fifthlevel of fourthMenu.items"
+                                  class="sublevel-nav-item"
+                                >
+                                  <a
+                                    class="sublevel-nav-link"
+                                    *ngIf="
+                                      fifthlevel.items &&
+                                      fifthlevel.items.length > 0
+                                    "
+                                  >
+                                    <span
+                                      class="sublevel-link-text"
+                                      *ngIf="collapsed"
+                                      >{{ fifthlevel.label }}</span
+                                    >
+                                  </a>
+                                  <a
+                                    class="sublevel-nav-link"
+                                    *ngIf="
+                                      !fifthlevel.items ||
+                                      (fifthlevel.items &&
+                                        fifthlevel.items.length === 0)
+                                    "
+                                    [routerLink]="fifthlevel.routerLink"
+                                    routerLinkActive="active-sublevel"
+                                    [routerLinkActiveOptions]="{ exact: true }"
+                                  >
+                                    <span
+                                      class="sublevel-link-text"
+                                      *ngIf="collapsed"
+                                      >{{ fifthlevel.label }}</span
+                                    >
+                                  </a>
+                                </li>
+                              </ul>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

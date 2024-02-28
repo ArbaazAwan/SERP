@@ -1,0 +1,305 @@
+<p-confirmDialog #cd [style]="{ width: '30vw' }">
+  <ng-template pTemplate="footer">
+    <button
+      type="button"
+      pButton
+      icon="pi pi-times"
+      label="No"
+      class="p-button-success"
+      (click)="cd.reject()"
+    ></button>
+    <button
+      type="button"
+      pButton
+      icon="pi pi-check"
+      label="Yes"
+      class="p-button-danger"
+      (click)="cd.accept()"
+    ></button>
+  </ng-template>
+</p-confirmDialog>
+
+<div class="main-container">
+  <div class="container">
+    <app-store-project
+      [showInput2]="false"
+      [showInput1]="false"
+      [componentName]="componentName"
+      [hide]="false"
+    ></app-store-project>
+  </div>
+  <div class="">
+    <div class="row">
+      <form
+        class="col-lg-12 col-md-12 col-sm-12 mb-2"
+        [formGroup]="form"
+        novalidate
+      >
+        <div class="card-wrapper">
+          <div class="row text-center" style="font-size: small">
+            <div class="col-lg-12 col-md-12 col-sm-10">
+              <div
+                class="row align-items-stretch"
+                style="display: flex; justify-content: center"
+              >
+                <!-- <div class="col-lg-2 col-md-6 col-sm-12 mb-3"></div> -->
+                <div class="col-xxl-2 col-lg-3 col-md-6 col-sm-12 mb-3">
+                  <label class="float-md-left d-flex float-sm-left mb-1 ml-1">
+                    Users
+                    <span class="astrik">*</span>
+                  </label>
+                  <div class="group-gap">
+                    <div class="d-block my-1">
+                      <div class="mb-3">
+                        <p-dropdown
+                          [style]="{ height: '30px', width: '230px' }"
+                          [options]="userlist$"
+                          [filter]="true"
+                          optionLabel="Username"
+                          optionValue="UserId"
+                          [(ngModel)]="userlist$.userDropdown"
+                          [ngModelOptions]="{ standalone: true }"
+                          filterBy="Username,UserId"
+                          [showClear]="false"
+                          placeholder="Select Users"
+                          [panelStyle]="{ overflow: 'auto' }"
+                          [showClear]="true"
+                          (onChange)="changeUsers($event)"
+                          appendTo="body"
+                        >
+                          <ng-template let-option pTemplate="item">
+                            <div class="option-item">
+                              <div style="float: left; width: 30%">
+                                {{ option.UserId }}
+                              </div>
+                              <div style="float: left; width: 70%">
+                                {{ option.Username }}
+                              </div>
+                            </div>
+                          </ng-template>
+                        </p-dropdown>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-xxl-2 col-lg-3 col-md-6 col-sm-12 mb-3">
+                  <label class="float-md-left d-flex float-sm-left mb-1 ml-1">
+                    Modules
+
+                    <span class="astrik">*</span>
+                  </label>
+                  <div class="group-gap">
+                    <div class="d-block my-1">
+                      <div class="mb-3">
+                        <p-dropdown
+                          [style]="{ height: '30px', width: '230px' }"
+                          [options]="Modulelist$"
+                          [filter]="true"
+                          optionLabel="ModuleName"
+                          optionValue="ModuleID"
+                          [(ngModel)]="Modulelist$.ModuleDropdown"
+                          [ngModelOptions]="{ standalone: true }"
+                          filterBy="ModuleName,ModuleID"
+                          [showClear]="false"
+                          placeholder="Select Modules"
+                          [panelStyle]="{ overflow: 'auto' }"
+                          [showClear]="true"
+                          (onChange)="changeModule($event)"
+                          appendTo="body"
+                        >
+                          <ng-template let-option pTemplate="item">
+                            <div class="option-item">
+                              <div style="float: left; width: 30%">
+                                {{ option.ModuleID }}
+                              </div>
+                              <div style="float: left; width: 70%">
+                                {{ option.ModuleName }}
+                              </div>
+                            </div>
+                          </ng-template>
+                        </p-dropdown>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="row mt-3 user-data-entry-rights">
+      <div class="col-lg-12 col-md-12 col-sm-12">
+        <div
+          class="table-responsive card-wrapper custom-table table-body-height user-rights-table"
+          style="max-height: fit-content"
+        >
+          <p-table
+            [scrollable]="true"
+            scrollHeight="400px"
+            [value]="ModulelistResp$"
+            [rows]="4"
+            styleClass="p-datatable-sm"
+            responsiveLayout="stack"
+            [breakpoint]="'960px'"
+            [rowHover]="true"
+          >
+            <!-- Header template -->
+            <ng-template pTemplate="header">
+              <tr>
+                <th>ID</th>
+                <th>Form Name</th>
+
+                <th>
+                  <input
+                    type="checkbox"
+                    style="height: 12px"
+                    [(ngModel)]="masterCheckboxAdd"
+                    (change)="selectAllCheckboxes('Add', $event)"
+                  />
+                  <span class="ms-1">Can Add</span>
+                </th>
+                <th>
+                  <input
+                    type="checkbox"
+                    style="height: 12px"
+                    [(ngModel)]="masterCheckboxEdit"
+                    (change)="selectAllCheckboxes('Edit', $event)"
+                  />
+                  <span class="ms-1">Can Edit</span>
+                </th>
+                <th>
+                  <input
+                    type="checkbox"
+                    style="height: 12px"
+                    [(ngModel)]="masterCheckboxDelete"
+                    (change)="selectAllCheckboxes('Delete', $event)"
+                  />
+                  <span class="ms-1">Can Delete</span>
+                </th>
+                <th>
+                  <input
+                    type="checkbox"
+                    style="height: 12px"
+                    [(ngModel)]="masterCheckboxSR1"
+                    (change)="selectAllCheckboxes('SpecialRight1', $event)"
+                  />
+                  <span class="ms-1">SR1</span>
+                </th>
+                <th>
+                  <input
+                    style="height: 12px"
+                    type="checkbox"
+                    [(ngModel)]="masterCheckboxSR2"
+                    (change)="selectAllCheckboxes('SpecialRight2', $event)"
+                  />
+                  <span class="ms-1">SR2</span>
+                </th>
+                <th>
+                  <input
+                    type="checkbox"
+                    style="height: 12px"
+                    [(ngModel)]="masterCheckboxSR3"
+                    (change)="selectAllCheckboxes('SpecialRight3', $event)"
+                  />
+                  <span class="ms-1">SR3</span>
+                </th>
+              </tr>
+              <tr>
+                <td colspan="8">
+                  <hr />
+                </td>
+              </tr>
+            </ng-template>
+            <!-- Body template -->
+            <ng-template pTemplate="body" let-m>
+              <tr>
+                <td>
+                  <span class="ml-2">
+                    {{ m.FormID }}
+                  </span>
+                </td>
+                <td>
+                  <span class="ml-2">{{ m.FormName }}</span>
+                </td>
+                <td>
+                  <span class="ml-5">
+                    <input
+                      type="checkbox"
+                      [checked]="m.Add"
+                      [(ngModel)]="m.Add"
+                    />
+                  </span>
+                </td>
+                <td>
+                  <span class="ml-5">
+                    <input
+                      type="checkbox"
+                      [checked]="m.Edit"
+                      [(ngModel)]="m.Edit"
+                    />
+                  </span>
+                </td>
+                <td>
+                  <span class="ml-5">
+                    <input
+                      type="checkbox"
+                      [checked]="m.Delete"
+                      [(ngModel)]="m.Delete"
+                    />
+                  </span>
+                </td>
+                <td>
+                  <span class="ml-3">
+                    <input
+                      type="checkbox"
+                      [checked]="m.SpecialRight1"
+                      [(ngModel)]="m.SpecialRight1"
+                    />
+                  </span>
+                </td>
+                <td>
+                  <span class="ml-3">
+                    <input
+                      type="checkbox"
+                      [checked]="m.SpecialRight2"
+                      [(ngModel)]="m.SpecialRight2"
+                    />
+                  </span>
+                </td>
+                <td>
+                  <span class="ml-4">
+                    <input
+                      type="checkbox"
+                      [checked]="m.SpecialRight3"
+                      [(ngModel)]="m.SpecialRight3"
+                    />
+                  </span>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+        <div class="row align-items-stretch">
+          <div
+            class="row justify-content-center mt-3"
+            style="align-items: flex-end"
+          >
+            <ng-container class="mt-3">
+              <button
+                type="button"
+                id="btnsave"
+                Class="btn btn-outline-success btnFix mb-3"
+                (click)="saveUserRights()"
+              >
+                Save
+              </button>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

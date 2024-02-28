@@ -1,0 +1,116 @@
+<ngx-loading-bar [includeSpinner]="false" [height]="'3px'"></ngx-loading-bar>
+<div class="container-fluid p-3">
+  <div class="d-flex position-relative">
+    <div
+      class="left-side-content"
+      style="display: flex; align-items: center; justify-content: center"
+    >
+      <div class="loginCard">
+        <div *ngIf="activeBrand?.BrandLogo">
+          <img
+            [src]="activeBrand.BrandLogo"
+            [alt]="activeBrand.BrandName"
+            class="login-logo-img"
+          />
+        </div>
+        <!-- <div *ngIf="!activeBrand?.BrandLogo">
+          <img
+            src="../assets/logo/SerpLogoBlue.svg"
+            alt="SERP"
+            class="login-logo-img"
+            onerror="this.src='../assets/logo/SerpLogoBlue.svg'"
+          />
+        </div> -->
+
+        <form [formGroup]="form">
+          <h1 class="MainHeading mt-4">Login</h1>
+          <h1 class="SubHeading">Please enter your credentials</h1>
+          <div class="subcontent mt-4">
+            <div class="form-group row inlineForms">
+              <label
+                for="username"
+                class="col-sm-4 col-form-label lblInlineForms"
+                >Username:</label
+              >
+              <div class="col-sm-8">
+                <input
+                  type="text"
+                  class="form-control CustomTextBox"
+                  pInputText
+                  formControlName="username"
+                  placeholder="Username"
+                />
+                <small
+                  class="text-xs text-danger float-end"
+                  *ngIf="
+                    (form.controls['username'].dirty ||
+                      form.controls['username'].touched) &&
+                    form.hasError('required', 'username')
+                  "
+                >
+                  *Username is required
+                </small>
+              </div>
+            </div>
+            <div class="form-group row inlineForms">
+              <label
+                for="username"
+                class="col-sm-4 col-form-label lblInlineForms"
+                >Password:</label
+              >
+              <div class="col-sm-8">
+                <input
+                  type="password"
+                  class="form-control CustomTextBox"
+                  pInputText
+                  formControlName="password"
+                  placeholder="Password"
+                />
+                <small
+                  class="text-xs text-danger float-end"
+                  *ngIf="
+                    (form.controls['password'].dirty ||
+                      form.controls['password'].touched) &&
+                    form.hasError('required', 'password')
+                  "
+                >
+                  *Password is required
+                </small>
+              </div>
+            </div>
+            <button type="submit" class="btn btnCom mt-3" (click)="login()">
+              Login
+            </button>
+            <button
+              type="button"
+              class="btn-update w-100 pt-2 pb-2 mt-3"
+              (click)="BackToCompanyCode()"
+            >
+              Change Company
+            </button>
+          </div>
+        </form>
+        <div class="login-footer">
+          <span>Powered by </span>
+          <span
+            ><a
+              [href]="activeBrand.BrandWebsiteLink"
+              target="_blank"
+              class="copyrights"
+              >{{ activeBrand.BrandName }}</a
+            ></span
+          >
+        </div>
+      </div>
+    </div>
+    <div class="right-side-content w-100">
+      <div class="rightside-content">
+        <div class="img-wrapper">
+          <div class="img-container">
+            <img src="../../../assets/OBJECTS.svg" alt="" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

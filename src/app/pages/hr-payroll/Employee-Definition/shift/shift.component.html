@@ -1,0 +1,190 @@
+<ngx-loading-bar [includeSpinner]="false" [height]="'3px'"></ngx-loading-bar>
+<app-confirm-dialog></app-confirm-dialog>
+
+<div class="main-container" (scroll)="onMainContainerScroll($event)">
+  <div [class]="isSticky ? 'sticky-header' : ''">
+    <app-store-project
+      [componentName]="'Shift'"
+      [showInput2]="false"
+      [showInput1]="false"
+      [hide]="false"
+    ></app-store-project>
+  </div>
+  <div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+      <form [formGroup]="form" (ngSubmit)="addorUpdate()">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-sm-10">
+            <div class="card-wrapper">
+              <div class="row">
+                <div class="col-lg-2 col-md-6 col-sm-12">
+                  <div class="form-group">
+                    <label>Shift Code</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      formControlName="ShiftCode"
+                    />
+                  </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                  <div class="form-group">
+                    <label
+                      >Shift Name
+                      <span class="astrik">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Enter Shift Name"
+                      formControlName="ShiftName"
+                    />
+                    <div
+                      *ngIf="
+                        form.controls['ShiftName'].invalid &&
+                        form.controls['ShiftName'].touched
+                      "
+                      class="input-error"
+                    >
+                      Field Required
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-2 col-md-6 col-sm-12">
+                  <div class="form-group">
+                    <label>Short Name <span class="astrik">*</span></label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Short Name"
+                      formControlName="ShortName"
+                    />
+                    <div
+                      *ngIf="
+                        form.controls['ShortName'].invalid &&
+                        form.controls['ShortName'].touched
+                      "
+                      class="input-error"
+                    >
+                      Field Required
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-1 col-md-6 col-sm-12 align-self-center">
+                  <div class="checkbox">
+                    <input
+                      type="checkbox"
+                      class="form-checkbox"
+                      formControlName="IsActive"
+                      style="float: left"
+                    />
+                    <label class="form-check-label">Active</label>
+                  </div>
+                </div>
+              </div>
+              <div class="row mt-3">
+                <div class="d-flex align-items-center gap-2">
+                  <button type="submit" class="btn-save" [disabled]="isUpdate">
+                    Save
+                  </button>
+                  <button
+                    type="submit"
+                    id="btnsave"
+                    class="btn-update"
+                    [disabled]="!isUpdate"
+                  >
+                    Update
+                  </button>
+                  <button
+                    type="button"
+                    id="btnRefresh"
+                    class="btn-refresh"
+                    (click)="refresh()"
+                  >
+                    <img
+                      src="../../../../assets/icons/btn-refresh.svg"
+                      alt=""
+                    />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="col-lg-12 col-md-12 col-sm-12 mt-3">
+      <div class="table-responsive card-wrapper custom-table">
+        <table
+          class="table table-striped table-borderless"
+          *ngIf="!isLoadingData"
+        >
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Shift Name</th>
+              <th>Short Name</th>
+              <th>Active</th>
+              <th scope="col" class="text-center">Action</th>
+            </tr>
+          </thead>
+          <hr />
+          <tbody>
+            <tr
+              *ngFor="let item of Shiftresponse$; let odd = odd"
+              [ngClass]="{ 'odd-row': odd }"
+            >
+              <td>{{ item.ShiftCode }}</td>
+              <td>{{ item.ShiftName }}</td>
+              <td>{{ item.ShortName }}</td>
+              <td>
+                <span
+                  [class]="
+                    item.IsActive == true ? 'success-badge' : 'danger-badge'
+                  "
+                >
+                  {{ item.IsActive | yesNo }}</span
+                >
+              </td>
+              <td>
+                <div class="dropdown text-center">
+                  <button
+                    class="three-dots"
+                    type="button"
+                    id="table-action-menu"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    <i class="fa fa-ellipsis-v"></i>
+                  </button>
+                  <ul class="dropdown-menu" aria-labelledby="table-action-menu">
+                    <li>
+                      <a
+                        class="dropdown-item edit cursor-hover cursor-pointer"
+                        (click)="getSelectedRow(item)"
+                        >Edit</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        class="dropdown-item delete cursor-hover cursor-pointer"
+                        (click)="onDeleteShift(item.ShiftCode)"
+                        >Delete</a
+                      >
+                    </li>
+                  </ul>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div *ngIf="isLoadingData">
+          <app-table-loader></app-table-loader>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-not-authorized *ngIf="loadingerror"></app-not-authorized>

@@ -1,0 +1,276 @@
+<app-confirm-dialog></app-confirm-dialog>
+
+<div class="main-container">
+  <div class="container">
+    <app-store-project
+      [showInput2]="false"
+      [showInput1]="false"
+      [componentName]="componentName"
+      [hide]="false"
+    ></app-store-project>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <form
+        class="col-lg-12 col-md-12 col-sm-12"
+        [formGroup]="form"
+        (ngSubmit)="onSubmit()"
+      >
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-sm-10">
+            <div class="card-wrapper">
+              <div class="row">
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                  <div class="form-group">
+                    <label>Shifts</label>
+                    <p-dropdown
+                      [filter]="true"
+                      filterBy="ShiftName"
+                      [options]="shifts"
+                      formControlName="ShiftCode"
+                      optionValue="ShiftCode"
+                      optionLabel="ShiftName"
+                      placeholder="Select Shift"
+                      (onChange)="onShiftSelection($event)"
+                    >
+                    </p-dropdown>
+                  </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                  <div class="form-group">
+                    <label>Start Time <span class="astrik">*</span></label>
+                    <input
+                      class="form-control"
+                      [ngxTimepicker]="stime"
+                      formControlName="StartTime"
+                    />
+                    <ngx-material-timepicker #stime></ngx-material-timepicker>
+                  </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                  <div class="form-group">
+                    <label>End Time <span class="astrik">*</span></label>
+                    <input
+                      class="form-control"
+                      [ngxTimepicker]="etime"
+                      formControlName="EndTime"
+                    />
+                    <ngx-material-timepicker #etime></ngx-material-timepicker>
+                  </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                  <div class="form-group">
+                    <label
+                      >Break Start Time <span class="astrik">*</span></label
+                    >
+                    <input
+                      class="form-control"
+                      [ngxTimepicker]="bstime"
+                      formControlName="BreakStartTime"
+                    />
+                    <ngx-material-timepicker #bstime></ngx-material-timepicker>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row align-items-stretch mt-1">
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                  <div class="form-group">
+                    <label>Break End Time <span class="astrik">*</span></label>
+                    <input
+                      class="form-control"
+                      [ngxTimepicker]="betime"
+                      formControlName="BreakEndTime"
+                    />
+                    <ngx-material-timepicker #betime></ngx-material-timepicker>
+                  </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                  <div class="form-group">
+                    <label
+                      >Flexi Time (Minute) <span class="astrik">*</span></label
+                    >
+                    <input
+                      type="number"
+                      class="form-control"
+                      formControlName="FlexiTime"
+                    />
+                  </div>
+                </div>
+
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                  <label class="mb-2"
+                    >Weekdays <span class="astrik">*</span></label
+                  >
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="checkbox">
+                      <input
+                        class="form-checkbox"
+                        type="checkbox"
+                        formControlName="Monday"
+                        id="monday"
+                      />
+                      <label class="form-check-label" for="monday">Mon</label>
+                    </div>
+                    <div class="checkbox">
+                      <input
+                        class="form-checkbox"
+                        type="checkbox"
+                        formControlName="Tuesday"
+                        id="tuesday"
+                      />
+                      <label class="form-check-label" for="tuesday">Tue</label>
+                    </div>
+                    <div class="checkbox">
+                      <input
+                        class="form-checkbox"
+                        type="checkbox"
+                        formControlName="Wednesday"
+                        id="wednesday"
+                      />
+                      <label class="form-check-label" for="wednesday">Wed</label>
+                    </div>
+                    <div class="checkbox">
+                      <input
+                        class="form-checkbox"
+                        type="checkbox"
+                        formControlName="Thursday"
+                        id="thursday"
+                      />
+                      <label class="form-check-label" for="thursday">Thu</label>
+                    </div>
+                    <div class="checkbox">
+                      <input
+                        class="form-checkbox"
+                        type="checkbox"
+                        formControlName="Friday"
+                        id="friday"
+                      />
+                      <label class="form-check-label" for="friday">Fri</label>
+                    </div>
+                    <div class="checkbox">
+                      <input
+                        class="form-checkbox"
+                        type="checkbox"
+                        formControlName="Saturday"
+                        id="saturday"
+                      />
+                      <label class="form-check-label" for="saturday">Sat</label>
+                    </div>
+                    <div class="checkbox">
+                      <input
+                        class="form-checkbox"
+                        type="checkbox"
+                        formControlName="Sunday"
+                        id="sunday"
+                      />
+                      <label class="form-check-label" for="sunday">Sun</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="d-flex align-items-center gap-2">
+                  <button type="submit" class="btn-save" [disabled]="isUpdate">Save</button>
+                  <button type="submit" class="btn-save" [disabled]="!isUpdate">Update</button>
+                  <button
+                    type="button"
+                    id="btnRefresh"
+                    class="btn-refresh"
+                    (click)="refresh()"
+                  >
+                    <img
+                      src="../../../../assets/icons/btn-refresh.svg"
+                      alt=""
+                    />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="row">
+      <div class="col-lg-12 col-md-12 mt-3">
+        <div class="table-responsive card-wrapper custom-table">
+          <table
+            class="table table-striped table-borderless"
+            *ngIf="!isLoadingData"
+          >
+            <thead>
+              <tr>
+                <th scope="col">Code</th>
+                <th scope="col">Shift Name</th>
+                <th scope="col">Start Time</th>
+                <th scope="col">End Time</th>
+                <th scope="col">Break Start Time</th>
+                <th scope="col">Break End Time</th>
+                <th scope="col">Flexi Time</th>
+                <th scope="col">Is Active</th>
+                <th scope="col" class="text-center">Action</th>
+              </tr>
+            </thead>
+            <hr />
+            <tbody>
+              <tr
+                *ngFor="let item of shiftTimings; let odd = odd"
+                [ngClass]="{ 'odd-row': odd }"
+              >
+                <td>{{ item.ShiftCode }}</td>
+                <td>{{ item.ShiftName }}</td>
+                <td>{{ item.StartTime | date: 'hh:mm a' }}</td>
+                <td>{{ item.EndTime | date: 'hh:mm a' }}</td>
+                <td>{{ item.BreakStartTime | date: 'hh:mm a' }}</td>
+                <td>{{ item.BreakEndTime | date: 'hh:mm a' }}</td>
+                <td>{{ item.FlexiTime }}</td>
+                <td>{{ item.IsActive | yesNo }}</td>
+                <td>
+                  <div class="dropdown text-center">
+                    <button
+                      class="three-dots"
+                      type="button"
+                      id="table-action-menu"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      <i class="fa fa-ellipsis-v"></i>
+                    </button>
+                    <ul
+                      class="dropdown-menu"
+                      aria-labelledby="table-action-menu"
+                    >
+                      <li>
+                        <a
+                          class="dropdown-item edit cursor-hover cursor-pointer"
+                          (click)="getSelectedRow(item)"
+                          >Edit</a
+                        >
+                      </li>
+                      <li>
+                        <a
+                          class="dropdown-item delete cursor-hover cursor-pointer"
+                          (click)="delete(item.ShiftCode)"
+                          >Delete</a
+                        >
+                      </li>
+                    </ul>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div *ngIf="isLoadingData">
+            <app-table-loader></app-table-loader>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-not-authorized *ngIf="loadingerror"></app-not-authorized>

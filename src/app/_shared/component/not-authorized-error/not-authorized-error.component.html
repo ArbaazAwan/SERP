@@ -1,0 +1,11 @@
+<div class="loading-newpopup" *ngIf="showError">
+  <div class="newpopup">
+    <div class="Errormessage">
+      <p><strong>Error</strong></p>
+      <p>You are not authorized to perform this Operation</p>
+    </div>
+    <button class="btn btn-danger ErrorClosebtn" (click)="hideErrorPopup()">
+      Cancel
+    </button>
+  </div>
+</div>

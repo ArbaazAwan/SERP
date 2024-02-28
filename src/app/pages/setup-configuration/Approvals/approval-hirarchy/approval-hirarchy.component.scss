@@ -1,0 +1,64 @@
+
+.btnCheckBox{
+  width: 9.5rem;
+  /* background-color: white; */
+  margin-top: 6px;
+  border-radius: 12px;
+  font-size: 12px;
+  height: 30px;
+  padding: 5px;
+  border: 1px solid white;
+
+}
+
+.btnCheckBox:hover,
+.btnCheckBox:focus,
+.btnCheckBox:active
+{
+  background-color: white;
+  color: black;
+  border: 1px solid white;
+
+}
+.chk{
+  border:  1px solid #ced4da !important;
+}
+.form-check{
+  padding-left: 0.5rem !important;
+}
+.form-check-inline{
+  align-items: center !important;
+  margin-right: 0px !important;
+}
+.labelChk{
+  margin-left: 18px;
+  margin-top: 0px;
+}
+.box
+{
+  border:1px solid #8080808a;
+    border-radius: 12px;
+    padding: 11px;
+}
+.searchbtn
+{
+  display: inline-flex;
+}
+.searchbutton
+{
+  margin-left: 5px;
+    width: 2rem !important;
+}
+
+
+.selected-row {
+  background-color: #e9ecef; /* Change this to your desired color */
+}
+
+// .btnCheckBox:active,
+// .btn-custom:focus
+// {
+//   border: white !important;
+//   box-shadow: none;
+//   outline-color: white;
+// }

@@ -1,0 +1,9 @@
+::ng-deep .p-datatable .p-datatable-thead > tr > th,
+::ng-deep .p-datatable .p-datatable-tbody > tr > td,
+::ng-deep .p-datatable .p-paginator {
+  border: none !important;
+}
+
+hr{
+  margin-top: 0;
+}

@@ -1,0 +1,257 @@
+<app-confirm-dialog></app-confirm-dialog>
+
+<div class="main-container">
+  <div class="">
+    <app-store-project [componentName]="componentName"></app-store-project>
+  </div>
+
+  <div class="">
+    <div class="row">
+      <!-- novalidate was written in place of saveForm()-->
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="card-wrapper mb-3">
+          <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-12 d-none">
+              <div class="form-group">
+                <label> Id <span class="astrik">*</span></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter SalesMan Id"
+                  formControlName="SalesManId"
+                  name="SalesManId"
+                  [(ngModel)]="salesman.SalesManId"
+                  [value]="SalesManMAxId"
+                  [attr.disabled]="true"
+                />
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label> Name <span class="astrik">*</span> </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter Name"
+                  formControlName="Name"
+                  name="Name"
+                  [(ngModel)]="salesman.Name"
+                />
+                <div
+                  class="input-error"
+                  *ngIf="
+                    form.controls['Name'].invalid &&
+                    form.controls['Name'].touched
+                  "
+                >
+                  <!-- *ngIf="
+                    form.controls['Name'].invalid &&
+                    form.controls['Name'].touched
+                  " -->
+                  Field Required
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label> CNIC <span class="astrik">*</span> </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter CNIC"
+                  formControlName="CNIC"
+                  name="CNIC"
+                  [(ngModel)]="salesman.CNIC"
+                />
+                <div
+                  class="input-error"
+                  *ngIf="
+                    form.controls['CNIC'].invalid &&
+                    form.controls['CNIC'].touched
+                  "
+                >
+                  Field Required
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label> Phone No <span class="astrik">*</span> </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter Phone No"
+                  formControlName="PhoneNo"
+                  name="PhoneNo"
+                  [(ngModel)]="salesman.PhoneNo"
+                />
+                <div
+                  class="input-error"
+                  *ngIf="
+                    form.controls['PhoneNo'].invalid &&
+                    form.controls['PhoneNo'].touched
+                  "
+                >
+                  Field Required
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 align-self-center">
+              <div class="checkbox" (click)="IsActive()">
+                <input
+                  type="checkbox"
+                  class="form-checkbox"
+                  formControlName="IsActive"
+                  name="IsActive"
+                  [(ngModel)]="salesman.IsActive"
+                />
+                <label class="form-check-lable">Active </label>
+              </div>
+            </div>
+            <div class="col-lg-12 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label> Address <span class="astrik">*</span> </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter Address"
+                  formControlName="Address"
+                  name="Address"
+                  [(ngModel)]="salesman.Address"
+                />
+                <div
+                  class="input-error"
+                  *ngIf="
+                    form.controls['Address'].invalid &&
+                    form.controls['Address'].touched
+                  "
+                >
+                  Field Required
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="d-flex align-items-center gap-2">
+              <button
+                type="submit"
+                id="btnsave"
+                class="btn-save"
+                (click)="addorUpdate()"
+                [disabled]="isUpdate"
+              >
+                Save
+              </button>
+              <button
+                type="button"
+                id="btnsave"
+                class="btn-update"
+                (click)="addorUpdate()"
+                [disabled]="!isUpdate"
+              >
+                Update
+              </button>
+              <button
+                type="button"
+                id="btnRefresh"
+                class="btn-refresh"
+                (click)="refresh()"
+              >
+                <img src="../../../../assets/icons/btn-refresh.svg" alt="" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="table-responsive card-wrapper custom-table">
+          <table
+            class="table table-striped table-borderless"
+            *ngIf="!isLoadingData"
+          >
+            <thead>
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">CNIC</th>
+                <th scope="col">Phone No</th>
+                <th scope="col">Active</th>
+                <th scope="col" class="text-center">Action</th>
+              </tr>
+            </thead>
+            <hr />
+            <tbody>
+              <tr
+                *ngFor="let item of salesman; let odd = odd"
+                [ngClass]="{ 'odd-row': odd }"
+              >
+                <td>{{ item.Name }}</td>
+                <td>{{ item.CNIC }}</td>
+                <td>{{ item.PhoneNo }}</td>
+                <td>
+                  <span
+                    [class]="
+                      item.IsActive == true ? 'success-badge' : 'danger-badge'
+                    "
+                    >{{ item.IsActive | yesNo }}</span
+                  >
+                </td>
+                <td>
+                  <div class="dropdown text-center">
+                    <button
+                      class="three-dots"
+                      type="button"
+                      id="table-action-menu"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      <i class="fa fa-ellipsis-v"></i>
+                    </button>
+                    <ul
+                      class="dropdown-menu"
+                      aria-labelledby="table-action-menu"
+                    >
+                      <li>
+                        <a
+                          class="dropdown-item edit cursor-hover cursor-pointer"
+                          (click)="getSelectedRow(item)"
+                          >Edit</a
+                        >
+                      </li>
+                      <li>
+                        <a
+                          class="dropdown-item delete cursor-hover cursor-pointer"
+                          (click)="delete(item.SalesManId)"
+                          >Delete</a
+                        >
+                      </li>
+                    </ul>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div *ngIf="isLoadingData">
+            <app-table-loader></app-table-loader>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Response-Error-Message  -->
+<div class="loading-newpopup" *ngIf="loadingerror">
+  <div class="newpopup">
+    <div class="Errormessage">
+      <p><strong>Error</strong></p>
+      <p>You are not authorized to perform this Operation</p>
+    </div>
+    <button class="btn btn-danger ErrorClosebtn" (click)="hideErrorPopup()">
+      Cancel
+    </button>
+  </div>
+</div>

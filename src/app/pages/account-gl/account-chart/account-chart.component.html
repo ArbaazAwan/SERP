@@ -1,0 +1,584 @@
+<ngx-loading-bar [includeSpinner]="false" [height]="'3px'"></ngx-loading-bar>
+
+<p-toast></p-toast>
+
+<div class="main-container">
+  <div class="container mt-1">
+    <app-store-project
+      [componentName]="componentName"
+      [showInput2]="false"
+      [showInput1]="false"
+      [hide]="false"
+    ></app-store-project>
+    <div class="card">
+      <p-toolbar>
+        <ng-template pTemplate="left">
+          <button
+            pButton
+            pRipple
+            label="Create"
+            icon="pi pi-plus-circle one"
+            class="btn-save"
+            (click)="openNew()"
+          ></button>
+          <button
+            pButton
+            pRipple
+            label="Preview / Print"
+            icon="pi pi-print"
+            class="btn-update"
+            style="margin-left: 5px"
+            (click)="PrintReport()"
+          ></button>
+        </ng-template>
+        <ng-template pTemplate="right">
+          <span class="p-input-icon-left">
+            <i class="pi pi-search"></i>
+            <input
+              pInputText
+              type="text"
+              (input)="filterGlobal($event)"
+              (blur)="clearFilter($event)"
+              class="inputSet"
+              placeholder="Search..."
+            />
+          </span>
+        </ng-template>
+      </p-toolbar>
+      <p-treeTable
+        #dt
+        [value]="chartResponse2"
+        [rowHover]="true"
+        [globalFilterFields]="[
+          'AccountCode',
+          'AccountName',
+          'HasDetail',
+          'IsDetail'
+        ]"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="min-width: 200px" field="AccountCode">Account Code</th>
+            <th style="min-width: 200px" field="AccountName">Account Name</th>
+            <th style="min-width: 150px" field="HasDetail">Parent Acc</th>
+            <th style="min-width: 150px" field="IsDetail">
+              Transaction Account
+            </th>
+            <th style="min-width: 200px" field="IsDetail">Actions</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
+          <tr [ttRow]="rowNode">
+            <td>
+              <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+
+              {{ rowData.AccountCode }}
+            </td>
+
+            <td>{{ rowData.AccountName }}</td>
+
+            <td>
+              <ng-container *ngIf="rowData.HasDetail">
+                <input type="checkbox" checked disabled />
+              </ng-container>
+              <ng-container *ngIf="!rowData.HasDetail">
+                <input type="checkbox" disabled />
+              </ng-container>
+            </td>
+            <td>
+              <ng-container *ngIf="rowData.IsDetail">
+                <input type="checkbox" checked disabled />
+              </ng-container>
+              <ng-container *ngIf="!rowData.IsDetail">
+                <input type="checkbox" disabled />
+              </ng-container>
+            </td>
+            <td [style]="'right-padding: 0'">
+              <button
+                pButton
+                pRipple
+                icon="pi pi-pencil"
+                class="p-button p-button-outlined p-button-rounded p-button-warning GridEditButton p-mr-2 mx-1"
+                (click)="editProduct(rowData)"
+              ></button>
+              <button
+                pButton
+                pRipple
+                icon="pi pi-trash"
+                class="p-button p-button-outlined p-button-rounded p-button-danger GridDelButton mx-1"
+                (click)="deleteProduct(rowData.AccountCode)"
+              ></button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-treeTable>
+    </div>
+
+    <form [formGroup]="form">
+      <div class="account-chart">
+        <p-dialog
+          [(visible)]="productDialog"
+          [style]="{ width: '800px' }"
+          [header]="header"
+          [modal]="true"
+          styleClass="p-fluid"
+          [closable]="true"
+          (onHide)="hideDialog()"
+        >
+          <ng-template pTemplate="content">
+            <div class="row">
+              <div class="col-lg-6 col-md-4">
+                <div class="form-group">
+                  <label>Parent Code <span class="astrik">*</span> </label>
+                  <p-dropdown
+                    [style]="{ height: '38px' }"
+                    formControlName="ParentAccountCode"
+                    [options]="parentCode"
+                    [filter]="true"
+                    optionLabel="AccountName"
+                    optionValue="AccountCodeWithSeperator"
+                    filterBy="AccountName"
+                    appendTo="body"
+                    placeholder="Select Parent Code"
+                    [panelStyle]="{ overflow: 'auto' }"
+                    [showClear]="true"
+                    [(ngModel)]="chart$.ParentAccountCode"
+                    (onChange)="changeParentCode($event)"
+                    [disabled]="isUpdate ? true : false"
+                  >
+                    <ng-template let-option pTemplate="item">
+                      <div class="option-item">
+                        <!-- <div style="float: left; width: 30%">
+                        {{ option.AccountCodeWithSeperator }}
+                      </div> -->
+                        <div>
+                          {{ option.AccountName }}
+                        </div>
+                      </div>
+                    </ng-template>
+                  </p-dropdown>
+                </div>
+              </div>
+              <div class="col-md-4 col-lg-3">
+                <div class="form-group">
+                  <label>Account Code </label>
+                  <input
+                    type="tel"
+                    class="form-control"
+                    formControlName="AccountCode"
+                    [(ngModel)]="chart$.AccountCode"
+                    [attr.disabled]="isUpdate ? true : null"
+                  />
+                </div>
+              </div>
+              <div class="col-md-4 col-lg-3">
+                <div class="form-group">
+                  <label>Account Title <span class="astrik">*</span> </label>
+                  <input
+                    type="tel"
+                    class="form-control"
+                    formControlName="AccountName"
+                    name="AccountName"
+                    [(ngModel)]="chart$.AccountName"
+                  />
+                </div>
+              </div>
+              <div class="col-md-12 mb-3">
+                <div class="d-flex align-items-center gap-4">
+                  <div class="checkbox" (click)="hasDetail()">
+                    <input
+                      type="checkbox"
+                      class="form-checkbox"
+                      formControlName="HasDetail"
+                      name="HasDetail"
+                      [(ngModel)]="chart$.HasDetail"
+                    />
+                    <label for="description" class="form-check-label">
+                      Parent Account
+                    </label>
+                  </div>
+                  <div class="checkbox" (click)="isActive()">
+                    <input
+                      type="checkbox"
+                      class="form-checkbox"
+                      formControlName="IsActive"
+                      name="IsActive"
+                      [(ngModel)]="chart$.IsActive"
+                    />
+                    <label for="description" class="form-check-label"
+                      >Active</label
+                    >
+                  </div>
+                  <div class="checkbox" (click)="isDetail()">
+                    <input
+                      type="checkbox"
+                      class="form-checkbox"
+                      formControlName="IsDetail"
+                      name="IsDetail"
+                      [(ngModel)]="chart$.IsDetail"
+                    />
+                    <label for="description" class="form-check-label"
+                      >Transaction Account</label
+                    >
+                  </div>
+                </div>
+              </div>
+              <!-- <div class="col-md-4">
+              <div class="form-group">
+                <label>P&L Category <span class="astrik">*</span> </label>
+                <select class="form-select" formControlName="CategoryId" (change)="changeCategoryId($event)"
+                  [attr.disabled]="!chart$.IsDetail ? true : null" [(ngModel)]="chart$.CategoryId">
+                  <option [ngValue]="null" disabled selected>
+                    Select Category
+                  </option>
+                  <option *ngFor="let b of categories$" [ngValue]="b" [value]="b?.CategoryId">
+                    {{ b.Category }}
+                  </option>
+                </select>
+              </div>
+            </div> -->
+
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label
+                    >P&L Category
+                    <!-- <span class="astrik">*</span> -->
+                  </label>
+                  <p-dropdown
+                    [style]="{ height: '38px' }"
+                    formControlName="CategoryId"
+                    [options]="categories$"
+                    [filter]="true"
+                    optionLabel="Category"
+                    optionValue="CategoryId"
+                    filterBy="Category"
+                    appendTo="body"
+                    placeholder="Select Category"
+                    [panelStyle]="{ overflow: 'auto' }"
+                    [showClear]="true"
+                    [(ngModel)]="chart$.CategoryId"
+                    (onChange)="changeCategoryId($event)"
+                    [disabled]="!chart$.IsDetail == true"
+                  >
+                    <ng-template let-option pTemplate="item">
+                      <div class="option-item">
+                        <div>
+                          {{ option.Category }}
+                        </div>
+                      </div>
+                    </ng-template>
+                  </p-dropdown>
+                </div>
+              </div>
+              <!-- <div class="col-md-4">
+              <div class="form-group">
+                <label>P&L Sub Category <span class="astrik">*</span> </label>
+                <select class="form-select" formControlName="SubCategoryId" (change)="changeSubCategoryId($event)"
+                  [attr.disabled]="!chart$.IsDetail ? true : null" [(ngModel)]="chart$.SubCategoryId">
+                  <option [ngValue]="null" disabled selected>
+                    Select Sub Category
+                  </option>
+                  <option *ngFor="let b of subCategories$" [ngValue]="b" [value]="b?.SubCategoryId">
+                    {{ b.SubCategory }}
+                  </option>
+                </select>
+              </div>
+            </div> -->
+
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label
+                    >P&L Sub Category
+                    <!-- <span class="astrik">*</span> -->
+                  </label>
+                  <p-dropdown
+                    [style]="{ height: '38px' }"
+                    formControlName="SubCategoryId"
+                    [options]="subCategories$"
+                    [filter]="true"
+                    optionLabel="SubCategory"
+                    optionValue="SubCategoryId"
+                    filterBy="SubCategory"
+                    appendTo="body"
+                    placeholder="Select Sub Category"
+                    [panelStyle]="{ overflow: 'auto' }"
+                    [showClear]="true"
+                    [(ngModel)]="chart$.SubCategoryId"
+                    (onChange)="changeSubCategoryId($event)"
+                    [disabled]="!chart$.IsDetail == true"
+                  >
+                    <ng-template let-option pTemplate="item">
+                      <div class="option-item">
+                        <div>
+                          {{ option.SubCategory }}
+                        </div>
+                      </div>
+                    </ng-template>
+                  </p-dropdown>
+                </div>
+              </div>
+
+              <!-- <div class="col-md-4">
+              <div class="form-group">
+                <label>CashFlow Category</label>
+                <select class="form-select" formControlName="CashFlowCategory" (change)="changeCashCategoryId($event)"
+                  [attr.disabled]="!chart$.IsDetail ? true : null" [(ngModel)]="chart$.CashCategoryId">
+                  <option [ngValue]="null" disabled selected>
+                    Select Cashflow Category
+                  </option>
+                  <option *ngFor="let b of cashCategories$" [ngValue]="b" [value]="b?.CategoryCode">
+                    {{ b.CategoryName }}
+                  </option>
+                </select>
+              </div>
+            </div> -->
+
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>CashFlow Category </label>
+                  <p-dropdown
+                    [style]="{ height: '38px' }"
+                    formControlName="CashCategoryCode"
+                    [options]="cashCategories$"
+                    [filter]="true"
+                    optionLabel="CategoryName"
+                    optionValue="CategoryCode"
+                    filterBy="CategoryName"
+                    appendTo="body"
+                    placeholder="Select CashFlow"
+                    [panelStyle]="{ overflow: 'auto' }"
+                    [showClear]="true"
+                    [(ngModel)]="chart$.CashCategoryCode"
+                    (onChange)="changeCashCategoryId($event)"
+                    [disabled]="!chart$.IsDetail == true"
+                  >
+                    <ng-template let-option pTemplate="item">
+                      <div class="option-item">
+                        <div>
+                          {{ option.CategoryName }}
+                        </div>
+                      </div>
+                    </ng-template>
+                  </p-dropdown>
+                </div>
+              </div>
+
+              <!-- <div class="col-md-4">
+              <div class="form-group">
+                <label>CashFlow Sub Category </label>
+                <select class="form-select" formControlName="CashFlowSubCategory"
+                  (change)="changeCashSubCategoryId($event)" [attr.disabled]="!chart$.IsDetail ? true : null"
+                  [(ngModel)]="chart$.CashSubCategoryId">
+                  <option [ngValue]="null" disabled selected>
+                    Select Cashflow Sub Category
+                  </option>
+                  <option *ngFor="let b of cashSubCategories$" [ngValue]="b" [value]="b?.SubCategoryCode">
+                    {{ b.SubCategoryName }}
+                  </option>
+                </select>
+              </div>
+            </div> -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>CashFlow Sub Category </label>
+                  <p-dropdown
+                    [style]="{ height: '38px' }"
+                    formControlName="CashSubCategoryCode"
+                    [options]="cashSubCategories$"
+                    [filter]="true"
+                    optionLabel="SubCategoryName"
+                    optionValue="SubCategoryCode"
+                    filterBy="SubCategoryName"
+                    appendTo="body"
+                    placeholder="Select Sub Category"
+                    [panelStyle]="{ overflow: 'auto' }"
+                    [showClear]="true"
+                    [(ngModel)]="chart$.CashSubCategoryCode"
+                    (onChange)="changeCashSubCategoryId($event)"
+                    [disabled]="!chart$.IsDetail == true"
+                  >
+                    <ng-template let-option pTemplate="item">
+                      <div class="option-item">
+                        <div>
+                          {{ option.SubCategoryName }}
+                        </div>
+                      </div>
+                    </ng-template>
+                  </p-dropdown>
+                </div>
+              </div>
+
+              <!-- <div class="col-md-4">
+              <div class="form-group">
+                <label>Balance Sheet Category </label>
+                <select class="form-select" formControlName="BalanceSheetCode"
+                  (change)="changeBalanceSheetCategory($event)" [attr.disabled]="!chart$.IsDetail ? true : null"
+                  [(ngModel)]="chart$.BalanceSheetCode">
+                  <option [ngValue]="null" disabled selected>
+                    Select Balance Sheet Category
+                  </option>
+                  <option *ngFor="let b of BalanceSheetCategory$" [ngValue]="b" [value]="b?.BalanceSheetCode">
+                    {{ b.BalanceSheetName }}
+                  </option>
+                </select>
+              </div>
+            </div> -->
+
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Balance Sheet Category </label>
+                  <p-dropdown
+                    [style]="{ height: '38px' }"
+                    formControlName="BalanceSheetCode"
+                    [options]="BalanceSheetCategory$"
+                    [filter]="true"
+                    optionLabel="BalanceSheetName"
+                    optionValue="BalanceSheetCode"
+                    filterBy="BalanceSheetName"
+                    appendTo="body"
+                    placeholder="Select Balance"
+                    [panelStyle]="{ overflow: 'auto' }"
+                    [showClear]="true"
+                    [(ngModel)]="chart$.BalanceSheetCode"
+                    (onChange)="changeBalanceSheetCategory($event)"
+                    [disabled]="!chart$.IsDetail == true"
+                  >
+                    <ng-template let-option pTemplate="item">
+                      <div class="option-item">
+                        <div>
+                          {{ option.BalanceSheetName }}
+                        </div>
+                      </div>
+                    </ng-template>
+                  </p-dropdown>
+                </div>
+              </div>
+
+              <!-- <div class="col-md-4">
+              <div class="form-group">
+                <label>Balance Sheet SubCategory </label>
+                <select class="form-select" formControlName="BalanceSheetSubCode"
+                  (change)="changeBalanceSheetSubCategory($event)" [attr.disabled]="!chart$.IsDetail ? true : null"
+                  [(ngModel)]="chart$.selectBalanceSheetSubCategory">
+                  <option [ngValue]="null" disabled selected>
+                    Select Balance Sheet SubCategory
+                  </option>
+                  <option *ngFor="let b of BalanceSheetSubCategory$" [ngValue]="b" [value]="b?.BalanceSheetSubCode">
+                    {{ b.BalanceSheetSubCategoryName }}
+                  </option>
+                </select>
+              </div>
+            </div> -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Balance Sheet SubCategory</label>
+                  <p-dropdown
+                    [style]="{ height: '38px' }"
+                    formControlName="BalanceSheetSubCode"
+                    [options]="BalanceSheetSubCategory$"
+                    [filter]="true"
+                    optionLabel="BalanceSheetSubCategoryName"
+                    optionValue="BalanceSheetSubCode"
+                    filterBy="BalanceSheetSubCategoryName"
+                    appendTo="body"
+                    placeholder="Select Balance Sheet"
+                    [panelStyle]="{ overflow: 'auto' }"
+                    [showClear]="true"
+                    [(ngModel)]="chart$.BalanceSheetSubCode"
+                    (onChange)="changeBalanceSheetSubCategory($event)"
+                    [disabled]="!chart$.IsDetail == true"
+                  >
+                    <ng-template let-option pTemplate="item">
+                      <div class="option-item">
+                        <div>
+                          {{ option.BalanceSheetSubCategoryName }}
+                        </div>
+                      </div>
+                    </ng-template>
+                  </p-dropdown>
+                </div>
+              </div>
+              <!-- <div class="col-md-4">
+              <div class="form-group">
+                <label>Balance Sheet Note</label>
+                <select class="form-select" formControlName="BalanceSheetNoteCode"
+                  (change)="changeBalanceSheetNoteId($event)" [attr.disabled]="!chart$.IsDetail ? true : null"
+                  [(ngModel)]="chart$.selectedBalanceSheetNoteId">
+                  <option [ngValue]="null" disabled selected>
+                    Select Balance Sheet Note
+                  </option>
+                  <option *ngFor="let b of BalanceSheetNote$" [ngValue]="b" [value]="b?.BalanceSheetNoteCode">
+                    {{ b.Name }}
+                  </option>
+                </select>
+              </div>
+            </div> -->
+
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>Balance Sheet Note</label>
+                  <p-dropdown
+                    [style]="{ height: '38px' }"
+                    formControlName="BalanceSheetNoteCode"
+                    [options]="BalanceSheetNote$"
+                    [filter]="true"
+                    optionLabel="Name"
+                    optionValue="BalanceSheetNoteCode"
+                    filterBy="Name"
+                    appendTo="body"
+                    placeholder="Select Balance Sheet"
+                    [panelStyle]="{ overflow: 'auto' }"
+                    [showClear]="true"
+                    [(ngModel)]="chart$.BalanceSheetNoteCode"
+                    (onChange)="changeBalanceSheetNoteId($event)"
+                    [disabled]="!chart$.IsDetail == true"
+                  >
+                    <ng-template let-option pTemplate="item">
+                      <div class="option-item">
+                        <div>
+                          {{ option.Name }}
+                        </div>
+                      </div>
+                    </ng-template>
+                  </p-dropdown>
+                </div>
+              </div>
+            </div>
+            <!-- ===Balance Sheet=== -->
+          </ng-template>
+          <ng-template pTemplate="footer">
+            <!-- <button pButton pRipple class="p-button-text" (click)="hideDialog()">
+            Cancel
+          </button> -->
+            <button
+              pButton
+              pRipple
+              class="p-button-text"
+              style="font-size: 15px"
+              (click)="addorUpdate()"
+            >
+              {{ saveorUpdate }}
+            </button>
+          </ng-template>
+        </p-dialog>
+      </div>
+    </form>
+
+    <!-- <p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog> -->
+    <app-confirm-dialog></app-confirm-dialog>
+  </div>
+</div>
+
+<!-- Response-Error-Message  -->
+<div class="loading-newpopup" *ngIf="loadingerror">
+  <div class="newpopup">
+    <!---<a><img class="ErrorIcon" src="./assets/icon/error.svg" /></a>-->
+    <div class="Errormessage">
+      <p><strong>Error</strong></p>
+      <p>You are not authorized to perform this Operation</p>
+    </div>
+    <button class="btn btn-danger ErrorClosebtn" (click)="hideErrorPopup()">
+      Cancel
+    </button>
+  </div>
+</div>

@@ -1,0 +1,219 @@
+
+// :host ::ng-deep {
+//   .p-dropdown-filter {
+//     height: 30px;
+//   }
+//   .option-item {
+//     display: flex !important;
+//     justify-content: space-between !important;
+//     align-items: center !important;
+//   }
+
+//   .option-column1 {
+//     width: 30%;
+//   }
+
+//   .option-column2 {
+//     width: 70%;
+//   }
+// }
+
+.btn-update {
+    background: transparent !important;
+    border: 1px solid #32A0EF !important;
+    color: #32A0EF !important;
+    transition: 0.3s all !important;
+  }
+  .btn-save {
+    background: #32A0EF !important;
+    color: white !important;
+    transition: 0.3s all !important;
+    border: 0 !important;
+  }
+  
+  
+  
+  :host ::ng-deep {
+  
+    .p-button {
+      padding: 5px 6px;
+    }
+    .p-button-label {
+      font-size: 12px;
+    }
+  
+  
+  
+    .p-treetable .p-treetable-tbody > tr > td {
+      text-align: left;
+      border: 1px solid #dee2e6;
+      border-width: 1px 0 0 0;
+      font-size: smaller;
+      font-family: system-ui;
+      padding: 0rem 1rem;
+    }
+    .custom-checkbox:disabled::before {
+      background-color: darkcyan !important;
+      transform: scale(2.5);
+    }
+  
+    .p-treetable .p-treetable-thead > tr > th {
+      text-align: left;
+      padding: 0.2rem 1rem;
+      border: 1px solid #dee2e6;
+      border-width: 1px 0 2px 0;
+      font-weight: 600;
+      color: #212529;
+      background: #ffffff;
+      transition: box-shadow 0.15s;
+    }
+  
+  
+    .p-input-icon-left > .p-inputtext {
+      padding-left: 2rem;
+    }
+    .p-button.p-button-icon-only.p-button-rounded {
+      border-radius: 50%;
+      height: 1.8rem;
+      width: 1.8rem;
+      margin: 2px 0px;
+    }
+    .p-button.p-button-success,
+    .p-buttonset.p-button-success > .p-button,
+    .p-splitbutton.p-button-success > .p-button {
+  
+      padding: 2px 5px;
+      font-size: 13px;
+    }
+    .p-toolbar {
+      padding: 5px 10px;
+    }
+    .p-dropdown-filter {
+      height: 30px;
+    }
+    .option-item {
+      display: flex !important;
+      justify-content: space-between !important;
+      align-items: center !important;
+    }
+  
+    .option-column1 {
+      width: 30%;
+    }
+  
+    .option-column2 {
+      width: 70%;
+    }
+  }
+  .custom-checkbox:disabled::before {
+    background-color: darkcyan !important;
+    transform: scale(2.5);
+  }
+  
+  :host ::ng-deep {
+    .pi-chevron-right:before {
+      content: "\e901";
+      font-size: smaller;
+  }
+  .pi-chevron-down:before {
+      content: "\e902";
+      font-size: smaller;
+  }
+    .p-treetable
+      .p-treetable-tbody
+      > tr
+      > td
+      > input[type="checkbox"]:disabled
+      + label::before {
+      background: #28a745;
+      transform: scale(3.5) !important;
+      font-weight: bold;
+      color: red;
+    }
+    .p-treetable
+      .p-treetable-tbody
+      > tr
+      > td
+      > input[type="checkbox"]:checked
+      + label::before {
+      background: #28a745;
+      transform: scale(3.5) !important;
+      font-weight: bold;
+      color: red;
+    }
+    .p-treetable
+      .p-treetable-tbody
+      > tr
+      > td
+      > input[type="checkbox"]:disabled
+      + label:hover::before {
+      background: #28a745;
+      transform: scale(3.5) !important;
+      font-weight: bold;
+      color: black;
+      border: 3px solid red;
+    }
+    .btnCheckBox{
+      width: 10rem;
+      /* background-color: white; */
+      border-radius: 12px;
+      font-size: 12px;
+      height: 30px;
+      padding: 5px;
+      border: 1px solid #ced4da;
+  
+    }
+  
+    .btnCheckBox:hover{
+      background-color: white;
+      color: black;
+      border:  1px solid #ced4da !important;
+  
+    }
+    .chk{
+      border:  1px solid #ced4da !important;
+    }
+    .form-check-inline{
+      align-items: center !important;
+      margin-right: 0px !important;
+    }
+  
+  }
+  .inputSet{
+    margin-right: 70px;
+    width: 200px;
+  }
+  
+  .loading-newpopup {
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .newpopup {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+  }
+  
+
+.btn-setting{
+    margin-left: 487px;
+}
+
+.divlabelset{
+  background: #32A0EF;
+  color: antiquewhite;
+  border-radius: 5px;
+  height: 37px;
+}
+

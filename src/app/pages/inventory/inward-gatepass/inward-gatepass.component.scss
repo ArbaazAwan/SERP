@@ -1,0 +1,103 @@
+
+::ng-deep{
+  .p-dropdown-panel .p-dropdown-header .p-dropdown-filter{
+    height:30px !important;
+    font-size:12px !important;
+    }
+    .p-inputtext{
+      height: 30px !important;
+      font-size: 12px;
+    }
+
+  .p-multiselect-panel {
+    height: 30px !important;
+    width: 100% !important;
+  }
+  .p-multiselect {
+    width: 100% !important;
+
+}
+
+
+.chk{
+  border:  1px solid #ced4da !important;
+}
+.form-check{
+  padding-left: 0.5rem !important;
+}
+.form-check-inline{
+  align-items: center !important;
+  margin-right: 0px !important;
+}
+.labelChk{
+  margin-left: 18px;
+  margin-top: 0px;
+}
+
+.loading-newpopup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.newpopup {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+}
+
+
+
+.btn-save {
+  background: #32A0EF !important;
+  color: white !important;
+  transition: 0.3s all !important;
+  border: 0 !important;
+  padding: 5px;
+}
+
+:host ::ng-deep {
+  .p-toolbar {
+    padding: 5px;
+    background: white;
+    border: 0;
+  }
+  .p-button-label {
+    font-size: 12px;
+  }
+  .p-button .p-button-icon-left {
+    margin-right: 2px;
+  }
+  .p-toolbar-group-left {
+    width: 100%
+  }
+}
+.btn-margin{
+  margin-right: 740px;
+}
+
+
+::ng-deep .p-dialog .p-dialog-header .p-dialog-header-icon {
+  color: white!important;
+}
+
+.divAlign{
+  float: right;
+}
+
+.inputSetting{
+  height: 32px;
+  padding: 0px;
+}
+
+
+

@@ -1,0 +1,146 @@
+<div class="main-container">
+  <app-store-project
+    [showInput2]="false"
+    [showInput1]="false"
+    [componentName]="componentName"
+    [hide]="false"
+  ></app-store-project>
+  <div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+      <div class="card-wrapper">
+        <p-toolbar>
+          <ng-template pTemplate="left">
+            <button
+              pButton
+              pRipple
+              label="Add New"
+              icon="pi pi-plus-circle one"
+              class="btn-save"
+              style="margin-right: 4px"
+              (click)="openNew(null)"
+            ></button>
+            <button
+              pButton
+              pRipple
+              label="Preview / Print"
+              icon="pi pi-print"
+              class="btn-save"
+            ></button>
+          </ng-template>
+          <ng-template pTemplate="right">
+            <div class="flex">
+              <span class="p-input-icon-left ml-auto">
+                <i class="pi pi-search"></i>
+                <input
+                  pInputText
+                  type="text"
+                  class="search-input"
+                  (input)="filter($event)"
+                  placeholder="Search keyword"
+                />
+              </span>
+            </div>
+          </ng-template>
+        </p-toolbar>
+        <div class="row">
+          <div class="col-lg-12 col-md-12">
+            <div class="table-responsive custom-table">
+              <p-table
+                #dt2
+                class="table table-striped table-borderless"
+                *ngIf="!isLoadingData"
+                [value]="employeeTableResponse"
+                [paginator]="true"
+                [alwaysShowPaginator]="false"
+                [rows]="10"
+                [globalFilterFields]="globalFilters"
+              >
+                <ng-template pTemplate="header">
+                  <tr class="table-fixed">
+                    <th pSortableColumn="EmployeeCode" class="text-nowrap">
+                      Employee Code
+                      <p-sortIcon field="EmployeeCode"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="EmployeeName" class="text-nowrap">
+                      Employee
+                      <p-sortIcon field="EmployeeName"></p-sortIcon>
+                    </th>
+                    <th>CNIC</th>
+                    <th pSortableColumn="DepartmentName" class="text-nowrap">
+                      Department
+                      <p-sortIcon field="DepartmentName"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="DesignationName" class="text-nowrap">
+                      Designation
+                      <p-sortIcon field="DesignationName"></p-sortIcon>
+                    </th>
+                    <th scope="col" class="text-center">Action</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-item let-odd>
+                  <tr [ngClass]="{ 'odd-row': odd }">
+                    <td>{{ item.EmployeeCode }}</td>
+                    <td>{{ item.EmployeeName }}</td>
+                    <td>{{ item.CNIC }}</td>
+                    <td>{{ item.DepartmentName }}</td>
+                    <td>{{ item.DesignationName }}</td>
+                    <td>
+                      <div class="dropdown text-center">
+                        <button
+                          class="three-dots"
+                          type="button"
+                          id="table-action-menu"
+                          data-bs-toggle="dropdown"
+                          aria-expanded="false"
+                        >
+                          <i class="fa fa-ellipsis-v"></i>
+                        </button>
+                        <ul
+                          class="dropdown-menu"
+                          aria-labelledby="table-action-menu"
+                        >
+                          <li>
+                            <a
+                              class="dropdown-item edit cursor-hover cursor-pointer"
+                              (click)="openNew(item)"
+                              >Edit</a
+                            >
+                          </li>
+                          <li>
+                            <a
+                              class="dropdown-item delete cursor-hover cursor-pointer"
+                              (click)="delete(item.EmployeeCode)"
+                              >Delete</a
+                            >
+                          </li>
+                        </ul>
+                      </div>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+              <div *ngIf="isLoadingData">
+                <app-table-loader></app-table-loader>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-confirm-dialog></app-confirm-dialog>
+
+<!-- Response-Error-Message  -->
+<div class="loading-newpopup" *ngIf="loadingerror">
+  <div class="newpopup">
+    <div class="Errormessage">
+      <p><strong>Error</strong></p>
+      <p>You are not authorized to perform this Operation</p>
+    </div>
+    <button class="btn btn-danger ErrorClosebtn" (click)="hideErrorPopup()">
+      Cancel
+    </button>
+  </div>
+</div>

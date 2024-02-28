@@ -1,0 +1,59 @@
+<div class="card-wrapper">
+  <div class="table-responsive scrollable-table-container">
+    <table class="table text-sm">
+      <thead>
+        <tr>
+          <th scope="col">
+            <input
+              type="checkbox"
+              class="checkbox"
+              name="checkall"
+              id="checkall"
+              [(ngModel)]="checkAll"
+              (change)="toggleAllCheckboxes()"
+            />
+          </th>
+          <th class="text-center">Branch</th>
+          <th>Charge Percentage%</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          class=""
+          *ngFor="let branch of branches; let odd = odd"
+          [ngClass]="{ odd: !odd }"
+        >
+          <td>
+            <input
+              type="checkbox"
+              class="checkbox"
+              name="check"
+              [(ngModel)]="branch.Checked"
+              (change)="calculateTotalPercentage()"
+            />
+          </td>
+          <td class="text-center">{{ branch.BranchName }}</td>
+          <td>
+            <input
+              type="number"
+              placeholder="Enter Percentage eg.50%"
+              [(ngModel)]="branch.Percentage"
+              (input)="calculateTotalPercentage()"
+              class="form-control"
+            />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="mx-3 mt-3 custom-row">
+    <small class="text-sm">
+      <button (click)="onSubmit()" type="submit" class="btn-save mt-2">Save</button>
+      <div class="total-per-wrapper float-end">
+        <span class="text-bold"
+        ><span class="total-perc">Total Percentage: </span> {{ this.totalPercentage }}%</span
+      >
+      </div>
+    </small>
+  </div>
+</div>

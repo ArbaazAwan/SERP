@@ -1,0 +1,180 @@
+<div class="main-container">
+  <div class="container">
+    <div class="container">
+      <div class="col-lg-12 col-md-12 col-sm-12 mb-2 FormsHeading">
+        <p class="mx-2 my-1">Sales Person Wise</p>
+      </div>
+      <div class="row">
+        <form
+          class="col-lg-12 col-md-12 col-sm-12"
+          [formGroup]="form"
+          novalidate
+        >
+          <div class="card p-3">
+            <div class="row align-items-stretch">
+              <div class="col-lg-3">
+                <label class="float-md-left d-flex float-sm-left">
+                  Store
+                  <span class="astrik">*</span>
+                </label>
+                <div class="group-gap">
+                  <div class="d-block">
+                    <div class="">
+                      <p-dropdown
+                        id="StoreCode"
+                        [options]="storeResponse$"
+                        [filter]="true"
+                        formControlName="StoreCode"
+                        style="border-color: #ced4da !important"
+                        optionLabel="DepartmentName"
+                        optionValue="DepartmentCode"
+                        filterBy="DepartmentName"
+                        [showClear]="true"
+                        placeholder="Select Store"
+                        [panelStyle]="{ overflow: 'auto' }"
+                      >
+                        <ng-template let-option pTemplate="item">
+                          <span style="width: 85%; float: left">{{
+                            option.DepartmentName
+                          }}</span>
+                        </ng-template>
+                      </p-dropdown>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-3">
+                <label class="float-md-left d-flex float-sm-left"
+                  >Project
+                  <span class="astrik">*</span>
+                </label>
+                <p-dropdown
+                  id="ProjectCode"
+                  [options]="projectResponse$"
+                  [filter]="true"
+                  formControlName="ProjectCode"
+                  style="border-color: #ced4da !important"
+                  optionLabel="ProjectName"
+                  optionValue="ProjectCode"
+                  filterBy="ProjectName"
+                  [showClear]="true"
+                  placeholder="Select Project"
+                  [panelStyle]="{ overflow: 'auto' }"
+                >
+                  <ng-template let-option pTemplate="item">
+                    <span style="width: 85%; float: left">{{
+                      option.ProjectName
+                    }}</span>
+                  </ng-template>
+                </p-dropdown>
+              </div>
+              <div class="col-lg-3">
+                <label class="float-md-left d-flex float-sm-left"
+                  >Date From</label
+                >
+                <input
+                  type="date"
+                  class="form-control"
+                  formControlName="DateFrom"
+                />
+              </div>
+              <div class="col-lg-3">
+                <label class="float-md-left d-flex float-sm-left"
+                  >Date To</label
+                >
+                <input
+                  type="date"
+                  class="form-control"
+                  formControlName="DateTo"
+                />
+              </div>
+            </div>
+            <div class="row align-items-stretch">
+              <div class="col-lg-3">
+                <label class="float-md-left d-flex float-sm-left">
+                  Customer
+                </label>
+                <div class="group-gap">
+                  <div class="d-block">
+                    <div class="">
+                      <p-dropdown
+                        id="CustomerId"
+                        [options]="customerResponse$"
+                        [filter]="true"
+                        formControlName="CustomerId"
+                        style="border-color: #ced4da !important"
+                        optionLabel="Name"
+                        optionValue="CustomerId"
+                        filterBy="Name"
+                        [showClear]="true"
+                        placeholder="Select Customer"
+                        [panelStyle]="{ overflow: 'auto' }"
+                      >
+                        <ng-template let-option pTemplate="item">
+                          <span style="width: 85%; float: left">{{
+                            option.Name
+                          }}</span>
+                        </ng-template>
+                      </p-dropdown>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-3">
+                <label class="float-md-left d-flex float-sm-left mb-1 ml-1"
+                  >Sales Person</label
+                >
+                <p-dropdown
+                  id="SalesManId"
+                  [options]="saleResponse$"
+                  [filter]="true"
+                  formControlName="SalesManId"
+                  style="border-color: #ced4da !important"
+                  optionLabel="Name"
+                  optionValue="SalesManId"
+                  filterBy="Name"
+                  [showClear]="true"
+                  placeholder="Select SalesMan"
+                  [panelStyle]="{ overflow: 'auto' }"
+                >
+                  <ng-template let-option pTemplate="item">
+                    <span style="width: 85%; float: left">{{
+                      option.Name
+                    }}</span>
+                  </ng-template>
+                </p-dropdown>
+              </div>
+              <div
+                class="col-lg-4 row justify-content-center"
+                style="align-items: flex-end; padding-bottom: 1.5%"
+              >
+                <div
+                  class="row justify-content-start"
+                  style="align-items: baseline"
+                >
+                  <ng-container>
+                    <Button
+                      type="button"
+                      id="btnviewlist"
+                      Class="btn primary-button-color btnFix mt-3"
+                      (click)="printSaleMenWise()"
+                    >
+                      Preview / Print
+                    </Button>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="loading-popup" *ngIf="loading">
+      <div class="overlay"></div>
+      <div class="popup">
+        <div class="spinner"></div>
+        <p class="text-center mt-2 mb-0">Report Generating</p>
+      </div>
+    </div>
+  </div>
+</div>

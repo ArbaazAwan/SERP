@@ -1,0 +1,153 @@
+<form [formGroup]="createForm" novalidate>
+  <div class="row mb-2 topbar-dropdown w-100">
+    <div class="col-lg-2 col-md-12 col-sm-12 align-self-center">
+      <p class="DashHeading m-0">{{ componentName }}</p>
+    </div>
+    <div class="col-lg-8 col-md-12 col-sm-12 align-self-center">
+      <div class="row">
+        <div class="col-lg-4 col-md-4 p-0">
+          <div class="d-flex align-items-center mb-2 w-100">
+            <label class="store-label" for="branch"
+              >Branch <span class="text-danger">*</span></label
+            >
+            <p-dropdown
+              id="branch"
+              [options]="branchOptions"
+              [filter]="true"
+              formControlName="Branch"
+              optionLabel="BranchName"
+              optionValue="BranchCode"
+              filterBy="BranchName"
+              [showClear]="true"
+              placeholder="Select Branch"
+              [panelStyle]="{ overflow: 'auto' }"
+              (onChange)="changeBranch($event)"
+              emptyFilterMessage="No Resutls"
+              [disabled]="showInput3"
+            >
+              <ng-template let-option pTemplate="item">
+                <span style="width: 85%; float: left; font-family: Manrope">{{
+                  option.BranchName
+                }}</span>
+              </ng-template>
+            </p-dropdown>
+            <div
+              class="input-error"
+              *ngIf="
+                createForm.controls['Branch'].invalid &&
+                createForm.controls['Branch'].touched
+              "
+            >
+              Field Required
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-4 p-0">
+          <div class="d-flex align-items-center mb-2 w-100">
+            <label class="store-label" for="storeInput"
+              >Store <span class="text-danger">*</span>
+            </label>
+            <p-dropdown
+              id="storeInput"
+              [options]="StoreOptions"
+              [filter]="true"
+              formControlName="Store"
+              optionLabel="DepartmentName"
+              filterBy="DepartmentName"
+              [showClear]="true"
+              placeholder="Select Store"
+              [panelStyle]="{ overflow: 'auto' }"
+              (onChange)="changeStore($event)"
+              [disabled]="showInput1"
+              emptyFilterMessage="No Resutls"
+            >
+              <ng-template let-option pTemplate="item">
+                <span style="width: 85%; float: left; font-family: Manrope">{{
+                  option.DepartmentName
+                }}</span>
+              </ng-template>
+            </p-dropdown>
+            <div
+              class="input-error"
+              *ngIf="
+                createForm.controls['Store'].invalid &&
+                createForm.controls['Store'].touched
+              "
+            >
+              Field Required
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-md-4 p-0">
+          <div class="d-flex align-items-center w-100">
+            <label class="store-label" for="projectInput"
+              >Project <span class="text-danger">*</span>
+            </label>
+            <p-dropdown
+              id="projectInput"
+              [options]="projectOptions"
+              [filter]="true"
+              formControlName="Project"
+              optionLabel="ProjectName"
+              filterBy="ProjectName"
+              [showClear]="true"
+              placeholder="Select Project"
+              autoWidth="false"
+              [style]="{ minWidth: '50px', width: '50%' }"
+              [panelStyle]="{ overflow: 'auto' }"
+              (onChange)="changeProject($event)"
+              [disabled]="showInput2"
+              emptyFilterMessage="No Resutls"
+            >
+              <ng-template let-option pTemplate="item">
+                <span style="width: 85%; float: left; font-family: Manrope">{{
+                  option.ProjectName
+                }}</span>
+              </ng-template>
+            </p-dropdown>
+            <div
+              class="input-error"
+              *ngIf="
+                createForm.controls['Project'].invalid &&
+                createForm.controls['Project'].touched
+              "
+            >
+              Field Required
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-2 col-md-12 col-sm-12 p-0">
+      <div class="UserContainer">
+        <div class="login-info">
+          <span class="account-title">{{ userName }}</span>
+          <span class="login-time">Last Login:{{ " " + loginTime }}</span>
+        </div>
+        <!-- <img src="../../../assets/logo/profile.jpg" class="UserProfile float-right" alt="User Profile" /> -->
+        <i class="fa-regular fa-user ml-2 mb-2"></i>
+        <div class="DropdownContent">
+          <a [routerLink]="['/changepassword']">Change Password</a>
+          <a (click)="logout()">Logout</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+<div class="loading-newpopup" *ngIf="!branchOptions">
+  <div class="newpopup">
+    <div class="Errormessage">
+      <p class="text-warning">
+        <i class="fa fa-warning text-lg mx-2"></i>
+        <strong>You are not allowed any branches</strong>
+      </p>
+      <p class="text-sm text-bold">Please contact Administrator!</p>
+      <p class="text-sm text-bold">We are logging you out</p>
+      <button class="btn btn-danger ErrorClosebtn" (click)="logout()">
+        OK
+      </button>
+    </div>
+  </div>
+</div>

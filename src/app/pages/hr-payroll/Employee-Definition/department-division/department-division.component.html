@@ -1,0 +1,137 @@
+<ngx-loading-bar [includeSpinner]="false" [height]="'3px'"></ngx-loading-bar>
+<app-confirm-dialog></app-confirm-dialog>
+
+<div class="main-container" (scroll)="onMainContainerScroll($event)">
+  <div [class]="isSticky ? 'sticky-header' : ''">
+    <app-store-project [componentName]="'Department Division'" [showInput2]="false" [showInput1]="false"
+      [hide]="false"></app-store-project>
+  </div>
+
+
+  <div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+      <form [formGroup]="divisionForm" novalidate>
+        <div class="card-wrapper">
+          <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Department Division Name</label>
+                <input type="text" class="form-control" 
+                placeholder="Enter Department Division Name" formControlName="DivisionName" />
+                <small *ngIf="
+                    divisionForm.get('DivisionName')?.invalid &&
+                    divisionForm.get('DivisionName')?.touched
+                  " class="text-danger text-xs">
+                   Department Division Name is Required
+                </small>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Short Name</label>
+                <input type="text" class="form-control"
+                placeholder="Enter Short Name" formControlName="ShortName" />
+                <small *ngIf="
+                    divisionForm.get('ShortName')?.invalid &&
+                    divisionForm.get('ShortName')?.touched
+                  " class="text-danger text-xs">
+                   Short Name is Required
+                </small>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-12 ">
+              <div class="d-flex align-items-center gap-2 isactive">
+                <div class="checkbox">
+                  <input type="checkbox" id="active" class="form-checkbox" formControlName="IsActive" />
+                  <label class="form-check-label" for="active">Active</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="d-flex align-items-center gap-2">
+              <button type="button" id="btnsave" class="btn-save" (click)="addorUpdate()"
+                [disabled]="isUpdate">
+                Save
+              </button>
+              <button type="button" id="btnupdate" class="btn-update" (click)="addorUpdate()"
+                [disabled]="!isUpdate">
+                Update
+              </button>
+              <button type="button" id="btnRefresh" class="btn-refresh" (click)="refresh()">
+                <img src="../../../../assets/icons/btn-refresh.svg" alt="" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="col-lg-12 col-md-12 col-sm-12 mt-3 ">
+        <div class="table-responsive card-wrapper custom-table">
+          <table class="table table-striped table-borderless" *ngIf="!isLoadingData">
+            <thead>
+              <tr>
+                <!-- <th scope="col">Division Code</th> -->
+                <th scope="col">Division Name</th>
+                <th scope="col">Short Name</th>
+                <th scope="col">Active</th>
+                <th scope="col" class="text-center">Action</th>
+              </tr>
+            </thead>
+            <hr />
+            <tbody>
+              <tr *ngFor="let item of Divisionresponse$; let odd = odd" [ngClass]="{ 'odd-row': odd }">
+                <!-- <td>{{ item.DivisionCode }}</td> -->
+                <td>{{ item.DivisionName }}</td>
+                <td>{{ item.ShortName }}</td>
+                <td>
+                  <span [class]="
+                      item.IsActive == true ? 'success-badge' : 'danger-badge'
+                    ">{{ item.IsActive | yesNo }}</span>
+                </td>
+                <td>
+                  <div class="dropdown text-center">
+                    <button class="three-dots" type="button" id="table-action-menu" data-bs-toggle="dropdown"
+                      aria-expanded="false">
+                      <i class="fa fa-ellipsis-v"></i>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="table-action-menu">
+                      <li>
+                        <a class="dropdown-item edit cursor-hover cursor-pointer"
+                          (click)="getRowDivision(item)">Edit</a>
+                      </li>
+                      <li>
+                        <a class="dropdown-item delete cursor-hover cursor-pointer"
+                          (click)="deleteDivision(item.DivisionCode)">Delete</a>
+                      </li>
+                    </ul>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div *ngIf="isLoadingData">
+            <app-table-loader></app-table-loader>
+          </div>
+        </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Response-Error-Message  -->
+<div class="loading-newpopup" *ngIf="loadingerror">
+  <div class="newpopup">
+    <!---<a><img class="ErrorIcon" src="./assets/icon/error.svg" /></a>-->
+    <div class="Errormessage">
+      <p><strong>Error</strong></p>
+      <p>You are not authorized to perform this Operation</p>
+    </div>
+    <button class="btn btn-danger ErrorClosebtn" (click)="hideErrorPopup()">
+      Cancel Cancel
+    </button>
+  </div>
+</div>

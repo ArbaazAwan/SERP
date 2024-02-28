@@ -1,0 +1,351 @@
+<div class="main-container">
+  <div class="">
+    <app-store-project
+      [showInput2]="false"
+      [showInput1]="false"
+      [componentName]="componentName"
+    ></app-store-project>
+  </div>
+  <div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 mt-3">
+      <div class="card-wrapper">
+        <p-toolbar>
+          <ng-template pTemplate="left">
+            <div class="d-flex justify-content-between w-100">
+              <button
+                pButton
+                pRipple
+                label="Add New"
+                icon="pi pi-plus-circle one"
+                class="btn-save"
+                (click)="CreateNewPurchaseInvoice()"
+              ></button>
+              <div class="d-flex gap-2">
+                <button
+                  pButton
+                  pRipple
+                  label=""
+                  icon="pi pi-filter-slash"
+                  class="btn-save"
+                  *ngIf="showClearFilterButton"
+                  (click)="clearFilter()"
+                ></button>
+                <button
+                  pButton
+                  pRipple
+                  label=""
+                  icon="pi pi-filter-fill"
+                  class="btn-save"
+                  (click)="FiltersDialogue = true"
+                ></button>
+              </div>
+            </div>
+          </ng-template>
+        </p-toolbar>
+        <div
+          class="table-responsive custom-table mt-2"
+          (scroll)="onMainContainerScroll($event)"
+        >
+          <table
+            class="table table-striped table-borderless"
+            *ngIf="!isLoadingData"
+          >
+            <thead [class]="isSticky ? 'sticky-header' : ''">
+              <tr>
+                <th>Purchase Invoice#</th>
+                <th>Invoice Date</th>
+                <th>Party</th>
+                <th>Due Date</th>
+                <th>Verified</th>
+                <th>Posted</th>
+                <th scope="col" class="text-center">Action</th>
+              </tr>
+            </thead>
+            <hr />
+            <tbody>
+              <tr
+                *ngFor="let item of filteredPurchaseInvoices; let odd = odd"
+                [ngClass]="{ 'odd-row': odd }"
+              >
+                <td>{{ item.PurchaseInvoiceNo }}</td>
+                <td>{{ item.PurchaseInvoiceDate | date : "dd-MMM-yyyy" }}</td>
+                <td>{{ item.Party }}</td>
+                <td>{{ item.DueDate | date : "dd-MMM-yyyy" }}</td>
+                <td>
+                  <span
+                    [class]="
+                      item.IsVerified == true ? 'success-badge' : 'danger-badge'
+                    "
+                    >{{ item.IsVerified | yesNo }}</span
+                  >
+                </td>
+                <td>
+                  <span
+                    [class]="
+                      item.IsPosted == true ? 'success-badge' : 'danger-badge'
+                    "
+                    >{{ item.IsPosted | yesNo }}</span
+                  >
+                </td>
+                <td>
+                  <div class="dropdown text-center">
+                    <button
+                      class="three-dots"
+                      type="button"
+                      id="table-action-menu"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      <i class="fa fa-ellipsis-v"></i>
+                    </button>
+                    <ul
+                      class="dropdown-menu"
+                      aria-labelledby="table-action-menu"
+                    >
+                      <!-- <li><a class="dropdown-item edit cursor-hover cursor-pointer"
+                         >View</a></li> -->
+                      <li [ngClass]="{ disabled: item.IsVerified }">
+                        <a
+                          class="dropdown-item edit cursor-hover cursor-pointer"
+                          (click)="getSelectedRow(item)"
+                          >Edit</a
+                        >
+                      </li>
+                      <!-- <li [ngClass]="{ 'disabled': item.IsVerified }" ><a class="dropdown-item delete cursor-hover cursor-pointer"
+                          (click)="getSelectedRow(item)">Delete</a></li> -->
+                    </ul>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div *ngIf="isLoadingData">
+            <app-table-loader></app-table-loader>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="loading-newpopup" *ngIf="FiltersDialogue == true"></div> -->
+  </div>
+
+  <p-dialog
+    [(visible)]="FiltersDialogue"
+    [style]="{ width: '700px', height: '215px' }"
+    header="Filter Purchase Invoices"
+    [modal]="true"
+    styleClass="p-fluid"
+    [closable]="true"
+  >
+    <form [formGroup]="filterForm">
+      <div class="row">
+        <div class="col-lg-3 col-md-6 col-sm-12">
+          <div class="form-group">
+            <label> Party Name </label>
+            <p-dropdown
+              [style]="{ width: '95%' }"
+              [options]="partyResponse"
+              [filter]="true"
+              optionLabel="PartyName"
+              optionValue="PartyName"
+              formControlName="PartyName"
+              filterBy="EmployeeName"
+              placeholder="Select Party"
+              appendTo="body"
+              [panelStyle]="{ overflow: 'auto' }"
+              [showClear]="true"
+              (onChange)="changeParty($event)"
+            >
+            </p-dropdown>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-sm-12">
+          <div class="form-group">
+            <label> Date From </label>
+            <input
+              class="form-control"
+              type="date"
+              name="dateFrom"
+              id="dateFrom"
+              formControlName="DateFrom"
+            />
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-sm-12">
+          <div class="form-group">
+            <label> Date To </label>
+            <input
+              class="form-control"
+              type="date"
+              name="dateTo"
+              id="dateTo"
+              formControlName="DateTo"
+            />
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-sm-12 mt-3">
+          <div class="form-group">
+            <div class="row">
+              <label
+                class="float-md-left d-flex float-sm-left col-lg-8 col-md-12 col-sm-12"
+                for="verified"
+              >
+                Verified
+              </label>
+              <input
+                type="checkbox"
+                class="checkbox col-lg-4 col-md-12 col-sm-12"
+                formControlName="Verified"
+                id="verified"
+              />
+            </div>
+            <div class="row mt-2">
+              <label
+                class="float-md-left d-flex float-sm-left col-lg-8 col-md-12 col-sm-12"
+                for="posted"
+              >
+                Posted
+              </label>
+              <input
+                type="checkbox"
+                class="checkbox col-lg-4 col-md-12 col-sm-12"
+                formControlName="Posted"
+                id="posted"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- <div class="row mt-2">
+          <div class="d-flex align-items-center justify-content-end">
+            <button type="button" id="btnRefresh" class="btn-refresh mr-2" (click)="clearFilter()">
+              <img src="../../../../assets/icons/btn-refresh.svg" alt="">
+            </button>
+            <button type="button" id="btnviewlist" Class="btn-save" (click)="filter()">View
+              List</button>
+          </div>
+        </div> -->
+    </form>
+
+    <ng-template pTemplate="footer">
+      <button
+        type="button"
+        id="btnRefresh"
+        class="btn-refresh mr-2"
+        (click)="clearFilter()"
+      >
+        <img src="../../../../assets/icons/btn-refresh.svg" alt="" />
+      </button>
+      <button
+        type="button"
+        id="btnviewlist"
+        Class="btn-save"
+        (click)="filter()"
+      >
+        View List
+      </button>
+    </ng-template>
+  </p-dialog>
+
+  <!-- Response-Error-Message  -->
+  <div class="loading-newpopup" *ngIf="loadingerror">
+    <div class="newpopup">
+      <!---<a><img class="ErrorIcon" src="./assets/icon/error.svg" /></a>-->
+      <div class="Errormessage">
+        <p><strong>Error</strong></p>
+        <p>You are not authorized to perform this Operation</p>
+      </div>
+      <button class="btn btn-danger ErrorClosebtn" (click)="hideErrorPopup()">
+        Cancel
+      </button>
+    </div>
+  </div>
+
+  <p-dialog
+    [(visible)]="productDialog"
+    [style]="{ width: '600px' }"
+    [header]="header"
+    [modal]="true"
+    styleClass="p-fluid"
+    [closable]="true"
+  >
+    <form [formGroup]="purchaseInvoiceForm">
+      <div class="row">
+        <div class="col-lg-4 col-md-6 col-sm-12">
+          <div class="form-group">
+            <label> Party</label>
+            <p-dropdown
+              [style]="{ width: '245px' }"
+              [options]="partyResponse"
+              [filter]="true"
+              formControlName="PartyCode"
+              optionLabel="PartyName"
+              optionValue="PartyCode"
+              filterBy="PartyName,PartyCode"
+              [showClear]="false"
+              placeholder="Select Party"
+              [panelStyle]="{ overflow: 'auto' }"
+              [showClear]="true"
+              appendTo="body"
+            >
+              <ng-template let-option pTemplate="item">
+                <div class="option-item">
+                  <div style="float: left; width: 70%">
+                    {{ option.PartyName }}
+                  </div>
+                </div>
+              </ng-template>
+            </p-dropdown>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12">
+          <div class="form-group">
+            <label>Purchase Invoice Date <span class="astrik">*</span> </label>
+            <input
+              type="date"
+              class="form-control"
+              formControlName="PurchaseInvoiceDate"
+            />
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 col-sm-12">
+          <div class="form-group">
+            <label>Invoice Type <span class="astrik">*</span> </label>
+            <p-dropdown
+              [style]="{ width: '245px' }"
+              [options]="invoiceTypes"
+              [filter]="true"
+              formControlName="InvoiceTypeId"
+              optionLabel="InvoiceType"
+              optionValue="InvoiceTypeId"
+              filterBy="InvoiceType"
+              [showClear]="false"
+              placeholder="Select Invoice Type"
+              [panelStyle]="{ overflow: 'auto' }"
+              [showClear]="true"
+              appendTo="body"
+            >
+              <ng-template let-option pTemplate="item">
+                {{ option.InvoiceType }}
+              </ng-template>
+            </p-dropdown>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="row">
+          <div class="d-flex justify-content-end align-items-center gap-2">
+            <button class="btn-cancel" (click)="hideDialog()">Cancel</button>
+            <button class="btn-save" (click)="createPurchaseInvoice()">Create</button>
+          </div>
+        </div> -->
+    </form>
+    <ng-template pTemplate="footer">
+      <button class="btn-cancel" (click)="hideDialog()">Cancel</button>
+      <button class="btn-save" (click)="createPurchaseInvoice()">Create</button>
+    </ng-template>
+  </p-dialog>
+</div>

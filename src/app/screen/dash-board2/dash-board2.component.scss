@@ -1,0 +1,783 @@
+// this is navbar side code
+.searchInput{
+  background: #3c474c;
+    border: 1px solid #ffffff00;
+    color: white;
+    width: 100% !important;
+}
+
+.searchside{
+  width: 100% !important;
+}
+
+.sidenav-collapsed {
+  width: 16.5625rem;
+}
+
+.sidenav-nav {
+  list-style: none;
+  padding: 5px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  font-size: smaller;
+
+  .sidenav-nav-item-search {
+    width: 100%;
+    margin-bottom: 5px;
+
+  }
+  .sidenav-nav-item {
+    width: 100%;
+    margin-bottom: 5px;
+    // background:  #ffffff0f;
+    border-radius: 5px;
+
+
+    .sidenav-nav-link {
+      display: flex;
+      align-items: center;
+      height: 2rem;
+      color: #f3f3f3;
+      text-decoration: none;
+      border-radius: 0.625rem;
+      transition: all 0.3s ease;
+
+      .sidenav-link-icon {
+        font-size: 15px;
+        width: 2rem;
+        min-width: 2rem;
+        margin: 0 0.5rem;
+        text-align: center;
+      }
+
+      .sidenav-link-text {
+        margin-left: 0.5rem;
+      }
+    }
+    .sidenav-nav-link:active{
+      background-color: blueviolet;
+    }
+
+    .sidenav-nav-link:hover {
+      background-color: #ffffff1a;
+      color: white;
+
+      .menu-collapse-icon {
+        color: white;
+      }
+    }
+
+  }
+  .sidenav-nav-item:active{
+    border-radius: 10px;
+    border: 1px solid #ffffff1a;
+     background:  #32A0EF;;
+
+    }
+
+}
+
+.active {
+  // background-color: #fff;
+  background-color: #1984D0;
+
+  .menu-collapse-icon,
+  .sidenav-link-icon,
+  .sidenav-link-text {
+    color: #fff;
+    // background-color: #1984D0;
+  }
+}
+.menu-collapse-icon {
+  font-size: 25px;
+  // width: 2rem;
+  // min-width: 2rem;
+  margin: auto 0.5rem auto auto;
+  text-align: center;
+  color: #f3f3f3;
+}
+.active-sublevel {
+  color: #fff !important;
+  // opacity: 1 !important;
+  background: #ffffff1a;
+}
+
+
+
+.sublevel-nav {
+  list-style: none;
+  margin-left: 0px;
+  padding-left: 0px;
+  background-color: blue;
+  .sublevel-nav:active{
+    background-color: #ffffff1a !important;
+  }
+
+  .sublevel-nav-item {
+    .sublevel-nav-link {
+      display: flex;
+      align-items: center;
+      height: 2rem;
+      color: #f3f3f3;
+      background-color: #ffffff1a !important;
+
+      text-decoration: none;
+      border-radius: 0.625rem;
+      transition: all 0.3s ease;
+
+      .sublevel-link-icon {
+        font-size: 4px;
+        width: 2rem;
+        min-width: 2rem;
+        margin: 0 0.5rem;
+        text-align: center;
+      }
+
+      .sublevel-link-text {
+        margin-left: 0.8rem;
+      }
+    }
+
+    .sublevel-nav-link:hover {
+      color: #fff;
+    }
+  }
+}
+
+//scrollbar and visibility on hover and focus
+
+.scrollwrap {
+  overflow-y: auto;
+  visibility: hidden;
+  height: calc(100% - 3.65rem);
+}
+
+.sidenav-nav,
+.scrollwrap:hover,
+.scrollwrap:focus {
+  visibility: visible;
+}
+
+.scrollwrap_delayed {
+  transition: visibility 0.5s 0.2s;
+}
+
+.scrollwrap_delayed:hover {
+  transition: visibility 0.2s 0.2s;
+}
+
+// works on chrome, edge and safari
+.scrollwrap::-webkit-scrollbar {
+  width: 10px;
+}
+
+.scrollwrap::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollwrap::-webkit-scrollbar-thumb {
+  background-color: #32A0EF;
+  border-radius: 20px;
+}
+
+// works on firefox
+.scrollwrap {
+  scrollbar-width: thin;
+  scrollbar-color: #556268 transparent;
+}
+
+// dashboard sidebar
+
+
+// .body-trimmed {
+//   width: calc(100% - -0.4375rem);
+//   margin-left: -0.4375rem;
+// }
+
+.body-md-screen {
+  width: calc(100% - 5rem);
+  margin-left: 5rem;
+}
+
+//css of icons
+.p-card-body {
+  border: 3px solid red !important;
+  padding: 0.5rem;
+}
+
+:host ::ng-deep .p-card .p-component {
+  border: 1px solid #ffffff;
+  width: 1045px;
+  margin: 15px 380px;
+  border-radius: 12px;
+}
+
+:host ::ng-deep .p-card .p-card-title {
+  text-align: center;
+  color: lightslategrey;
+  /* border-bottom: 1px solid grey; */
+  background: #eff3f8;
+  border-radius: 5px;
+  font-weight: 700;
+}
+
+:host ::ng-deep .p-card .p-card-body {
+  padding: 0.5rem;
+}
+
+:host ::ng-deep .p-card .p-card-content .p-card-content div {
+  display: flex;
+  flex-direction: row;
+}
+
+.datarow {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.icon {
+  font-size: 1.5em;
+  cursor: pointer;
+  color: #2196f3;
+  border: 1px solid black;
+  border-radius: 10%;
+  padding: 5px;
+}
+
+.headingcolor {
+  text-decoration: none;
+  color: grey;
+}
+
+.heading a {
+  text-decoration: none;
+}
+
+.headingcolor:hover {
+  color: #000;
+}
+
+.headingcenter {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 10px 25px;
+}
+
+.headingcenter img {
+  margin: auto;
+  width: 50px;
+}
+
+.headingcenter img:hover {
+  margin: auto;
+
+  /* background: darkslategrey; */
+  border-radius: 50%;
+  background: #eff3f8;
+  padding: 7px;
+  cursor: pointer;
+}
+
+// .headinghover
+// {
+//   border:3px solid green;
+
+// }
+.companylog {
+  margin: 0px 18px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// rough
+.order-card {
+  background: #FFFFFF;
+  position: relative;
+}
+
+
+.card {
+  border-radius: 5px;
+  -webkit-box-shadow: 0 1px 2.94px 0.06px rgba(4, 26, 55, 0.16);
+  box-shadow: 0 1px 2.94px 0.06px rgba(4, 26, 55, 0.16);
+  border: none;
+  margin-bottom: 30px;
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+}
+.card:hover{
+  background-color:#563aff21 !important;
+  cursor:pointer;
+}
+
+
+.boxIcon {
+  background-color: #0000ff12;
+  color: #563AFF;
+}
+
+.card .card-block {
+  padding: 15px;
+}
+
+.order-card i {
+  font-size: 26px;
+}
+
+.NumHeading {
+  text-align: left;
+  margin-bottom: 1px;
+  font-size: 15px;
+}
+
+.f-left {
+  float: left;
+}
+
+.f-right {
+  float: left;
+  margin-bottom: 4px;
+}
+
+.card-content {
+  color: #999999;
+  font-size: 12px;
+}
+
+
+
+.text-start {
+  font-size: 12px;
+}
+
+.IconDesign {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #563AFF !important;
+  float: right;
+  margin-top: 12px;
+}
+.bg-primary{
+  background-color: #563AFF !important;
+}
+
+
+
+
+.sideColapseIcon{
+  background: white;
+  border: none;
+  border-radius: 3px;
+  position: absolute;
+  right: -12px
+  // margin: 0px 2px 1px 84px;
+}
+
+//============================================================================================================
+
+@import url('https://fonts.cdnfonts.com/css/manrope');
+
+.card{
+  height: 150px !important;
+  border-radius: 20px;
+  outline: 0px;
+  border: none;
+  width: 335px;
+
+}
+.card-body{
+  padding:25px !important;
+}
+.card-content {
+  /* Card Title */
+  margin-top: 5px;
+font-family: Manrope;
+font-size: 20px;
+font-weight: normal !important;
+font-weight: 600;
+line-height: 24px; /* 24px */
+color: #8C8C8C !important;
+}
+.usd {
+  font-size: 18px;
+  font-weight: 500;
+  color: #8c8c8c;
+  font-family: Manrope;
+
+}
+.NumHeading {
+  font-family: Manrope;
+margin-top: 15px;
+  line-height: 120%;
+  font-size:  38px;
+  color: #0a072b;
+  font-style: normal;
+font-weight: 700;
+}
+
+.tag{
+  // padding: 3px 0px 0px 29px;
+  padding: 3px 3px 3px 12px;
+  background:#E5FAE3;
+  color: #35BF29;
+
+    width: 56px;
+    height: 24px;
+    border-radius: 4px;
+    font-size: 12px;
+    margin: auto;
+}
+.tag-1{
+  // padding: 3px 0px 0px 29px;
+  padding: 3px 3px 3px 12px;
+  background: #FAE3E3  ;
+  color: #BF2929;
+    width: 56px;
+    height: 24px;
+    border-radius: 4px;
+    font-size: 12px;
+    margin: auto;
+}
+.DashHeading{
+font-weight: 800;
+font-family:Manrope;
+line-height: 42px;
+font-size: 30px;
+margin-left: 5px;
+}
+.tag-2{
+  // padding: 3px 0px 0px 29px;
+  padding: 3px 3px 3px 12px;
+  background: #E5FAE3;
+  color: #35BF29;
+
+    width: 56px;
+    height: 24px;
+    border-radius: 4px;
+    font-size: 12px;
+    margin: auto;
+}
+
+.card2{
+  background: #fff;
+  border-radius: 10px;
+
+}
+
+
+
+
+
+
+
+
+
+#searchbtn {
+  border: 0;
+  padding: 0px 10px;
+  margin-top: 10px;
+  color: #fff;
+  background: #888;
+  font-size: 27px;
+  font-weight: 500;
+  border: 1px solid #e2e2e2;
+  border-left: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  min-height: 60px;
+  height: auto;
+  border-radius: 0 50px 50px 0 !important;
+}
+/* Center search form styles */
+.search-form {
+  display: flex;
+    align-items: center;
+    /* border: 1px solid #ccc; */
+    border-radius: 5px;
+    padding: 5px 15px;
+    height: 40px;
+    flex: 2;
+    background: #fff;
+}
+.form-control {
+  padding: 0 5px; /* Adjust the padding for the input field */
+  border: none;
+  outline: none;
+  background-color: transparent;
+  flex: 1; /* Allow the search bar to take remaining space */
+  width: 400px; /* Adjust the width of the search bar as per your requirement */
+}
+
+.search-icon {
+  width: 16px; /* Set the width of the SVG icon */
+  height: 16px; /* Set the height of the SVG icon */
+  margin-right: 5px; /* Add a small margin between icon and input field */
+  fill: gray; /* Set the color of the SVG icon to gray */
+}
+
+.loginProfile{
+  float: right;
+  // margin-right: 30px;
+}
+
+.UserContainer {
+  display: block;
+  align-items: center;
+  justify-content: space-between;
+  float: right;
+}
+
+.UserData {
+  font-size: 12px;
+  // line-height: 35px;
+}
+
+.UserProfile {
+  color: #32A0EF;
+    // margin-bottom: 16px;
+    margin-left: 10px;
+}
+
+
+//-------------------------------------------------------------
+
+// Variables
+
+$button-text-color: black;
+$dropdown-bg-color: #f1f1f1;
+
+
+// Styles
+.button {
+  font-size: 12px;
+  color: $button-text-color;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.dropdown {
+  display: none;
+  position: absolute;
+  background-color: $dropdown-bg-color;
+  min-width: 160px;
+  z-index: 1;
+
+  .dropdown-content {
+    display: block;
+
+    p {
+      margin: 0;
+
+      a {
+        display: block;
+        padding: 10px;
+        text-decoration: none;
+        color: black;
+
+        &:hover {
+          background-color: darken($dropdown-bg-color, 10%);
+        }
+      }
+    }
+  }
+}
+
+// Event handling
+button.button:focus + .dropdown {
+  display: block;
+}
+
+// Close the dropdown if the user clicks outside of it
+html {
+  &:not(button.button):hover {
+    .dropdown {
+      display: none;
+    }
+  }
+}
+
+.DashHeading{
+  font-weight: 800;
+  font-family:Manrope;
+  line-height: 42px;
+  font-size: 30px;
+  margin-left: 5px;
+}
+
+.example-menu-row {
+  margin-bottom: 24px;
+}
+
+
+.profile-icon {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.profile-icon .fa-circle-user {
+  font-size: 24px;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 120px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.dropdown-content.show {
+  display: block;
+}
+
+.dropdown-content p-menubar {
+  border: none;
+}
+
+.dropdown-content p-menubar .p-menuitem {
+  padding: 8px 16px;
+  text-decoration: none;
+  display: block;
+  color: #333;
+}
+
+.dropdown-content p-menubar .p-menuitem:hover {
+  background-color: #ddd;
+}
+
+.dropdown-content p-menubar .p-menuitem .pi {
+  margin-right: 8px;
+}
+
+.dropdown-content p-menubar .p-submenu-icon {
+  display: none;
+}
+
+.UserContainer {
+  position: relative;
+  display: inline-block;
+}
+
+.UserProfile {
+  font-size: 1.5em;
+  color: #333;
+}
+
+.DropdownContent {
+  display: none;
+  position: fixed; /* Change to fixed */
+  background-color: #f9f9f9;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  min-width: 160px;
+  z-index: 1;
+  right: 0;
+  top: 50px; /* Adjust this value to position the dropdown */
+}
+
+.DropdownContent a {
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  color: #333;
+}
+
+.DropdownContent a:hover {
+  background-color: #f1f1f1;
+}
+
+.UserContainer:hover .DropdownContent {
+  display: block;
+}
+
+
+// new code css
+.main-body-wrapper {
+  display: flex;
+  height: 100%;
+  .sidenav {
+    background: #32A0EF;
+    font-size: 14px;
+    transition: all 0.5s ease;
+    position: relative;
+    z-index: 1;
+    top: 0;
+    height: 96vh;
+    border-radius: 15px;
+    max-width: 223px;
+    margin: 12px 5px 0px 10px;
+    // box-shadow: 0.063rem 0 1.25rem 0 #8690a3;
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      padding: 0.938rem 0.938rem 0 0.938rem;
+      width: 100%;
+
+      .logo {
+        background: #fff;
+        text-align: center;
+        width: 3rem;
+        height: 44px !important;
+        min-width: 3rem;
+        border-radius: 0.313rem;
+        padding: 0.313rem;
+        font-size: 24px;
+        font-weight: 900;
+        cursor: pointer;
+        border: none;
+      }
+
+      .logo-text {
+        margin-left: 10px;
+        font-size: 14px;
+        font-weight: 400;
+        color: #fff;
+      }
+
+
+      .btn-close {
+        margin-left: auto;
+        cursor: pointer;
+        width: 2rem;
+        height: 2rem;
+        border-radius: 50%;
+        background-color: transparent;
+        border: none;
+
+        .fa-times {
+          color: #fff;
+          font-size: 24px;
+        }
+      }
+    }
+  }
+  .body {
+    height: 100%;
+    overflow: hidden;
+    flex: 1 1 auto;
+  }
+}
+
+.dashboard-header-logo {
+  flex: 1;
+}

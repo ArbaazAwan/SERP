@@ -1,0 +1,77 @@
+.lblHeight {
+  line-height: 25px;
+  font-size: 12px;
+  font-weight: 500;
+  // margin-left: 78px;
+}
+.SmallBox {
+  height: 30px !important;
+  padding: 12px;
+}
+span {
+  font-size: 10px;
+  padding-left: 5px;
+  align-self: center;
+}
+.DashHeading {
+  font-weight: 500;
+  line-height: 22px;
+  font-size: 23px;
+  margin-left: 0px;
+  text-align: center;
+}
+.btnFix {
+  height: 40px;
+  width: 6.06rem !important;
+}
+.btnFix:hover {
+  color: white;
+}
+.btn-align {
+  text-align: right;
+}
+// @page {
+//   size: 101.6mm 101.6mm;
+//   margin: 0; /* Remove any default margins */
+
+// }
+
+// /* Set left alignment for the content */
+// body {
+//   text-align: left;
+//   margin: 0; /* Remove any default margins */
+//   padding: 0;
+// }
+.table {
+  font-size: 12px;
+  border-bottom: 1px solid black;
+}
+.table th,
+.table td {
+  border-top: none !important;
+}
+.table thead th {
+  border-bottom: 1px solid black;
+  border-top: 1px solid black !important;
+}
+.lableWidth {
+  width: 100px;
+}
+.lable2Width {
+  width: 120px;
+}
+.spanWidth {
+  width: 41px !important;
+}
+.mainHeight {
+  height: 18px;
+}
+.customBorder {
+  border-bottom: 1px solid;
+}
+.remarks {
+  font-size: 10px;
+  text-align: left;
+  margin-top: 30px;
+  margin-bottom: 10px;
+}

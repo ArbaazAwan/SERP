@@ -1,0 +1,18 @@
+::ng-deep .p-datatable .p-datatable-thead > tr > th,
+::ng-deep .p-datatable .p-datatable-tbody > tr > td,
+::ng-deep .p-datatable .p-paginator {
+  border: none !important;
+}
+
+hr {
+  margin-top: 0;
+}
+
+// .bg-dropdown{
+//   background-color: #8C8C8C;
+// }
+/* CSS to style the p-dropdown when disabled */
+::ng-deep .ui-dropdown-disabled .ui-dropdown-label {
+  color: #888; /* Change to the desired color */
+  background-color: #f4f4f4; /* Change to the desired background color */
+}

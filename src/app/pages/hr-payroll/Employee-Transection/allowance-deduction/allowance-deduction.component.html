@@ -1,0 +1,196 @@
+<div class="main-container" (scroll)="onMainContainerScroll($event)">
+  <div [class]="isSticky ? 'sticky-header' : ''">
+    <app-store-project [componentName]="componentName" [hide]="false"></app-store-project>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+      <form [formGroup]="form" >
+        <div class="card-wrapper">
+          <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label
+                  >Type
+                  <span class="astrik">*</span>
+                </label>
+                <p-dropdown
+                  [style]="{ height: '30px', width: '230px' }"
+                  [options]="typelist"
+                  [filter]="true"
+                  optionLabel="TypeName"
+                  optionValue="TypeID"
+                  formControlName="TypeID"
+                  filterBy="TypeName"
+                  [panelStyle]="{ overflow: 'auto' }"
+                  [showClear]="true"
+                  appendTo="body"
+                  placeholder="Select Type"
+                >
+                </p-dropdown>
+                <small
+                  *ngIf="
+                    form.controls['TypeID'].invalid &&
+                    form.controls['TypeID'].touched
+                  "
+                  class="text-danger text-xs"
+                >
+                Type is required
+                </small>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Allowance / Deduction Name <span class="astrik">*</span></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter Allowance / Deduction "
+                  formControlName="AllowanceDeductionName"
+                />
+                <small
+                  *ngIf="
+                    form.get('AllowanceDeductionName')?.invalid &&
+                    form.get('AllowanceDeductionName')?.touched
+                  "
+                  class="text-danger text-xs"
+                >
+                Allowance / Deduction is required
+                </small>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="d-flex align-items-center gap-2 isactive">
+                <div class="checkbox">
+                  <input
+                    type="checkbox"
+                    id="active"
+                    class="form-checkbox"
+                    formControlName="IsActive"
+                  />
+                  <label class="form-check-label ml-1" for="active">Active</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="d-flex align-items-center gap-2">
+              <button
+                type="button"
+                id="btnsave"
+                class="btn-save"
+                (click)="addorUpdate()"
+                [disabled]="isUpdate"
+              >
+                Save
+              </button>
+              <button
+                type="button"
+                id="btnupdate"
+                class="btn-update"
+                (click)="addorUpdate()"
+                [disabled]="!isUpdate"
+              >
+                Update
+              </button>
+              <button
+                type="button"
+                id="btnRefresh"
+                class="btn-refresh"
+                (click)="refresh()"
+              >
+                <img src="../../../../assets/icons/btn-refresh.svg" alt="" />
+              </button>
+            </div>
+            <div class="col-lg-4"></div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="col-lg-12 col-md-12 col-sm-12 mt-3">
+      <div class="table-responsive card-wrapper custom-table">
+        <table
+          class="table table-striped table-borderless"
+          *ngIf="!isLoadingData"
+        >
+          <thead>
+            <tr>
+              <th scope="col">Type</th>
+              <th scope="col">Allowance / Deduction</th>
+              <th scope="col">Active</th>
+              <th scope="col" class="text-center">Action</th>
+            </tr>
+          </thead>
+          <hr />
+          <tbody>
+            <tr
+              *ngFor="let item of AllowanceDeductionList; let odd = odd"
+              [ngClass]="{ 'odd-row': odd }"
+            >
+              <td>{{ item.TypeName }}</td>
+              <td>{{ item.AllowanceDeductionName }}</td>
+              <td>
+                <span
+                  [class]="
+                    item.IsActive == true ? 'success-badge' : 'danger-badge'
+                  "
+                  >{{ item.IsActive | yesNo }}</span
+                >
+              </td>
+              <td>
+                <div class="dropdown text-center">
+                  <button
+                    class="three-dots"
+                    type="button"
+                    id="table-action-menu"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    <i class="fa fa-ellipsis-v"></i>
+                  </button>
+                  <ul class="dropdown-menu" aria-labelledby="table-action-menu">
+                    <li>
+                      <a
+                        class="dropdown-item edit cursor-hover cursor-pointer"
+                        (click)="getRowCity(item)"
+                        >Edit</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        class="dropdown-item delete cursor-hover cursor-pointer"
+                        (click)="deleteCity(item.CityCode)"
+                        >Delete</a
+                      >
+                    </li>
+                  </ul>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div *ngIf="isLoadingData">
+          <app-table-loader></app-table-loader>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Response-Error-Message  -->
+<div class="loading-newpopup" *ngIf="loadingerror">
+  <div class="newpopup">
+    <!---<a><img class="ErrorIcon" src="./assets/icon/error.svg" /></a>-->
+    <div class="Errormessage">
+      <p><strong>Error</strong></p>
+      <p>You are not authorized to perform this Operation</p>
+    </div>
+    <button class="btn btn-danger ErrorClosebtn" (click)="hideErrorPopup()">
+      Cancel
+    </button>
+  </div>
+</div>

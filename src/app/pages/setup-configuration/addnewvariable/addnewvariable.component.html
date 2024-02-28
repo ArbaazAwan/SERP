@@ -1,0 +1,869 @@
+<div class="container input-fields-font-family">
+  <div class="row">
+    <!-- novalidate -->
+    <form
+      class="col-lg-12 col-md-12 col-sm-12"
+      [formGroup]="form"
+      (ngSubmit)="onSubmit()"
+    >
+      <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 mb-3">
+          <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+              <h3 class="form-section-title">
+                {{
+                  customervariable()
+                    ? "Customer Info"
+                    : partyvariable()
+                    ? "Party Information"
+                    : Addnew()
+                    ? "Info"
+                    : "Default"
+                }}
+              </h3>
+            </div>
+          </div>
+          <div class="row border-bottom">
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label class="float-left" *ngIf="Addnew()"
+                  >Party <span class="astrik">*</span>
+                </label>
+                <label class="float-left" *ngIf="customervariable()"
+                  >First Name <span class="astrik">*</span>
+                </label>
+                <label class="float-left" *ngIf="partyvariable()"
+                  >Party Name <span class="astrik">*</span>
+                </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [placeholder]="
+                    customervariable()
+                      ? 'Enter First Name'
+                      : partyvariable()
+                      ? 'Enter Party Name'
+                      : Addnew()
+                      ? 'Enter Name'
+                      : 'Default'
+                  "
+                  formControlName="PartyName"
+                  name="PartyName"
+                />
+                <div
+                  class="input-error"
+                  *ngIf="
+                    form.controls['PartyName'].invalid &&
+                    form.controls['PartyName'].touched
+                  "
+                >
+                  Party is Required
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <!-- <label class="float-left"
+                  >Last Name<span class="astrik">*</span></label
+                > -->
+                <label class="float-left" *ngIf="customervariable()"
+                  >Last Name <span class="astrik">*</span>
+                </label>
+                <label class="float-left" *ngIf="partyvariable()"
+                  >Short Name <span class="astrik">*</span>
+                </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [placeholder]="
+                    customervariable()
+                      ? 'Enter Last Name'
+                      : partyvariable()
+                      ? 'Enter Short Name'
+                      : Addnew()
+                      ? 'Enter Name'
+                      : 'Default'
+                  "
+                  formControlName="ShortName"
+                  name="ShortName"
+                />
+                <div
+                  class="input-error"
+                  *ngIf="
+                    form.controls['ShortName'].invalid &&
+                    form.controls['ShortName'].touched
+                  "
+                >
+                  Short Name is Required
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label *ngIf="Addnew()" class="float-left"
+                  >Party Type<span class="astrik">*</span></label
+                >
+                <label *ngIf="customervariable()" class="float-left"
+                  >Customer Type<span class="astrik">*</span></label
+                >
+                <label *ngIf="partyvariable()" class="float-left"
+                  >Party Type<span class="astrik">*</span></label
+                >
+                <p-multiSelect
+                  [options]="partyTypes"
+                  [placeholder]="
+                    customervariable()
+                      ? 'Select Customer Type'
+                      : partyvariable()
+                      ? 'Select Party Type'
+                      : Addnew()
+                      ? 'Add New'
+                      : 'Default'
+                  "
+                  optionLabel="PartyType"
+                  optionValue="PartyTypeId"
+                  formControlName="PartyTypeId"
+                ></p-multiSelect>
+                <div
+                  class="input-error"
+                  *ngIf="
+                    form.controls['PartyTypeId'].invalid &&
+                    form.controls['PartyTypeId'].touched
+                  "
+                >
+                  Party type is Required
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 align-self-center">
+              <div class="d-flex align-items-center gap-2">
+                <div class="checkbox">
+                  <input
+                    type="checkbox"
+                    id="track"
+                    class="form-checkbox"
+                    formControlName="IsTrackAsCompany"
+                  />
+                  <label class="form-check-label" for="track"
+                    >Track as Company</label
+                  >
+                </div>
+                <div class="checkbox">
+                  <input
+                    type="checkbox"
+                    id="active"
+                    class="form-checkbox"
+                    formControlName="IsActive"
+                  />
+                  <label class="form-check-label" for="active">Active</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-12 col-md-12 col-sm-12 mb-3">
+          <div class="row border-bottom">
+            <div class="col-lg-12">
+              <h3 class="form-section-title">Contact Information</h3>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Phone No</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  placeholder="Enter Phone No"
+                  formControlName="HeadOfficePhone"
+                  name="HeadOfficePhone"
+                />
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Mobile<span class="astrik">*</span></label>
+                <input
+                  type="number"
+                  class="form-control"
+                  placeholder="Enter Mobile"
+                  formControlName="MillPhone"
+                  name="MillPhone"
+                />
+                <div
+                  class="input-error"
+                  *ngIf="
+                    form.controls['MillPhone'].invalid &&
+                    form.controls['MillPhone'].touched
+                  "
+                >
+                  Mobile number is Required
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Email<span class="astrik">*</span></label>
+                <input
+                  type="email"
+                  class="form-control"
+                  placeholder="Enter Email"
+                  formControlName="Email"
+                  name="Email"
+                  [ngClass]="{ 'is-invalid': submitted && f.email.errors }"
+                />
+                <div
+                  class="input-error"
+                  *ngIf="
+                    form.controls['Email'].invalid &&
+                    form.controls['Email'].touched
+                  "
+                >
+                  Email is Required
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-12 col-sm-12 align-self-center">
+              <div class="checkbox">
+                <input
+                  type="checkbox"
+                  id="email"
+                  class="form-checkbox"
+                  formControlName="IsAllowedEmail"
+                />
+                <label class="form-check-label" for="email"
+                  >Allowed Email</label
+                >
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Country <span class="astrik">*</span></label>
+                <p-dropdown
+                  [options]="countryResponse$"
+                  [filter]="true"
+                  optionLabel="CountryName"
+                  optionValue="CountryCode"
+                  filterBy="CountryName,CountryCode"
+                  [showClear]="false"
+                  placeholder="Select Country"
+                  [panelStyle]="{ overflow: 'auto' }"
+                  [style]="{ height: '30px !important' }"
+                  [showClear]="true"
+                  appendTo="body"
+                  (onChange)="countrySelect($event)"
+                  formControlName="CountryCode"
+                >
+                  <ng-template let-option pTemplate="item">
+                    <div class="option-item">
+                      <div style="float: left; width: 70%">
+                        {{ option.CountryName }}
+                      </div>
+                    </div>
+                  </ng-template>
+                </p-dropdown>
+                <div
+                  class="input-error"
+                  *ngIf="
+                    form.controls['CountryCode'].invalid &&
+                    form.controls['CountryCode'].touched
+                  "
+                >
+                  Party type is Required
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>State</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="State"
+                  formControlName="State"
+                  name="State"
+                />
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>City</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="City"
+                  formControlName="City"
+                  name="City"
+                />
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Zip</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Zip"
+                  formControlName="Zip"
+                  name="Zip"
+                />
+              </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Street 1</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Street 1"
+                  formControlName="Street"
+                  name="Street"
+                />
+              </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Street 2</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Street 2"
+                  formControlName="Street2"
+                  name="MillPhone"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-12 col-md-12 col-sm-12 mb-3">
+          <div class="row border-bottom">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+              <h3 class="form-section-title">
+                {{
+                  customervariable()
+                    ? "Legal"
+                    : partyvariable()
+                    ? "Party Fields"
+                    : Addnew()
+                    ? "Fields"
+                    : "Default"
+                }}
+              </h3>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Sale License</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Sale License"
+                  formControlName="SaleLicense"
+                  name="SaleLicense"
+                />
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Sale License Expiry</label>
+                <input
+                  type="date"
+                  style="font-weight: 300 !important"
+                  class="form-control"
+                  placeholder="Expiry date"
+                  formControlName="SalesLicenseExpiry"
+                  name="SalesLicenseExpiry"
+                  [ngModel]="
+                    partyObjectResponse$.SalesLicenseExpiry
+                      | date : 'yyyy-MM-dd'
+                  "
+                  (change)="dateChange($event)"
+                />
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>ENDS License</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Ends License"
+                  formControlName="EndsLicense"
+                  name="EndsLicense"
+                />
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>ENDS Expiry</label>
+                <input
+                  type="date"
+                  style="font-weight: 300 !important"
+                  class="form-control"
+                  placeholder="Ends Expiry date"
+                  formControlName="EndsExpiry"
+                  name="EndsExpiry"
+                  [ngModel]="
+                    partyObjectResponse$.EndsExpiry | date : 'yyyy-MM-dd'
+                  "
+                  (change)="dateChange($event)"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-12 col-md-12 col-sm-12">
+          <div class="row border-bottom mb-3">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+              <h3 class="form-section-title">Account</h3>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Amount</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter Amount"
+                  formControlName="Amount"
+                  name="Amount"
+                />
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Past Due Balance </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter Past Due Balance"
+                  formControlName="PastDueBalance"
+                  name="dueBalance"
+                />
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Credit Days Limit</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Credit Days Limit"
+                  formControlName="DebitCreditLimitDays"
+                  name="DebitCreditLimit"
+                />
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Credit Amount Limit</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Credit Amount Limit"
+                  formControlName="DebitCreditLimitAmount"
+                  name="DebitCreditLimit"
+                />
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 mb-3 align-self-center">
+              <div class="checkbox">
+                <input
+                  type="checkbox"
+                  id="acceptCheck"
+                  class="form-checkbox"
+                  formControlName="IsAcceptChecks"
+                />
+                <label class="form-check-label" for="acceptCheck"
+                  >Accept Checks</label
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg 12 col-md-12 col-sm-12">
+          <div class="row border-bottom mb-3">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+              <h3 class="form-section-title">
+                {{
+                  customervariable()
+                    ? "Customer Notes"
+                    : partyvariable()
+                    ? "Party Notes"
+                    : Addnew()
+                    ? "Notes"
+                    : "Default"
+                }}
+              </h3>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Reference Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Reference Name"
+                  formControlName="RefrenceName"
+                  name="RefrenceName"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-12 col-md-12 col-sm-12 mb-3">
+          <div class="row border-bottom">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+              <h3 class="form-section-title">
+                {{
+                  customervariable()
+                    ? "Customer Settings"
+                    : partyvariable()
+                    ? "Party Settings"
+                    : Addnew()
+                    ? "Add New"
+                    : "Default"
+                }}
+              </h3>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Account Receivable</label>
+                <p-dropdown
+                  [options]="receiveableResponse$"
+                  [filter]="true"
+                  optionLabel="AccountName"
+                  optionValue="AccountCode"
+                  filterBy="AccountName,AccountCode"
+                  [showClear]="false"
+                  placeholder="Select Account Receivable"
+                  [panelStyle]="{ overflow: 'auto' }"
+                  [showClear]="true"
+                  appendTo="body"
+                  (onChange)="changeAccRec($event)"
+                  [style]="{ height: '30px !important' }"
+                >
+                  <ng-template let-option pTemplate="item" class="items-class">
+                    <div class="option-item">
+                      <div style="float: left" class="mx-2">
+                        {{ option.AccountCode }}
+                      </div>
+                      <div style="float: left">
+                        {{ option.AccountName }}
+                      </div>
+                    </div>
+                  </ng-template>
+                </p-dropdown>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Account Payable</label>
+                <p-dropdown
+                  [options]="payableResponse$"
+                  [filter]="true"
+                  optionLabel="AccountName"
+                  optionValue="AccountCode"
+                  filterBy="AccountName,AccountCode"
+                  [showClear]="false"
+                  placeholder="Select Account Payable"
+                  [panelStyle]="{ overflow: 'auto' }"
+                  [style]="{ height: '30px !important' }"
+                  [showClear]="true"
+                  appendTo="body"
+                  (onChange)="changeAccPay($event)"
+                >
+                  <ng-template let-option pTemplate="item">
+                    <div class="option-item">
+                      <div style="float: left" class="mx-2">
+                        {{ option.AccountCode }}
+                      </div>
+                      <div style="float: left">
+                        {{ option.AccountName }}
+                      </div>
+                    </div>
+                  </ng-template>
+                </p-dropdown>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-12 align-self-center">
+              <div class="checkbox">
+                <input
+                  type="checkbox"
+                  id="tax"
+                  class="form-checkbox"
+                  formControlName="IsTaxExempt"
+                />
+                <label class="form-check-label" for="tax">Tax Exempt</label>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>STR No</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter STR No"
+                  formControlName="STRNo"
+                  name="STRNo"
+                />
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>NTN</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter NTN"
+                  formControlName="NTN"
+                  name="NTN"
+                />
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>ID No</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter ID / Passport"
+                  formControlName="CNICNo"
+                  name="CNICNo"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-12 col-md-12 col-sm-12">
+          <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+              <h3 class="form-section-title">Shipping Information</h3>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>URL</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter URL"
+                  formControlName="URL"
+                  name="URL"
+                />
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Address 1</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter Address 1"
+                  formControlName="HeadOfficeAddress"
+                  name="HeadOfficeAddress"
+                />
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Address 2</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter Address 2"
+                  formControlName="MillAddress"
+                  name="MillAddress"
+                />
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Company Individual</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter Company Individual"
+                  formControlName="CompanyIndividual"
+                  name="CompanyIndividual"
+                />
+              </div>
+            </div>
+            <div class="col-lg-6 col-md-12 col-sm-12 align-self-center">
+              <div class="d-flex align-items-center gap-3">
+                <div class="checkbox">
+                  <input
+                    type="checkbox"
+                    id="businessAddress"
+                    class="form-checkbox"
+                    formControlName="IsShippingAddress"
+                  />
+                  <label class="form-check-label" for="businessAddress"
+                    >Same as business address</label
+                  >
+                </div>
+                <div class="checkbox">
+                  <input
+                    type="checkbox"
+                    id="mailAddress"
+                    class="form-checkbox"
+                    formControlName="IsMailAllowed"
+                  />
+                  <label class="form-check-label" for="mailAddress"
+                    >Do not mail to bill to address</label
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="d-flex align-items-center gap-2">
+          <button type="submit" id="btnsave" class="btn-save">
+            <!-- (click)="addorUpdate()" -->
+            <!-- [disabled]="
+              isUpdate ||
+              form.get('PartyName')?.invalid ||
+              form.get('ShortName')?.invalid
+            " -->
+            Save
+          </button>
+          <button
+            type="button"
+            id="btnsave"
+            class="btn-update"
+            (click)="addorUpdate()"
+            [disabled]="
+              !isUpdate ||
+              form.get('PartyName')?.invalid ||
+              form.get('ShortName')?.invalid
+            "
+          >
+            Update
+          </button>
+          <button
+            type="button"
+            id="btnRefresh"
+            class="btn-refresh"
+            (click)="refresh()"
+          >
+            <img src="../../../../assets/icons/btn-refresh.svg" alt="" />
+          </button>
+          <button
+            type="button"
+            id="btnRefresh"
+            class="btn-save"
+            (click)="openNew()"
+            *ngIf="customervariable() && isUpdate == true"
+          >
+            Customer Price
+          </button>
+          <button
+            type="button"
+            id="btnRefresh"
+            class="btn-save"
+            (click)="openNew()"
+            *ngIf="partyvariable()"
+          >
+            Party Price
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <p-dialog
+      [(visible)]="mainDialog"
+      [style]="{ width: '70%', left: '0.0px', top: '0.0rem' }"
+      [header]="mainHeader"
+      [modal]="true"
+      styleClass="p-fluid"
+      [closable]="false"
+      [resizable]="false"
+      [draggable]="false"
+    >
+      <ng-template pTemplate="content">
+        <div class="form-group position-relative">
+          <div class="icon-wrapper">
+            <i class="pi pi-search"></i>
+          </div>
+          <input
+            class="form-control search"
+            type="text"
+            (input)="filterGlobal($event)"
+            (blur)="clearFilter($event)"
+            placeholder="Search..."
+          />
+        </div>
+        <p-table
+          #dt
+          [value]="tableResponse$"
+          [scrollable]="true"
+          scrollHeight="450px"
+          [rows]="10"
+          class="datatable-width"
+          styleClass="p-datatable-striped"
+          responsiveLayout="stack"
+          [breakpoint]="'960px'"
+          [rowHover]="true"
+          dataKey="SaleInvoiceSrNo"
+          editMode="row"
+          [globalFilterFields]="['Itemcode', 'ItemName', 'Rate']"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th field="Itemcode">Item code</th>
+              <th field="ItemName">Item Name</th>
+              <th field="Rate">Rate</th>
+            </tr>
+          </ng-template>
+          <ng-template
+            pTemplate="body"
+            let-m
+            let-editing="editing"
+            let-ri="rowIndex"
+          >
+            <tr>
+              <td>{{ m.ItemCode }}</td>
+              <td>{{ m.ItemName }}</td>
+              <td>
+                <input
+                  type="text"
+                  class="tabletextbox"
+                  [(ngModel)]="m.Rate"
+                  (blur)="IssueOnBlur(m)"
+                />
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </ng-template>
+      <ng-template pTemplate="footer">
+        <button
+          pButton
+          pRipple
+          label="Cancel"
+          icon="pi pi-times"
+          class="p-button-text"
+          (click)="hideDialog()"
+        ></button>
+      </ng-template>
+    </p-dialog>
+  </div>
+
+  <!-- Response-Error-Message  -->
+  <div class="loading-newpopup" *ngIf="loadingerror">
+    <div class="newpopup">
+      <div class="Errormessage">
+        <p><strong>Error</strong></p>
+        <p>You are not authorized to perform this Operation</p>
+      </div>
+      <button class="btn btn-danger ErrorClosebtn" (click)="hideErrorPopup()">
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>

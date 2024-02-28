@@ -1,0 +1,30 @@
+::ng-deep .full-screen .p-dialog {
+    width: 40vw;
+    height: 35vh;
+    max-height: 100%;
+    border-radius: 0%;
+  }
+
+  .btn-add {
+    background: #32a0ef !important;
+    color: white !important;
+    transition: 0.3s all !important;
+    border: 0 !important;
+    padding: 5px;
+    font-size: 12px;
+  }
+
+  ::ng-deep .p-datatable .p-datatable-thead > tr > th,
+::ng-deep .p-datatable .p-datatable-tbody > tr > td,
+::ng-deep .p-datatable .p-paginator {
+  border: none !important;
+}
+
+hr {
+  margin-top: 0;
+}
+@media(max-width:1200px){
+  .table-width{
+    max-width: 765px !important;
+  }
+}

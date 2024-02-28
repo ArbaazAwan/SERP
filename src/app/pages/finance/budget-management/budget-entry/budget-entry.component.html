@@ -1,0 +1,335 @@
+<div class="main-container" (scroll)="onMainContainerScroll($event)">
+  <div [class]="isSticky ? 'sticky-header' : ''">
+    <app-store-project
+      [showInput2]="false"
+      [showInput1]="true"
+      [componentName]="componentName"
+      [hide]="false"
+    ></app-store-project>
+    <app-confirm-dialog></app-confirm-dialog>
+  </div>
+  <div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+      <div class="card-wrapper">
+        <p-toolbar>
+          <ng-template pTemplate="left">
+            <button
+              pButton
+              pRipple
+              label="Add New"
+              icon="pi pi-plus-circle one"
+              class="btn-add"
+              (click)="openNew()"
+              style="margin-right: 4px"
+            ></button>
+          </ng-template>
+          <ng-template pTemplate="right">
+            <button
+              *ngIf="isFilterApplied"
+              pButton
+              pRipple
+              icon="pi pi-filter-slash"
+              class="btn-add mx-1"
+              (click)="clearFilter()"
+            ></button>
+            <button
+              pButton
+              pRipple
+              label=""
+              icon="pi pi-filter-fill"
+              class="btn-add"
+              (click)="openFilterDialog()"
+            ></button>
+          </ng-template>
+        </p-toolbar>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+      <div class="table-responsive card-wrapper custom-table">
+        <p-table
+          class="datatable-width"
+          styleClass="p-datatable-sm"
+          responsiveLayout="stack"
+          [breakpoint]="'960px'"
+          *ngIf="!isLoadingData"
+          [value]="budgetList"
+          [paginator]="true"
+          [alwaysShowPaginator]="false"
+          [rows]="10"
+          [rowHover]="true"
+          [globalFilterFields]="[
+            'FinancialYear',
+            'CycleName',
+            'DateFrom',
+            'DateTo'
+          ]"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th pSortableColumn="CycleName" class="text-nowrap">
+                Budget Cycle Name
+                <p-sortIcon field="CycleName"></p-sortIcon>
+              </th>
+              <th pSortableColumn="BranchCode" class="text-nowrap">
+                Branch Name
+                <p-sortIcon field="BranchCode"></p-sortIcon>
+              </th>
+              <th pSortableColumn="ProjectCode" class="text-nowrap">
+                Project Name
+                <p-sortIcon field="ProjectCode"></p-sortIcon>
+              </th>
+              <th pSortableColumn="FinancialYear" class="text-nowrap">
+                Status
+                <p-sortIcon field="FinancialYear"></p-sortIcon>
+              </th>
+              <th scope="col" class="text-center">Action</th>
+            </tr>
+            <tr>
+              <td colspan="7">
+                <hr />
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-item>
+            <tr>
+              <td>
+                <span class="ml-2">
+                  {{ item.BudgetCycleTitle }}
+                </span>
+              </td>
+              <td>
+                <span class="ml-2">
+                  {{ item.BranchName }}
+                </span>
+              </td>
+              <td>
+                <span class="ml-2">
+                  {{ item.ProjectName }}
+                </span>
+              </td>
+              <td>
+                <span class="ml-2">
+                  {{ item.BudgetStatus }}
+                </span>
+              </td>
+              <td>
+                <div class="dropdown text-center ml-2">
+                  <button
+                    class="three-dots"
+                    type="button"
+                    id="table-action-menu"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    <i class="fa fa-ellipsis-v"></i>
+                  </button>
+                  <ul class="dropdown-menu" aria-labelledby="table-action-menu">
+                    <li>
+                      <a
+                        class="dropdown-item edit cursor-hover cursor-pointer"
+                        (click)="getSelectedRow(item.BudgetCode)"
+                        >Edit</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        class="dropdown-item delete cursor-hover cursor-pointer"
+                        (click)="delete(item.BudgetCode)"
+                        >Delete</a
+                      >
+                    </li>
+                  </ul>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="full-screen">
+  <p-dialog
+    [(visible)]="mainDialog"
+    header="Create New Entry"
+    [modal]="true"
+    styleClass="p-fluid"
+    class="modal-dialog full-screen"
+    [closable]="true"
+  >
+    <form [formGroup]="entryForm">
+      <div class="row">
+        <div class="col-lg-6 col-md-3 col-sm-12">
+          <div class="form-group">
+            <label class="mb-1 ml-1"
+              >Budget Cycle
+              <span class="astrik">*</span>
+            </label>
+            <p-dropdown
+              id="Branch"
+              [options]="budgeCycletListList"
+              [filter]="true"
+              optionLabel="BudgetCycleTitle"
+              optionValue="BudgetCycleCode"
+              formControlName="BudgetCycleCode"
+              filterBy="BudgetCycleTitle"
+              [showClear]="false"
+              placeholder="Select Branch"
+              [panelStyle]="{ overflow: 'auto' }"
+              appendTo="body"
+            >
+              <ng-template let-option pTemplate="item">
+                <div class="option-item">
+                  <div style="float: left; width: 70%">
+                    {{ option.BudgetCycleTitle }}
+                  </div>
+                </div>
+              </ng-template>
+            </p-dropdown>
+          </div>
+        </div>
+        <div class="col-lg-6 col-md-3 col-sm-12">
+          <div class="form-group">
+            <label class="mb-1 ml-1" for="financial-year"
+              >Budget Status
+              <span class="astrik">*</span>
+            </label>
+            <p-dropdown
+              id="Branch"
+              [options]="budgetStatusList"
+              [filter]="true"
+              optionLabel="BudgetStatus"
+              optionValue="BudgetStatusCode"
+              formControlName="BudgetStatusCode"
+              filterBy="BudgetStatus"
+              [showClear]="false"
+              placeholder="Select Branch"
+              [panelStyle]="{ overflow: 'auto' }"
+              appendTo="body"
+            >
+              <ng-template let-option pTemplate="item">
+                <div class="option-item">
+                  <div style="float: left; width: 70%">
+                    {{ option.BudgetStatus }}
+                  </div>
+                </div>
+              </ng-template>
+            </p-dropdown>
+          </div>
+        </div>
+      </div>
+    </form>
+    <ng-template pTemplate="footer">
+      <div class="mt-2">
+        <button type="button" id="btnsave" class="btn-save" (click)="create()">
+          Create
+        </button>
+        <button
+          type="button"
+          id="btnRefresh"
+          class="btn-refresh"
+          (click)="refresh()"
+        >
+          <img src="../../../../assets/icons/btn-refresh.svg" alt="" />
+        </button>
+      </div>
+    </ng-template>
+  </p-dialog>
+</div>
+
+<!-- Budget Cycle Filter -->
+<div class="full-screen">
+  <p-dialog
+    [(visible)]="filterDialog"
+    header="Filter Budget Entry"
+    [modal]="true"
+    styleClass="p-fluid"
+    class="modal-dialog full-screen"
+    [closable]="true"
+  >
+    <div class="row">
+      <form [formGroup]="filterForm">
+        <div class="row">
+          <div class="col-lg-6 col-md-3 col-sm-12">
+            <div class="form-group">
+              <label class="mb-1 ml-1">Budget Cycle </label>
+              <p-dropdown
+                id="Branch"
+                [options]="budgeCycletListList"
+                [filter]="true"
+                optionLabel="BudgetCycleTitle"
+                optionValue="BudgetCycleCode"
+                formControlName="BudgetCycleCode"
+                filterBy="BudgetCycleTitle"
+                [showClear]="false"
+                placeholder="Select Branch"
+                [panelStyle]="{ overflow: 'auto' }"
+                appendTo="body"
+              >
+                <ng-template let-option pTemplate="item">
+                  <div class="option-item">
+                    <div style="float: left; width: 70%">
+                      {{ option.BudgetCycleTitle }}
+                    </div>
+                  </div>
+                </ng-template>
+              </p-dropdown>
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-3 col-sm-12">
+            <div class="form-group">
+              <label class="mb-1 ml-1" for="financial-year"
+                >Budget Status
+              </label>
+              <p-dropdown
+                id="Branch"
+                [options]="budgetStatusList"
+                [filter]="true"
+                optionLabel="BudgetStatus"
+                optionValue="BudgetStatusCode"
+                formControlName="BudgetStatusCode"
+                filterBy="BudgetStatus"
+                [showClear]="false"
+                placeholder="Select Branch"
+                [panelStyle]="{ overflow: 'auto' }"
+                appendTo="body"
+              >
+                <ng-template let-option pTemplate="item">
+                  <div class="option-item">
+                    <div style="float: left; width: 70%">
+                      {{ option.BudgetStatus }}
+                    </div>
+                  </div>
+                </ng-template>
+              </p-dropdown>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <ng-template pTemplate="footer">
+      <div class="mt-2">
+        <button
+          type="button"
+          id="btnsave"
+          class="btn-save"
+          (click)="applyFilter()"
+        >
+          Filter
+        </button>
+        <button
+          type="button"
+          id="btnsave"
+          class="btn-save"
+          (click)="clearFilter()"
+        >
+          Clear Filter
+        </button>
+      </div>
+    </ng-template>
+  </p-dialog>
+</div>

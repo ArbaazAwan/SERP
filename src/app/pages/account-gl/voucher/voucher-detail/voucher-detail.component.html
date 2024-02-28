@@ -1,0 +1,1197 @@
+<app-confirm-dialog label="Create New Voucher"></app-confirm-dialog>
+
+<div class="main-container">
+  <div class="container">
+    <div class="col-lg-12 col-md-12 col-sm-12 mb-2 FormsHeading">
+      <p class="mx-2 my-1 d-flex">
+        Voucher Detail
+        <span
+          class="ml-auto"
+          style="margin-left: auto; margin-top: 2px; font-size: 12px"
+        >
+          Fields marked with (*) must be filled.
+        </span>
+      </p>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row justify-content-center">
+      <form
+        class="col-lg-12 col-md-12 col-sm-12"
+        [formGroup]="Masterform"
+        style="font-size: small"
+        novalidate
+      >
+        <div class="card p-3">
+          <!-- Row-1-Start -->
+          <div class="row align-items-stretch">
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label class="float-md-left d-flex float-sm-left">Branch</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="BranchCode"
+                  name="BranchCode"
+                  [(ngModel)]="voucherResponse$.BranchName"
+                  [attr.disabled]="true"
+                />
+              </div>
+            </div>
+            <div class="col-lg-2 col-md-6 col-sm-12">
+              <label class="float-md-left d-flex float-sm-left">Project</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="ProjectCode"
+                name="ProjectCode"
+                [(ngModel)]="voucherResponse$.ProjectName"
+                [attr.disabled]="true"
+              />
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <label class="float-md-left d-flex float-sm-left"
+                >Voucher Type</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                formControlName="VoucherTypeCode"
+                name="VoucherTypeCode"
+                [(ngModel)]="voucherResponse$.VoucherTypeName"
+                [attr.disabled]="true"
+              />
+            </div>
+            <div class="col-lg-2 col-md-6 col-sm-12">
+              <label class="float-md-left d-flex float-sm-left"
+                >Voucher No</label
+              >
+              <input
+                type="number"
+                class="form-control"
+                formControlName="VoucherNo"
+                name="VoucherNo"
+                [(ngModel)]="voucherResponse$.VoucherNoForDisplay"
+                [attr.disabled]="true"
+              />
+            </div>
+            <div class="col-lg-2 col-md-6 col-sm-12">
+              <label class="float-md-left d-flex float-sm-left"
+                >Voucher Date
+                <span class="astrik">*</span>
+              </label>
+              <input
+                type="date"
+                class="form-control"
+                formControlName="VoucherDate"
+                name="VoucherDate"
+                [(ngModel)]="voucherResponse$.VoucherDate"
+                [min]="minDate | date : 'yyyy-MM-dd'"
+                [max]="maxDate | date : 'yyyy-MM-dd'"
+              />
+
+              <div
+                *ngIf="
+                  Masterform.controls['VoucherDate'].invalid &&
+                  Masterform.controls['VoucherDate'].touched
+                "
+                style="color: red"
+              >
+                Field Required
+              </div>
+            </div>
+          </div>
+          <!-- Row-1-End -->
+
+          <!-- Row-2-Start -->
+          <div class="row align-items-stretch">
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <label class="float-md-left d-flex float-sm-left"
+                >Instrument Type
+              </label>
+              <div class="group-gap">
+                <div class="d-block">
+                  <div class="">
+                    <select
+                      class="form-select"
+                      formControlName="InstrumentTypeId"
+                      (change)="changeInstrument($event)"
+                      [(ngModel)]="voucherResponse$.InstrumentTypeId"
+                    >
+                      <option
+                        *ngFor="let b of instrumentsResponse$"
+                        [ngValue]="b"
+                        [value]="b?.InstrumentTypeId"
+                      >
+                        {{ b.InstrumentTypeName }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-2 col-md-6 col-sm-12">
+              <label class="float-md-left d-flex float-sm-left"
+                >Instrument No
+              </label>
+              <input
+                type="number"
+                class="form-control"
+                formControlName="InstrumentNo"
+                name="InstrumentNo"
+                [(ngModel)]="voucherResponse$.InstrumentNo"
+              />
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <label class="float-md-left d-flex float-sm-left"
+                >Instrument Date
+              </label>
+              <input
+                type="date"
+                class="form-control"
+                formControlName="InstrumentDate"
+                name="InstrumentDate"
+                [(ngModel)]="voucherResponse$.InstrumentDate"
+              />
+            </div>
+            <div class="col-lg-2 col-md-6 col-sm-12">
+              <label class="float-md-left d-flex float-sm-left"
+                >Currency
+              </label>
+              <div class="group-gap">
+                <div class="d-block">
+                  <div class="">
+                    <!-- <select
+                      class="form-select"
+                      formControlName="CurrencyCode"
+                      (change)="changecurrency($event)"
+                      (change)="ChangeCurrency()"
+                      [(ngModel)]="voucherResponse$.CurrencyCode"
+                    >
+                      <option
+                        *ngFor="let b of currencyResponse$"
+                        [ngValue]="b"
+                        [value]="b?.CurrencyCode"
+                      >
+                        {{ b.CurrencyTitle }}
+                      </option>
+                    </select> -->
+                    <p-dropdown
+                      [style]="{ height: '38px' }"
+                      formControlName="CurrencyCode"
+                      [options]="currencyResponse$"
+                      [filter]="true"
+                      optionLabel="CurrencyTitle"
+                      optionValue="CurrencyCode"
+                      filterBy="CurrencyTitle"
+                      appendTo="body"
+                      placeholder="Select Parent Code"
+                      [panelStyle]="{ overflow: 'auto' }"
+                      [showClear]="true"
+                      [(ngModel)]="voucherResponse$.CurrencyCode"
+                      (onChange)="ChangeCurrency($event)"
+                      [disabled]="isUpdate ? true : false"
+                    >
+                      <ng-template let-option pTemplate="item">
+                        <div class="option-item">
+                          <div>
+                            {{ option.CurrencyTitle }}
+                          </div>
+                        </div>
+                      </ng-template>
+                    </p-dropdown>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-2 col-md-6 col-sm-12">
+              <label class="float-md-left d-flex float-sm-left"
+                >Exchange Rate
+                <span class="astrik">*</span>
+              </label>
+              <input
+                type="number"
+                class="form-control"
+                formControlName="FCRate"
+                name="FCRate"
+                [(ngModel)]="voucherResponse$.FCRate"
+              />
+              <div
+                *ngIf="
+                  Masterform.controls['FCRate'].invalid &&
+                  Masterform.controls['FCRate'].touched
+                "
+                style="color: red"
+              >
+                Field Required
+              </div>
+            </div>
+          </div>
+          <!-- Row-2-End -->
+          <!-- Row-3-Start -->
+          <div
+            class="row align-items-stretch"
+            *ngIf="voucherResponse$.VoucherTypeName == 'Bank Payment'"
+          >
+            <!-- <div class="col-lg-12 col-md-6 col-sm-12">
+              <label class="float-md-left d-flex float-sm-left"
+                >Description</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                formControlName="Description"
+                name="Description"
+                [(ngModel)]="voucherResponse$.Description"
+              />
+            </div> -->
+            <div class="col-lg-3">
+              <div class="form-group">
+                <label> Bank</label>
+                <p-dropdown
+                  [style]="{ width: '245px' }"
+                  [options]="allBankCashAccounts"
+                  [filter]="true"
+                  formControlName="AccountId"
+                  optionLabel="AccountName1"
+                  optionValue="AccountId"
+                  filterBy="AccountName1"
+                  placeholder="Select Bank"
+                  [panelStyle]="{ overflow: 'auto' }"
+                  [showClear]="true"
+                  appendTo="body"
+                  (onChange)="loadAllChequeNo($event)"
+                >
+                </p-dropdown>
+              </div>
+            </div>
+
+            <div class="col-lg-2">
+              <div class="form-group">
+                <label> Cheque No</label>
+                <p-dropdown
+                  [style]="{ width: '245px' }"
+                  [options]="allChequesNo"
+                  [filter]="true"
+                  formControlName="ChequeNo"
+                  optionLabel="ChequeNo"
+                  optionValue="ChequeNo"
+                  filterBy="ChequeNo"
+                  placeholder="Cheque No"
+                  [panelStyle]="{ overflow: 'auto' }"
+                  [showClear]="true"
+                  appendTo="body"
+                >
+                </p-dropdown>
+              </div>
+            </div>
+          </div>
+          <!-- Row-3-End -->
+
+          <!-- Button-Start -->
+
+          <div class="row mt-2">
+            <!-- <div class="col-lg-4"></div> -->
+            <div class="col-lg-12 m-auto d-flex justify-content-center">
+              <ng-container>
+                <Button
+                  type="button"
+                  id="btnsave"
+                  Class="btn btn-outline-secondary btnArrow mx-1"
+                  title="Previous Voucher"
+                  (click)="LoadPreviousVoucher()"
+                >
+                  <
+                </Button>
+                <Button
+                  type="button"
+                  id="btnsave"
+                  Class="btn primary-button-color btnFix mx-1"
+                  (click)="CreateNewVoucher()"
+                  >New</Button
+                >
+                <Button
+                  type="button"
+                  id="btnsave"
+                  Class="btn btn-outline-success btnFix mx-1"
+                  [disabled]="voucherResponse$.IsPosted || IsDisabled"
+                  (click)="updateMaster()"
+                  >Update</Button
+                >
+                <Button
+                  type="button"
+                  id="btnsave"
+                  Class="btn primary-button-color btnFix"
+                  [disabled]="voucherResponse$.IsPosted || IsDisabled"
+                  (click)="UpdatePostVoucher()"
+                  >Post</Button
+                >
+                <Button
+                  type="button"
+                  id="btnsave"
+                  Class="btn btn-outline-danger btnFix mx-1"
+                  [disabled]="voucherResponse$.IsPosted || IsDisabled"
+                  >Drop</Button
+                >
+                <Button
+                  type="button"
+                  id="btnsave"
+                  Class="btn btn-outline-info btnFix"
+                  (click)="VoucherReportpdf()"
+                  >Preview / Print</Button
+                >
+                <button
+                  type="button"
+                  class="btn-save"
+                  (click)="openUploadDoc()"
+                >
+                  Upload Document
+                </button>
+
+                <Button
+                  type="button"
+                  id="btnsave"
+                  Class="btn btn-outline-secondary btnArrow mx-1"
+                  title="Next Voucher"
+                  (click)="LoadNextVoucher()"
+                  >></Button
+                >
+              </ng-container>
+            </div>
+            <div class="col-lg-4"></div>
+          </div>
+          <!-- Button-End -->
+        </div>
+      </form>
+    </div>
+
+    <div class="row mt-2">
+      <form
+        class="col-lg-12 col-md-12 col-sm-12"
+        style="font-size: small"
+        [formGroup]="Detailform"
+        novalidate
+      >
+        <div class="card p-3">
+          <!-- Row-4-Start -->
+
+          <div class="row align-items-stretch">
+            <div class="col-lg-4 col-md-6 col-sm-12" style="text-align: left">
+              <label class="float-md-left d-flex float-sm-left"
+                >A/C Description
+                <span class="astrik">*</span>
+              </label>
+              <p-dropdown
+                [style]="{ width: '340px' }"
+                [options]="accountDescriptionResponse$"
+                [filter]="true"
+                optionLabel="AccountName"
+                optionValue="AccountCode"
+                [(ngModel)]="voucherDetailResponse$.AccountCode"
+                [ngModelOptions]="{ standalone: true }"
+                filterBy="AccountName,AccountCode"
+                [showClear]="false"
+                placeholder="Select Account"
+                [panelStyle]="{ overflow: 'auto' }"
+                [showClear]="true"
+                (onChange)="changeACDescription($event)"
+                appendTo="body"
+              >
+                <ng-template let-option pTemplate="item">
+                  <div class="option-item">
+                    <div style="float: left; width: 70%">
+                      {{ option.AccountName }}
+                    </div>
+                  </div>
+                </ng-template>
+              </p-dropdown>
+            </div>
+
+            <div class="col-lg-4 col-md-6 col-sm-12">
+              <label class="float-md-left d-flex float-sm-left"
+                >Narration
+                <span class="astrik">*</span>
+              </label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="Narration"
+                name="Narration"
+                [(ngModel)]="voucherDetailResponse$.Narration"
+              />
+              <div
+                *ngIf="
+                  Detailform.controls['Narration'].invalid &&
+                  Detailform.controls['Narration'].touched
+                "
+                style="color: red"
+              >
+                Field Required
+              </div>
+            </div>
+
+            <div class="col-lg-2 col-md-6 col-sm-12">
+              <label class="float-md-left d-flex float-sm-left"
+                >Debit
+                <span class="astrik">*</span>
+              </label>
+              <input
+                type="number"
+                class="form-control"
+                formControlName="DebitAmount"
+                [(ngModel)]="voucherDetailResponse$.DebitAmount"
+                (blur)="disableDebit()"
+                [attr.disabled]="isDebitDisabled ? true : null"
+              />
+              <div
+                *ngIf="
+                  Detailform.controls['DebitAmount'].invalid &&
+                  Detailform.controls['DebitAmount'].touched
+                "
+                style="color: red"
+              >
+                Field Required
+              </div>
+            </div>
+            <div class="col-lg-2 col-md-6 col-sm-12">
+              <label class="float-md-left d-flex float-sm-left"
+                >Credit
+                <span class="astrik">*</span>
+              </label>
+              <input
+                type="number"
+                class="form-control"
+                formControlName="CreditAmount"
+                name="CreditAmount"
+                [(ngModel)]="voucherDetailResponse$.CreditAmount"
+                (blur)="disableDebit()"
+                [attr.disabled]="isCreditDisabled ? true : null"
+              />
+              <div
+                *ngIf="
+                  Detailform.controls['CreditAmount'].invalid &&
+                  Detailform.controls['CreditAmount'].touched
+                "
+                style="color: red"
+              >
+                Field Required
+              </div>
+            </div>
+          </div>
+          <div class="row align-items-stretch mt-1">
+            <div
+              class="col-lg-3 col-md-6 col-sm-12"
+              style="text-align: left"
+              *ngIf="assetdropdown"
+            >
+              <label class="float-md-left d-flex float-sm-left">Assets </label>
+              <p-dropdown
+                [style]="{ height: '38px', width: '252px' }"
+                [options]="filteredAssets"
+                [filter]="true"
+                optionLabel="AssetName"
+                optionValue="AssetCode"
+                [(ngModel)]="voucherDetailResponse$.AssetCode"
+                [ngModelOptions]="{ standalone: true }"
+                filterBy="AssetName,AssetCode"
+                [showClear]="false"
+                placeholder="Select Asset"
+                [panelStyle]="{ overflow: 'auto' }"
+                [showClear]="true"
+                (onChange)="changeAsset($event)"
+                appendTo="body"
+              >
+                <ng-template let-option pTemplate="item">
+                  <div class="option-item">
+                    <div style="float: left; width: 30%">
+                      {{ option.AssetCode }}
+                    </div>
+                    <div style="float: left; width: 70%">
+                      {{ option.AssetName }}
+                    </div>
+                  </div>
+                </ng-template>
+              </p-dropdown>
+            </div>
+            <div
+              class="col-lg-3"
+              style="text-align: left"
+              *ngIf="partydropdown"
+            >
+              <label class="float-md-left d-flex float-sm-left">Party </label>
+              <p-dropdown
+                [style]="{ height: '38px', width: '252px' }"
+                [options]="partyResponse$"
+                [filter]="true"
+                optionLabel="PartyName"
+                optionValue="PartyCode"
+                [(ngModel)]="voucherDetailResponse$.PartyCode"
+                [ngModelOptions]="{ standalone: true }"
+                filterBy="PartyName,PartyCode"
+                [showClear]="false"
+                placeholder="Select Party"
+                [panelStyle]="{ overflow: 'auto' }"
+                [showClear]="true"
+                (onChange)="changeParty($event)"
+                appendTo="body"
+              >
+                <!-- <ng-template let-option pTemplate="item">
+                  <div class="option-item">
+                    <div style="float: left; width: 30%">
+                      {{ option.PartyCode }}
+                    </div>
+                    <div style="float: left; width: 70%">
+                      {{ option.PartyName }}
+                    </div>
+                  </div>
+                </ng-template> -->
+              </p-dropdown>
+            </div>
+            <div
+              class="col-lg-3 col-md-6 col-sm-12"
+              style="text-align: left"
+              *ngIf="workOrderdropdown"
+            >
+              <label class="float-md-left d-flex float-sm-left"
+                >Work Order
+              </label>
+              <p-dropdown
+                [style]="{ height: '38px', width: '252px' }"
+                [options]="workOrderResponse$"
+                [filter]="true"
+                optionLabel="WorkOrder"
+                optionValue="wo_number"
+                [(ngModel)]="voucherDetailResponse$.wo_number"
+                [ngModelOptions]="{ standalone: true }"
+                filterBy="WorkOrder,wo_number"
+                [showClear]="false"
+                placeholder="Select WorkOrder"
+                [panelStyle]="{ overflow: 'auto' }"
+                [showClear]="true"
+                (onChange)="changeWorkOrder($event)"
+              >
+                <ng-template let-option pTemplate="item">
+                  <div class="option-item">
+                    <div style="float: left; width: 30%">
+                      {{ option.wo_number }}
+                    </div>
+                    <div style="float: left; width: 70%">
+                      {{ option.WorkOrder }}
+                    </div>
+                  </div>
+                </ng-template>
+              </p-dropdown>
+            </div>
+            <div
+              class="col-lg-3 col-md-6 col-sm-12"
+              style="text-align: left"
+              *ngIf="employeedropdown"
+            >
+              <label class="float-md-left d-flex float-sm-left"
+                >Employee
+              </label>
+              <p-dropdown
+                [style]="{ height: '38px', width: '240px' }"
+                [options]="employeeResponse$"
+                [filter]="true"
+                optionLabel="EmployeeName"
+                optionValue="EmployeeCode"
+                [(ngModel)]="voucherDetailResponse$.EmployeeCode"
+                [ngModelOptions]="{ standalone: true }"
+                filterBy="EmployeeName,EmployeeCode"
+                [showClear]="false"
+                placeholder="Select Employee"
+                [panelStyle]="{ overflow: 'auto' }"
+                [showClear]="true"
+                (onChange)="changeEmployee($event)"
+                appendTo="body"
+              >
+                <ng-template let-option pTemplate="item">
+                  <div class="option-item">
+                    <div style="float: left; width: 30%">
+                      {{ option.EmployeeCode }}
+                    </div>
+                    <div style="float: left; width: 70%">
+                      {{ option.EmployeeName }}
+                    </div>
+                  </div>
+                </ng-template>
+              </p-dropdown>
+            </div>
+            <!-- </div> -->
+            <!-- Row-4-End -->
+            <!-- Row-5-start -->
+            <!-- <div class="row align-items-stretch mt-1"> -->
+            <div
+              class="col-lg-3"
+              style="text-align: left"
+              *ngIf="costCentersLevel1dropdown"
+            >
+              <label class="float-md-left d-flex float-sm-left"
+                >Cost Center I
+              </label>
+              <p-dropdown
+                [style]="{ width: '252px' }"
+                [options]="CostCentersLevel1$"
+                [filter]="true"
+                optionLabel="Name"
+                optionValue="CodeLevel"
+                [(ngModel)]="voucherDetailResponse$.CodeLevel"
+                [ngModelOptions]="{ standalone: true }"
+                filterBy="Name,CodeLevel"
+                [showClear]="false"
+                placeholder="Select Code Level"
+                [panelStyle]="{ overflow: 'auto' }"
+                [showClear]="true"
+                appendTo="body"
+                (onChange)="changeCostCentersLevel1($event)"
+              >
+                <ng-template let-option pTemplate="item">
+                  <div class="option-item">
+                    <div style="float: left; width: 30%">
+                      {{ option.CodeLevel }}
+                    </div>
+                    <div style="float: left; width: 70%">
+                      {{ option.Name }}
+                    </div>
+                  </div>
+                </ng-template>
+              </p-dropdown>
+            </div>
+
+            <div
+              class="col-lg-3"
+              style="text-align: left"
+              *ngIf="costCentersLevel2dropdown"
+            >
+              <label class="float-md-left d-flex float-sm-left"
+                >Cost Center II
+              </label>
+              <p-dropdown
+                [style]="{ width: '252px' }"
+                [options]="CostCentersLevel2$"
+                [filter]="true"
+                optionLabel="Name"
+                optionValue="CodeLevel2"
+                [(ngModel)]="voucherDetailResponse$.CodeLevel2"
+                [ngModelOptions]="{ standalone: true }"
+                filterBy="Name,CodeLevel2"
+                [showClear]="false"
+                placeholder="Select Code Level II"
+                [panelStyle]="{ overflow: 'auto' }"
+                [showClear]="true"
+                (onChange)="changeCostCentersLevel2($event)"
+                appendTo="body"
+              >
+                <ng-template let-option pTemplate="item">
+                  <div class="option-item">
+                    <div style="float: left; width: 30%">
+                      {{ option.CodeLevel2 }}
+                    </div>
+                    <div style="float: left; width: 70%">
+                      {{ option.Name }}
+                    </div>
+                  </div>
+                </ng-template>
+              </p-dropdown>
+            </div>
+            <div
+              class="col-lg-3"
+              style="text-align: left"
+              *ngIf="costCentersLevel3dropdown"
+            >
+              <label class="float-md-left d-flex float-sm-left"
+                >Cost Center III
+              </label>
+              <p-dropdown
+                [style]="{ width: '252px' }"
+                [options]="CostCentersLevel3$"
+                [filter]="true"
+                optionLabel="Name"
+                optionValue="CodeLevel3"
+                [(ngModel)]="voucherDetailResponse$.CodeLevel3"
+                [ngModelOptions]="{ standalone: true }"
+                filterBy="Name,CodeLevel3"
+                [showClear]="false"
+                placeholder="Select Code Level III"
+                [panelStyle]="{ overflow: 'auto' }"
+                [showClear]="true"
+                (onChange)="changeCostCentersLevel3($event)"
+                appendTo="body"
+              >
+                <ng-template let-option pTemplate="item">
+                  <div class="option-item">
+                    <div style="float: left; width: 30%">
+                      {{ option.CodeLevel3 }}
+                    </div>
+                    <div style="float: left; width: 70%">
+                      {{ option.Name }}
+                    </div>
+                  </div>
+                </ng-template>
+              </p-dropdown>
+            </div>
+            <div
+              class="col-lg-3"
+              style="text-align: left"
+              *ngIf="functionsdropdown"
+            >
+              <label class="float-md-left d-flex float-sm-left"
+                >Function
+              </label>
+              <p-dropdown
+                [style]="{ width: '240px' }"
+                [options]="Functionresponse$"
+                [filter]="true"
+                optionLabel="Name"
+                optionValue="FunctionCode"
+                [(ngModel)]="voucherDetailResponse$.FunctionCode"
+                [ngModelOptions]="{ standalone: true }"
+                filterBy="Name,FunctionCode"
+                [showClear]="false"
+                placeholder="Select Function"
+                [panelStyle]="{ overflow: 'auto' }"
+                [showClear]="true"
+                (onChange)="changeFunction($event)"
+                appendTo="body"
+              >
+                <ng-template let-option pTemplate="item">
+                  <div class="option-item">
+                    <div style="float: left; width: 30%">
+                      {{ option.FunctionCode }}
+                    </div>
+                    <div style="float: left; width: 70%">
+                      {{ option.Name }}
+                    </div>
+                  </div>
+                </ng-template>
+              </p-dropdown>
+            </div>
+            <!-- </div> -->
+            <!-- <div class="row align-items-stretch mt-1"> -->
+            <div
+              class="col-lg-3"
+              style="text-align: left"
+              *ngIf="cashFlowTag1dropdown"
+            >
+              <label class="float-md-left d-flex float-sm-left"
+                >Cash Flow Tag-I
+              </label>
+              <p-dropdown
+                [style]="{ width: '252px' }"
+                [options]="cashflowtag1$"
+                [filter]="true"
+                optionLabel="CashFlowTag1Name"
+                optionValue="CashFlowTag1Code"
+                [(ngModel)]="voucherDetailResponse$.CashFlowTag1Code"
+                [ngModelOptions]="{ standalone: true }"
+                filterBy="CashFlowTag1Name,CashFlowTag1Code"
+                [showClear]="false"
+                placeholder="Select Cash Flow I"
+                [panelStyle]="{ overflow: 'auto' }"
+                [showClear]="true"
+                appendTo="body"
+                (onChange)="changeCashflowtag1($event)"
+              >
+                <ng-template let-option pTemplate="item">
+                  <div class="option-item">
+                    <div style="float: left; width: 30%">
+                      {{ option.CashFlowTag1Code }}
+                    </div>
+                    <div style="float: left; width: 70%">
+                      {{ option.CashFlowTag1Name }}
+                    </div>
+                  </div>
+                </ng-template>
+              </p-dropdown>
+            </div>
+
+            <div
+              class="col-lg-3"
+              style="text-align: left"
+              *ngIf="cashFlowTag2dropdown"
+            >
+              <label class="float-md-left d-flex float-sm-left"
+                >Cash Flow Tag-II
+              </label>
+              <p-dropdown
+                [style]="{ width: '252px' }"
+                [options]="cashflowtag2$"
+                [filter]="true"
+                optionLabel="CashFlowTag2Name"
+                optionValue="CashFlowTag2Code"
+                [(ngModel)]="voucherDetailResponse$.CashFlowTag2Code"
+                [ngModelOptions]="{ standalone: true }"
+                filterBy="CashFlowTag2Name,CashFlowTag2Code"
+                [showClear]="false"
+                placeholder="Select Cash Flow II"
+                [panelStyle]="{ overflow: 'auto' }"
+                [showClear]="true"
+                (onChange)="changeCashflowtag2($event)"
+                appendTo="body"
+              >
+                <ng-template let-option pTemplate="item">
+                  <div class="option-item">
+                    <div style="float: left; width: 30%">
+                      {{ option.CashFlowTag2Code }}
+                    </div>
+                    <div style="float: left; width: 70%">
+                      {{ option.CashFlowTag2Name }}
+                    </div>
+                  </div>
+                </ng-template>
+              </p-dropdown>
+              <!-- </div> -->
+              <!-- <div class="col-lg-3" style="text-align: left">
+              <label class="float-md-left d-flex float-sm-left "
+                >Cost Center 3
+              </label>
+              <p-dropdown
+                [style]="{ width: '252px' }"
+                [options]="CostCentersLevel3$"
+                [filter]="true"
+                optionLabel="Name"
+                optionValue="CodeLevel3"
+                [(ngModel)]="voucherDetailResponse$.CodeLevel3"
+                [ngModelOptions]="{ standalone: true }"
+                filterBy="Name,CodeLevel3"
+                [showClear]="false"
+                placeholder="Select Code Level 3"
+                [panelStyle]="{ overflow: 'auto' }"
+                [showClear]="true"
+                (onChange)="changeCostCentersLevel3($event)"
+                appendTo="body"
+              >
+                <ng-template let-option pTemplate="item">
+                  <div class="option-item">
+                    <div style="float: left; width: 30%">
+                      {{ option.CodeLevel3 }}
+                    </div>
+                    <div style="float: left; width: 70%">
+                      {{ option.Name }}
+                    </div>
+                  </div>
+                </ng-template>
+              </p-dropdown>
+            </div>
+            <div class="col-lg-3" style="text-align: left">
+              <label class="float-md-left d-flex float-sm-left "
+                >Function
+              </label>
+              <p-dropdown
+                [style]="{  width: '240px' }"
+                [options]="Functionresponse$"
+                [filter]="true"
+                optionLabel="Name"
+                optionValue="FunctionCode"
+                [(ngModel)]="voucherDetailResponse$.FunctionCode"
+                [ngModelOptions]="{ standalone: true }"
+                filterBy="Name,FunctionCode"
+                [showClear]="false"
+                placeholder="Select Function"
+                [panelStyle]="{ overflow: 'auto' }"
+                [showClear]="true"
+                (onChange)="changeFunction($event)"
+                appendTo="body"
+              >
+                <ng-template let-option pTemplate="item">
+                  <div class="option-item">
+                    <div style="float: left; width: 30%">
+                      {{ option.FunctionCode }}
+                    </div>
+                    <div style="float: left; width: 70%">
+                      {{ option.Name }}
+                    </div>
+                  </div>
+                </ng-template>
+              </p-dropdown>
+            </div> -->
+            </div>
+          </div>
+          <!-- Row-5-End -->
+
+          <!-- Buttons-Start -->
+
+          <div class="row align-items-stretch mt-2">
+            <div class="col-sm-4"></div>
+            <div
+              class="row justify-content-center"
+              style="align-items: flex-end"
+            >
+              <ng-container>
+                <Button
+                  type="button"
+                  id="btnsave"
+                  Class="btn btn-outline-success btnFix mx-1"
+                  (click)="addorUpdate()"
+                  [disabled]="
+                    isUpdate || voucherResponse$.IsPosted || IsDisabled
+                  "
+                  >Save</Button
+                >
+                <Button
+                  type="button"
+                  id="btnsave"
+                  Class="btn btn-outline-success btnFix"
+                  (click)="addorUpdate()"
+                  [disabled]="
+                    !isUpdate || voucherResponse$.IsPosted || IsDisabled
+                  "
+                  >Update</Button
+                >
+              </ng-container>
+              <Button
+                type="button"
+                id="btnRefresh"
+                class="btn primary-button-color btnFix mx-1"
+                (click)="refresh()"
+                [disabled]="voucherResponse$.IsPosted || IsDisabled"
+                >Refresh</Button
+              >
+            </div>
+          </div>
+          <!-- Buttons-End -->
+        </div>
+      </form>
+    </div>
+    <!-- Grid-Start -->
+    <p-table
+      [value]="voucherDetailResponsegrid$"
+      [paginator]="true"
+      [rows]="4"
+      styleClass="p-datatable-sm"
+      responsiveLayout="stack"
+      [breakpoint]="'960px'"
+      [rowHover]="true"
+      class="datatable-width"
+      [alwaysShowPaginator]="false"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="min-width: 100px">Seq#</th>
+          <th style="min-width: 100px">Acc/Code</th>
+          <th style="min-width: 150px">Acc/Title</th>
+          <th style="min-width: 150px">Narration</th>
+          <th style="min-width: 50px">Debit</th>
+          <th style="min-width: 50px">Credit</th>
+          <!-- <th style="min-width: 50px">Asset</th>
+        <th style="min-width: 50px">Party</th>
+        <th style="min-width: 50px">WorkOrder</th>
+        <th style="min-width: 50px">Employee</th> -->
+          <th>Action</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-m>
+        <tr>
+          <td>{{ m.EntrySeq }}</td>
+          <td>{{ m.AccountCode }}</td>
+          <td>{{ m.AccountName }}</td>
+          <td>{{ m.Narration }}</td>
+          <td>{{ m.DebitAmount }}</td>
+          <td>{{ m.CreditAmount }}</td>
+          <!-- <td>{{ m.AssetName}}</td>
+        <td>{{ m.PartyName}}</td>
+        <td>{{ m.WorkOrder }}</td>
+        <td>{{ m.EmployeeName}}</td> -->
+          <td>
+            <button
+              pButton
+              icon="pi pi-pencil"
+              class="p-button p-button-outlined p-button-rounded p-button-success p-mr-2 mx-1 custom-button-success"
+              (click)="getSelectedRow(m)"
+              [disabled]="voucherResponse$.IsPosted || IsDisabled"
+            ></button>
+            <button
+              pButton
+              icon="pi pi-trash"
+              class="p-button p-button-outlined p-button-rounded p-button-danger custom-button-success p-mr-2 mx-1"
+              (click)="deleteVoucherDetail(m.EntrySeq)"
+              [disabled]="voucherResponse$.IsPosted || IsDisabled"
+            ></button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <!-- Grid-End -->
+    <!-- Last-Row-Start -->
+    <div class="row text-center" style="font-size: small">
+      <div class="col-lg-12 col-md-12 col-sm-10">
+        <div class="card p-3">
+          <div class="row align-items-stretch">
+            <div class="col-lg-8 col-md-6 col-sm-12"></div>
+            <div class="col-lg-2 col-md-6 col-sm-12">
+              <label class="float-md-left d-flex float-sm-left"
+                >Total Debit:
+              </label>
+              <input
+                type="text"
+                class="form-control"
+                [attr.disabled]="true"
+                [(ngModel)]="totalDebit"
+                [ngModelOptions]="{ standalone: true }"
+              />
+            </div>
+            <div class="col-lg-2 col-md-6 col-sm-12">
+              <label class="float-md-left d-flex float-sm-left"
+                >Total Credit:
+              </label>
+              <input
+                type="text"
+                class="form-control"
+                [attr.disabled]="true"
+                [(ngModel)]="totalCredit"
+                [ngModelOptions]="{ standalone: true }"
+              />
+            </div>
+          </div>
+          <!-- Row-4-End -->
+        </div>
+      </div>
+    </div>
+    <!-- Last-Row-Start -->
+  </div>
+</div>
+
+<!--upload documents -->
+<p-dialog
+  [(visible)]="uploadDoc"
+  [style]="{ width: '900px' }"
+  [header]="'Upload Documents'"
+  [modal]="true"
+  styleClass="p-fluid"
+  [closable]="true"
+>
+  <ng-template pTemplate="content">
+    <form [formGroup]="UploadDocform" novalidate>
+      <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-10">
+          <div class="row">
+            <!-- <div class="col-lg-4 col-md-6 col-sm-12 mb-12">
+              <div class="form-group">
+                <label>Document Id<span class="astrik">*</span></label>
+                <input type="number" class="form-control" formControlName="DocumentId" name="DocumentId"
+                  [(ngModel)]="documentMaxId[0].DocumentId" [attr.disabled]="true" />
+              </div>
+            </div> -->
+            <div class="col-lg-8 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Description <span class="astrik">*</span></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="Description"
+                  placeholder="Enter Description "
+                />
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Documents</label>
+                <input
+                  type="file"
+                  class="form-control"
+                  formControlName="ImagePath"
+                  id="fileUpload"
+                  (change)="selectFiles($event)"
+                  multiple
+                  accept="image/jpeg,image/gif,image/png,application/pdf,image/x-eps"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="d-flex align-items-center gap-2">
+              <button
+                type="button"
+                id="btnsave"
+                class="btn-save"
+                (click)="saveDocument()"
+                [disabled]="UploadDocform.invalid"
+              >
+                Save
+              </button>
+              <button
+                type="button"
+                id="btnupdate"
+                class="btn-update"
+                (click)="HideUploadDoc()"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <p-table
+      #dt
+      [value]="documentResponse"
+      class="datatable-width"
+      styleClass="p-datatable-sm"
+      responsiveLayout="stack"
+      [breakpoint]="'960px'"
+      [rowHover]="true"
+      dataKey="id"
+      currentPageReportTemplate="{first} to {last} of {totalRecords} entries"
+      [showCurrentPageReport]="true"
+      [alwaysShowPaginator]="false"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th>DocumentId#</th>
+          <th>Description</th>
+          <th>ImagePath</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-m>
+        <tr>
+          <td>{{ m.DocumentId }}</td>
+          <td>{{ m.Description }}</td>
+          <td>{{ m.AttachmentPath }}</td>
+          <td>
+            <button
+              pButton
+              icon="pi pi-eye"
+              class="p-button p-button-outlined p-button-rounded p-button-primary GridEditButton mx-1"
+              (click)="ViewDocuments(m)"
+            ></button>
+            <button
+              pButton
+              icon="pi pi-trash"
+              class="p-button p-button-outlined p-button-rounded p-button-danger custom-button-success p-mr-2 mx-1"
+              (click)="deleteDoc(m)"
+            ></button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      pRipple
+      label="Cancel"
+      icon="pi pi-times"
+      class="p-button-text"
+      (click)="HideUploadDoc()"
+    ></button>
+  </ng-template>
+</p-dialog>
+
+<p-dialog
+  header="Document Viewer"
+  [(visible)]="displayDocumentDialog"
+  [modal]="true"
+  [responsive]="true"
+  [baseZIndex]="10000"
+  (onHide)="closeDocumentViewDialog()"
+  [style]="{ width: '950px', height: '600px' }"
+>
+  <div *ngIf="imagePathOnServer">
+    <img [src]="imagePathOnServer" alt="Document" style="width: 100%" />
+  </div>
+</p-dialog>

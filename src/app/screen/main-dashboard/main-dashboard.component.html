@@ -1,0 +1,411 @@
+<ngx-loading-bar [includeSpinner]="false" [height]="'3px'"></ngx-loading-bar>
+<div class="main-container" (scroll)="onMainContainerScroll($event)">
+  <div [class]="isSticky ? 'sticky-header' : ''">
+    <app-store-project
+      [componentName]="'Dashboard'"
+      [hide]="false"
+    ></app-store-project>
+  </div>
+  <div class="dashboard-wrapper">
+    <div class="row mb-3">
+      <div class="col-lg-4 col-md-4 col-sm-12">
+        <div class="card-wrapper">
+          <div class="card-content">
+            <div class="card-header mb-3">
+              <h4 class="card-title">Total Sales Amount</h4>
+              <!-- <div class="badge success">
+                <i class="fa-solid fa-caret-up mr-1"></i>
+                10%
+              </div> -->
+            </div>
+            <div class="card-body">
+              <span class="amount">
+                {{ totalSalesAmount | currencyFormat }}</span
+              >
+              <span class="currency">{{ currentCurrency }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-4 col-sm-12">
+        <div class="card-wrapper">
+          <div class="card-content">
+            <div class="card-header mb-3">
+              <h4 class="card-title">Payable Overdue</h4>
+              <!-- <div class="badge danger">
+                <i class="fa-solid fa-caret-up mr-1"></i>
+                10%
+              </div> -->
+            </div>
+            <div class="card-body">
+              <span class="amount">{{ 0 | currencyFormat }}</span>
+              <span class="currency">{{ currentCurrency }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-4 col-sm-12">
+        <div class="card-wrapper">
+          <div class="card-content">
+            <div class="card-header mb-3">
+              <h4 class="card-title">Receivable Overdue</h4>
+              <!-- <div class="badge success">
+                <i class="fa-solid fa-caret-up mr-1"></i>
+                15%
+              </div> -->
+            </div>
+            <div class="card-body">
+              <span class="amount">{{ 0 | currencyFormat }}</span>
+              <span class="currency">{{ currentCurrency }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mb-4">
+      <div class="col-lg-4 col-md-4 col-sm-12">
+        <div class="status-card-wrapper">
+          <div class="status-card-header" id="firstCard">
+            <h4 class="title">Sales Order Summary</h4>
+            <div class="status-title-amount">
+              <span>Total Sales Order</span>
+              <span class="total-count"
+                >{{ allSalesAmount | currencyFormat
+                }}<span class="currency-type">{{ currentCurrency }}</span></span
+              >
+            </div>
+          </div>
+          <div class="status-card-content">
+            <div class="status-inner-card">
+              <div
+                class="inner-card-data"
+                *ngFor="let sale of sales; let i = index"
+              >
+                <!-- <div class="icon-wrapper">
+                  {{i+1}}
+                  <img src="../../../assets/icons/inprogress.svg" alt="icon">
+                </div> -->
+                <div class="text-wrapper">
+                  <span class="status-title">{{ sale.Status }}</span>
+                </div>
+                <div class="amount">
+                  <span>{{ sale.TotalAmount }} </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-4 col-sm-12">
+        <div class="status-card-wrapper">
+          <div class="status-card-header" id="secondCard">
+            <h4 class="title">Quotation Summary</h4>
+            <div class="status-title-amount">
+              <span>Total Quotations</span>
+              <span class="total-count"
+                >{{ allQuotations | currencyFormat }}
+                <span class="currency-type">{{ currentCurrency }}</span>
+              </span>
+            </div>
+          </div>
+          <div class="status-card-content">
+            <div class="status-inner-card">
+              <div
+                class="inner-card-data"
+                *ngFor="let quotation of quotations; let i = index"
+              >
+                <!-- <div class="icon-wrapper">
+                 {{i+1}}
+                </div> -->
+                <div class="text-wrapper">
+                  <span class="status-title">{{ quotation.Status }}</span>
+                </div>
+                <div class="amount">
+                  <span>{{ quotation.TotalAmount }} </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-4 col-sm-12">
+        <div class="status-card-wrapper">
+          <div class="status-card-header" id="thirdCard">
+            <h4 class="title">Leads Sale Summary</h4>
+            <div class="status-title-amount">
+              <span>Total Open Leads</span>
+              <span class="total-count">{{ SalesLeads[0]?.TotalLeads }}</span>
+            </div>
+          </div>
+          <div class="status-card-content">
+            <div class="status-inner-card">
+              <div class="inner-card-data border-bottom">
+                <div class="text-wrapper">
+                  <span class="status-title">Status</span>
+                </div>
+                <div class="text-wrapper">
+                  <span class="status-title">Total Leads</span>
+                </div>
+                <div class="amount">
+                  <span>Amount</span>
+                </div>
+              </div>
+              <div
+                class="inner-card-data"
+                *ngFor="let lead of SalesLeads; let i = index"
+              >
+                <div class="text-wrapper">
+                  <span class="status-title">{{ lead.LeadStatus }}</span>
+                </div>
+                <div class="text-wrapper align-items-center">
+                  <span class="status-title">{{ lead.TotalLeads }}</span>
+                </div>
+                <div class="amount text-wrapper align-items-end">
+                  <span class="text-nowrap"
+                    >{{ lead.Amount | currencyFormat }}
+                    <span class="currency-type">{{
+                      currentCurrency
+                    }}</span></span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-4">
+      <div class="col-lg-8 col-md-8 col-sm-12">
+        <div class="card-wrapper">
+          <div class="card-content">
+            <div class="card-header mb-3">
+              <h4 class="card-title">Revenue v/s Gross Profit</h4>
+            </div>
+            <div class="card-body">
+              <p-chart
+                type="line"
+                [data]="data"
+                [options]="options"
+                height="340px"
+              ></p-chart>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-4 col-sm-12">
+        <div class="card-wrapper">
+          <div class="card-content">
+            <div class="card-header mb-3">
+              <h4 class="card-title">Notifications</h4>
+            </div>
+            <div class="card-body">
+              <div class="notification-wrapper">
+                <div class="notification">
+                  <span class="notify-badge">PO</span>
+                  <div class="notification-text">
+                    <span class="notify-text">Payable Overdue</span>
+                    <span class="notify-date">15-07-2023</span>
+                  </div>
+                </div>
+                <div class="notification">
+                  <span class="notify-badge">PO</span>
+                  <div class="notification-text">
+                    <span class="notify-text">Payable Overdue</span>
+                    <span class="notify-date">15-07-2023</span>
+                  </div>
+                </div>
+                <div class="notification">
+                  <span class="notify-badge">PO</span>
+                  <div class="notification-text">
+                    <span class="notify-text">Payable Overdue</span>
+                    <span class="notify-date">15-07-2023</span>
+                  </div>
+                </div>
+                <div class="notification">
+                  <span class="notify-badge">PO</span>
+                  <div class="notification-text">
+                    <span class="notify-text">Payable Overdue</span>
+                    <span class="notify-date">15-07-2023</span>
+                  </div>
+                </div>
+                <div class="notification">
+                  <span class="notify-badge">PO</span>
+                  <div class="notification-text">
+                    <span class="notify-text">Payable Overdue</span>
+                    <span class="notify-date">15-07-2023</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-3">
+      <div class="col-lg-3 col-md-3 col-sm-12">
+        <div class="card-wrapper">
+          <div class="card-content">
+            <div class="card-header mb-3">
+              <h4 class="card-title">Posted Vouchers</h4>
+            </div>
+            <div class="card-body">
+              <span class="amount"> {{ postedVoucher }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-3 col-md-3 col-sm-12">
+        <div class="card-wrapper">
+          <div class="card-content">
+            <div class="card-header mb-3">
+              <h4 class="card-title">Unposted Vouchers</h4>
+            </div>
+            <div class="card-body">
+              <span class="amount">{{ unPostedVoucher }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-3 col-md-3 col-sm-12">
+        <div class="card-wrapper">
+          <div class="card-content">
+            <div class="card-header mb-3">
+              <h4 class="card-title">Low Stock Items</h4>
+            </div>
+            <div class="card-body">
+              <span class="amount">{{ totalStockCount }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-3 col-sm-12">
+        <div class="card-wrapper">
+          <div class="card-content">
+            <div class="card-header mb-3">
+              <h4 class="card-title">Pending Demands</h4>
+            </div>
+            <div class="card-body">
+              <span class="amount">{{ pendingDemandCount }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-4">
+      <div class="col-lg-8 col-md-8 col-sm-12">
+        <div class="row mb-4">
+          <div class="col-lg-8 col-md-12 col-sm-12">
+            <div class="card-wrapper">
+              <div class="card-content">
+                <div class="card-header mb-3">
+                  <h4 class="card-title">Top 5 Best Seller</h4>
+                </div>
+                <div class="card-body">
+                  <p-chart
+                    type="bar"
+                    [data]="data"
+                    [options]="options"
+                  ></p-chart>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-12 col-sm-12">
+            <div class="d-flex flex-column h-100 justify-content-between">
+              <div class="card-wrapper" style="height: 155px">
+                <div
+                  class="card-content d-flex align-items-start h-100 flex-column"
+                >
+                  <div class="card-header mb-3">
+                    <h4 class="card-title">Open A/R Invoices</h4>
+                  </div>
+                  <div class="card-body">
+                    <span class="card-number">23</span>
+                  </div>
+                </div>
+              </div>
+              <div class="card-wrapper" style="height: 155px">
+                <div
+                  class="card-content d-flex align-items-start h-100 flex-column"
+                >
+                  <div class="card-header mb-3">
+                    <h4 class="card-title">Sales Order not delivered</h4>
+                  </div>
+                  <div class="card-body">
+                    <span class="card-number">12</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row mb-4">
+          <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="card-wrapper">
+              <div class="card-content">
+                <div class="card-header mb-3">
+                  <h4 class="card-title">Assets v/s Liabilities</h4>
+                </div>
+                <div class="card-body">
+                  <p-chart
+                    type="bar"
+                    [data]="assetData"
+                    [options]="assetOptions"
+                    height="270px"
+                  ></p-chart>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-8 col-sm-12">
+        <div class="card-wrapper">
+          <div class="card-content">
+            <div class="card-header mb-3">
+              <h4 class="card-title">Customer Experience</h4>
+            </div>
+            <div class="card-body">
+              <p-chart
+                type="doughnut"
+                [data]="douData"
+                [options]="douOptions"
+              ></p-chart>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mb-4">
+      <div class="col-xxl-8 col-xl-8 col-lg-8 col-md-10 col-sm-10">
+        <div class="card-wrapper">
+          <div class="card-content">
+            <div class="card-header mb-3">
+              <h4 class="card-title">Profit Margins</h4>
+              <div class="date-wrapper">
+                <!-- <p-calendar [(ngModel)]="date" [showIcon]="true"></p-calendar> -->
+              </div>
+            </div>
+            <div class="card-body">
+              <p-chart
+                type="bar"
+                [data]="assetData"
+                [options]="assetOptions"
+                height="270px"
+              ></p-chart>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,94 @@
+<div class="card">
+  <div class="card-header">
+    <label>Present Address</label>
+  </div>
+  <div class="card-body">
+    <div class="card-wrappper">
+      <form [formGroup]="PresentAddressForm">
+        <div class="row">
+          <div class="col-lg-3 col-md-6 col-sm-12">
+            <div class="form-group">
+              <label>Present Address</label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Enter Present Address"
+                formControlName="PresentAddress"
+                name="PresentAddress"
+              />
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6 col-sm-12">
+            <div class="form-group">
+              <label>Phone No </label>
+              <input
+                type="number"
+                class="form-control"
+                placeholder="Enter Phone No"
+                formControlName="PresentAddressPhoneNo"
+                name="PresentAddressPhoneNo"
+              />
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-2 col-sm-12">
+            <div class="form-group">
+              <label>Country </label>
+              <p-dropdown
+                formControlName="PresentCountryCode"
+                [style]="{ height: '38px', width: '235px' }"
+                [options]="countries"
+                [filter]="true"
+                optionLabel="CountryName"
+                optionValue="CountryCode"
+                appendTo="body"
+                filterBy="CountryName"
+                placeholder="Select Country"
+                [panelStyle]="{ overflow: 'auto' }"
+                [showClear]="true"
+              >
+              </p-dropdown>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-2 col-sm-12">
+            <div class="form-group">
+              <label>State</label>
+              <p-dropdown
+                formControlName="PresentStateCode"
+                [style]="{ height: '38px', width: '235px' }"
+                [options]="states"
+                [filter]="true"
+                filterBy="StateName"
+                optionLabel="StateName"
+                optionValue="StateCode"
+                placeholder="Select State"
+                [panelStyle]="{ overflow: 'auto' }"
+                [showClear]="true"
+                appendTo="body"
+              >
+              </p-dropdown>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-2 col-sm-12">
+            <div class="form-group">
+              <label>City </label>
+              <p-dropdown
+                formControlName="PresentCityCode"
+                [style]="{ height: '38px', width: '235px' }"
+                [options]="cities"
+                [filter]="true"
+                optionLabel="CityName"
+                optionValue="CityCode"
+                filterBy="CityName"
+                placeholder="Select City"
+                [panelStyle]="{ overflow: 'auto' }"
+                [showClear]="true"
+                appendTo="body"
+              >
+              </p-dropdown>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

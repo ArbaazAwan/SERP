@@ -1,0 +1,22 @@
+<div
+  class="form-control"
+  [formGroup]="formGroup"
+  [ngClass]="extraClass"
+  [class.invalid]="control.touched && control.invalid"
+>
+  <label *ngIf="label">{{ label }}</label>
+  <input
+    [type]="type"
+    [placeholder]="placeholder"
+    [attr.name]="name"
+    [attr.id]="id"
+    [formControl]="control"
+    [maxlength]="maxLength"
+    [minLength]="minLength"
+    autocomplete="off"
+    (blur)="blur()"
+  />
+  <span class="error-msg" *ngIf="control.errors && control.touched">
+    {{ control.errors[objectFn.keys(control.errors)[0]] }}
+  </span>
+</div>

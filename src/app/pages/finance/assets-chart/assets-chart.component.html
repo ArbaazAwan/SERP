@@ -1,0 +1,1195 @@
+<ngx-loading-bar [includeSpinner]="false" [height]="'3px'"></ngx-loading-bar>
+<p-toast></p-toast>
+
+<div class="main-container">
+  <app-confirm-dialog></app-confirm-dialog>
+
+  <div class="container mt-1">
+    <app-store-project [componentName]="componentName" [hide]="false"></app-store-project>
+    <div class="card">
+      <p-toolbar>
+        <ng-template pTemplate="left">
+          <button pButton pRipple label="Create" icon="pi pi-plus" class="btn-save" style="margin-right: 4px"
+            (click)="openNew()"></button>
+          <button pButton pRipple label="Preview / Print" icon="pi pi-print" class="btn-update" (click)="printChartOfassetsReport()"></button>
+        </ng-template>
+        <ng-template pTemplate="right">
+          <label class="inline-radio">
+            <input type="radio" value="Code" [(ngModel)]="selectedRadio" />
+            Code
+          </label>
+
+          <label class="inline-radio">
+            <input type="radio" value="Title" [(ngModel)]="selectedRadio" />
+            Title
+          </label>
+
+          <span class="p-input-icon-left">
+            <i class="pi pi-search"></i>
+            <input pInputText type="text" (input)="filterGlobal($event)" (click)="getRadioControl()"
+              (blur)="clearFilter($event)" placeholder="Search..." />
+          </span>
+        </ng-template>
+      </p-toolbar>
+      <p-treeTable #dt [value]="chartResponse2" [rowHover]="true" [globalFilterFields]="[
+          'AssetCode',
+          'ParentAssetCode',
+          'AssetName',
+          'HasDetail',
+          'IsDetail'
+        ]">
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="min-width: 200px" field="AssetCode">Asset Code#</th>
+            <th style="min-width: 200px" field="ParentAssetCode">
+              Asset Parent Code
+            </th>
+            <th style="min-width: 200px" field="AssetName">Asset Title</th>
+            <th style="min-width: 150px" field="HasDetail">Category Acc</th>
+            <th style="min-width: 150px" field="IsDetail">Transaction Acc</th>
+            <th style="min-width: 200px" field="IsDetail">Actions</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
+          <tr [ttRow]="rowNode">
+            <td>
+              <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+
+              {{ rowData.AssetCode }}
+            </td>
+            <td>{{ rowData.ParentAssetCode }}</td>
+            <td>{{ rowData.AssetName }}</td>
+
+            <td>
+              <ng-container *ngIf="rowData.HasDetail">
+                <input type="checkbox" checked disabled />
+              </ng-container>
+              <ng-container *ngIf="!rowData.HasDetail">
+                <input type="checkbox" disabled />
+              </ng-container>
+            </td>
+            <td>
+              <ng-container *ngIf="rowData.IsDetail">
+                <input type="checkbox" checked disabled />
+              </ng-container>
+              <ng-container *ngIf="!rowData.IsDetail">
+                <input type="checkbox" disabled />
+              </ng-container>
+            </td>
+            <td [style]="'right-padding: 0'">
+              <div class="dropdown">
+                <button class="three-dots" type="button" id="table-action-menu" data-bs-toggle="dropdown"
+                  aria-expanded="false">
+                  <i class="fa fa-ellipsis-v"></i>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="table-action-menu">
+                  <li><a class="dropdown-item edit cursor-hover cursor-pointer" (click)="getRow(rowData)">Edit</a></li>
+                  <li><a class="dropdown-item delete cursor-hover cursor-pointer"
+                      (click)="deleteChartItem(rowData.AssetCode)">Delete</a></li>
+                </ul>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-treeTable>
+    </div>
+  </div>
+
+  <form [formGroup]="form" class="p-2">
+    <p-dialog [(visible)]="mainDialog" [style]="{ width: '900px', height: '490px' }" [header]="mainHeader"
+      [modal]="true" styleClass="p-fluid" [closable]="false">
+      <ng-template pTemplate="content">
+        <div class="row">
+          <div class="col-lg-3 col-md-3 col-sm-12">
+            <div class="form-group">
+              <label for="description">Parent Code<span class="astrik">*</span></label>
+              <ng-container *ngIf="!isUpdate">
+                <p-dropdown [style]="{ height: '30px' }" [options]="parentCodeResponse$" [filter]="true"
+                  optionLabel="AssetName" optionValue="AssetCode" filterBy="AssetName" placeholder="Parent Code"
+                  [panelStyle]="{ overflow: 'auto' }" [showClear]="true" formControlName="ParentAssetCode"
+                  (onChange)="changeParentCode($event)">
+                  <ng-template let-option pTemplate="item">
+                    <div class="option-item">
+                      <div class="option-column1">
+                        {{ option.AssetCode }}
+                      </div>
+                      <div class="option-column2">
+                        {{ option.AssetName }}
+                      </div>
+                    </div>
+                  </ng-template>
+                </p-dropdown>
+              </ng-container>
+              <ng-container *ngIf="isUpdate">
+                <input type="text" class="form-control" [(ngModel)]="parentwithName"
+                  [ngModelOptions]="{ standalone: true }" [attr.disabled]="true" />
+              </ng-container>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-12">
+            <div class="form-group">
+              <label>Asset Code <span class="astrik">*</span> </label>
+              <input type="text" [appDecimal2]="0" class="form-control" placeholder="Enter Asset Code"
+                formControlName="AssetCode" [attr.disabled]="isUpdate ? false : null" />
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-12">
+            <div class="form-group">
+              <label>Asset Name <span class="astrik">*</span> </label>
+              <input type="text" class="form-control" placeholder="Enter Asset Name" formControlName="AssetName"
+                required />
+              <div class="input-error" *ngIf="form.controls['AssetName'].invalid && form.controls['AssetName'].touched">
+                Field Required
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-12">
+            <div class="form-group">
+              <label>Short Name <span class="astrik">*</span> </label>
+              <input type="text" class="form-control" placeholder="Short Name" formControlName="ShortName"
+                required />
+              <div class="input-error" *ngIf="form.controls['ShortName'].invalid && form.controls['ShortName'].touched">
+                Field Required
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="d-flex align-items-center gap-3 mb-3">
+              <div class="checkbox" (click)="hasDetail()">
+                <input type="checkbox" class="form-checkbox" formControlName="HasDetail" name="HasDetail"/>
+                <label for="description" class="form-check-label">Category Account</label>
+              </div>
+              <div class="checkbox" (click)="IsDetail()">
+                <input type="checkbox" class="form-checkbox" formControlName="IsDetail" name="IsDetail"/>
+                <label for="description" class="form-check-label">Transaction Account</label>
+              </div>
+            </div>
+
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-12">
+            <div class="form-group">
+              <label>Registration#</label>
+              <input type="text" class="form-control" placeholder="Enter Registration No."
+                formControlName="RegistrationNo" required />
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-12">
+            <div class="form-group">
+              <label>Serial#</label>
+              <input type="text" class="form-control" placeholder="Enter Serial No." formControlName="AssetSrNo"
+                 required />
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-12">
+            <div class="form-group">
+              <label>Remarks</label>
+              <input type="text" class="form-control" placeholder="Enter Remarks " formControlName="Remarks"
+                required />
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-12">
+            <div class="form-group">
+              <label>Size</label>
+              <div class="d-flex align-items-center gap-1">
+                <p-dropdown [style]="{ height: '30px' }" [options]="sizeResponse$" [filter]="true"
+                  optionLabel="ItemSize" optionValue="ItemSizeCode" filterBy="ItemSize,ItemSizeCode" placeholder="Size"
+                  formControlName="AssetSizeCode" [panelStyle]="{ overflow: 'auto' }" [showClear]="true" appendTo="body"
+                  (onChange)="changeSize($event)">
+                  <ng-template let-option pTemplate="item">
+                    <div class="option-item">
+                      {{ option.ItemSize }}
+                    </div>
+                  </ng-template>
+                </p-dropdown>
+                <button class="btn-dropdown" (click)="openNewSize()">
+                  <img src="../../../../assets/icons/plus.svg" alt="">
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-12">
+            <div class="form-group">
+              <label>Colour</label>
+              <div class="d-flex align-items-center gap-1">
+                <p-dropdown [style]="{ height: '30px' }" [options]="colourResponse$" [filter]="true"
+                  optionLabel="ItemColour" optionValue="ItemColourCode" filterBy="ItemColour,ItemColourCode"
+                  formControlName="AssetColourCode" placeholder="Colour" [panelStyle]="{ overflow: 'auto' }"
+                  [showClear]="true" appendTo="body" (change)="changeColour($event)"
+                 >
+                  <ng-template let-option pTemplate="item">
+                    <div class="option-item">
+                        {{ option.ItemColour }}
+                    </div>
+                  </ng-template>
+                </p-dropdown>
+                <button class="btn-dropdown" (click)="openNewColour()">
+                  <img src="../../../../assets/icons/plus.svg" alt="">
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-12">
+            <div class="form-group">
+              <label> Item Type</label>
+              <div class="d-flex align-items-center gap-1">
+                <p-dropdown [style]="{ height: '30px' }" [options]="typeResponse$" [filter]="true"
+                  optionLabel="ItemType" optionValue="ItemTypeCode" filterBy="ItemType,ItemTypeCode"
+                  formControlName="AssetTypeCode" placeholder="Type" [panelStyle]="{ overflow: 'auto' }"
+                  [showClear]="true" appendTo="body" (onChange)="changeType($event)"
+                 >
+                  <ng-template let-option pTemplate="item">
+                    <div class="option-item">
+                        {{ option.ItemType }}
+                    </div>
+                  </ng-template>
+                </p-dropdown>
+                <button class="btn-dropdown" (click)="openNewType()">
+                  <img src="../../../../assets/icons/plus.svg" alt="">
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-12">
+            <div class="form-group">
+              <label>Category</label>
+              <div class="d-flex align-items-center gap-1">
+                <p-dropdown   appendTo="body" [style]="{ height: '30px' }" [options]="categoryResponse$" [filter]="true"
+                  optionLabel="ItemCategory" optionValue="ItemCategoryCode" filterBy="ItemCategory,ItemCategoryCode"
+                  placeholder="Category" [panelStyle]="{ overflow: 'auto' }" [showClear]="true"
+                  formControlName="AssetCategoryCode" (onChange)="changeCategory($event)">
+                  <ng-template let-option pTemplate="item">
+                    <div class="option-item">
+                        {{ option.ItemCategory }}
+                    </div>
+                  </ng-template>
+                </p-dropdown>
+                <button class="btn-dropdown" (click)="openNewCategory()">
+                  <img src="../../../../assets/icons/plus.svg" alt="">
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-12">
+            <div class="form-group">
+              <label>Grade</label>
+              <div class="d-flex align-items-center gap-1">
+                <p-dropdown appendTo="body" [style]="{ height: '30px' }" [options]="gradeResponse$" [filter]="true"
+                  optionLabel="ItemGrade" optionValue="ItemGradeCode" filterBy="ItemGrade,ItemGradeCode"
+                  placeholder=" Grade" [panelStyle]="{ overflow: 'auto' }" [showClear]="true"
+                  formControlName="AssetGradeCode" (onChange)="changeGrade($event)">
+                  <ng-template let-option pTemplate="item">
+                    <div class="option-item">
+                        {{ option.ItemGrade }}
+                    </div>
+                  </ng-template>
+                </p-dropdown>
+                <button class="btn-dropdown" (click)="openNewGrade()">
+                  <img src="../../../../assets/icons/plus.svg" alt="">
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-12">
+            <div class="form-group">
+              <label>Manufacturer</label>
+              <div class="d-flex align-items-center gap-1">
+                <p-dropdown appendTo="body" [style]="{ height: '30px' }" [options]="manufacturerResponse$" [filter]="true" optionLabel="ItemManufacturer"
+                  optionValue="ItemManufacturerCode" filterBy="ItemManufacturer,ItemManufacturerCode"
+                  placeholder="Select Manufacturer" [panelStyle]="{ overflow: 'auto' }" [showClear]="true"
+                  formControlName="AssetManufacturerCode" (onChange)="changeManufacturer($event)">
+                  <ng-template let-option pTemplate="item">
+                    <div class="option-item">
+                        {{ option.ItemManufacturer }}
+                    </div>
+                  </ng-template>
+                </p-dropdown>
+                <button class="btn-dropdown" (click)="openNewManufacturer()">
+                  <img src="../../../../assets/icons/plus.svg" alt="">
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-12">
+            <div class="form-group">
+              <label>Brand </label>
+              <div class="d-flex align-items-center gap-1">
+                <p-dropdown [style]="{ height: '30px' }" [options]="brandResponse$" [filter]="true"
+                  optionLabel="ItemBrand" optionValue="ItemBrandCode" filterBy="ItemBrand,ItemBrandCode"
+                  placeholder="Brand" [panelStyle]="{ overflow: 'auto' }" [showClear]="true" appendTo="body"
+                  formControlName="AssetBrandCode" (onChange)="changeBrand($event)">
+                  <ng-template let-option pTemplate="item">
+                    <div class="option-item">
+                        {{ option.ItemBrand }}
+                    </div>
+                  </ng-template>
+                </p-dropdown>
+                <button class="btn-dropdown" (click)="openNewBrand()">
+                  <img src="../../../../assets/icons/plus.svg" alt="">
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-12">
+            <div class="form-group">
+              <label>Model</label>
+              <div class="d-flex align-items-center gap-1">
+                <p-dropdown [style]="{ height: '30px' }" [options]="modelResponse$" [filter]="true"
+                  optionLabel="ItemModel" optionValue="ItemModelCode" filterBy="ItemModel,ItemModelCode"
+                  placeholder="Model" [panelStyle]="{ overflow: 'auto' }" [showClear]="true" appendTo="body"
+                  formControlName="AssetModelCode" (onChange)="changeModel($event)">
+                  <ng-template let-option pTemplate="item">
+                    <div class="option-item">
+                        {{ option.ItemModel }}
+                    </div>
+                  </ng-template>
+                </p-dropdown>
+                <button class="btn-dropdown" (click)="openNewModel()">
+                  <img src="../../../../assets/icons/plus.svg" alt="">
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-12">
+            <div class="form-group">
+              <label>Unit</label>
+              <div class="d-flex align-items-center gap-1">
+                <p-dropdown [style]="{ height: '30px' }" [options]="unitResponse$" [filter]="true"
+                  optionLabel="ShortName" optionValue="ItemUnitCode" filterBy="ShortName,ItemUnitCode"
+                  placeholder="Unit" [panelStyle]="{ overflow: 'auto' }" [showClear]="true" appendTo="body"
+                  formControlName="AssetUnitCode" (onChange)="changeUnit($event)">
+                  <ng-template let-option pTemplate="item">
+                    <div class="option-item">
+                        {{ option.ShortName }}
+                    </div>
+                  </ng-template>
+                </p-dropdown>
+                <button class="btn-dropdown" (click)="openNewUnit()">
+                  <img src="../../../../assets/icons/plus.svg" alt="">
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-12">
+            <div class="form-group">
+              <label> COA Head</label>
+              <p-dropdown [style]="{ height: '30px' }" [options]="coaResponse$" [filter]="true"
+                optionLabel="AccountName" optionValue="AccountCode" filterBy="AccountName,AccountCode"
+                placeholder="Select COA" [panelStyle]="{ overflow: 'auto' }" [showClear]="true" appendTo="body"
+                formControlName="AccountCode" >
+                <ng-template let-option pTemplate="item">
+                  <div class="option-item">
+                      {{ option.AccountName }}
+                  </div>
+                </ng-template>
+              </p-dropdown>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-12">
+            <div class="form-group">
+              <label>Purchase Price</label>
+              <input type="number" formControlName="PurchasePrice" 
+                class="form-control" required autofocus />
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-12">
+            <div class="form-group">
+              <label>Depreciation %age </label>
+              <input type="number" class="form-control" formControlName="Depriciation" 
+                required autofocus />
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-12">
+            <div class="form-group">
+              <label>Location</label>
+              <p-dropdown [style]="{ height: '30px' }" [options]="departmentResponse$" [filter]="true"
+                optionLabel="DepartmentName" optionValue="DepartmentCode" filterBy="DepartmentName,DepartmentCode"
+                placeholder="Select Depart location" [panelStyle]="{ overflow: 'auto' }" [showClear]="true"
+                appendTo="body" (onChange)="changeDepartment($event)" formControlName="DepartmentCode">
+                <ng-template let-option pTemplate="item">
+                  <!-- <div class="option-item"> -->
+                    <!-- <div class="option-column1">
+                      {{ option.DepartmentCode }}
+                    </div> -->
+                    <div class="option-item">
+                      {{ option.DepartmentName }}
+                    </div>
+                  <!-- </div> -->
+                </ng-template>
+              </p-dropdown>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="footer">
+        <button pButton pRipple label="Print/Preview Sticker" icon="fa fa-print" class="p-button-text"
+          (click)="printSticker(model.AssetCode)"></button>
+        <button pButton pRipple label="Cancel" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton pRipple [label]="mainBtn" class="p-button-text" (click)="addorUpdate()"></button>
+      </ng-template>
+
+      <!-- Size Form -->
+      <form [formGroup]="formSize">
+        <p-dialog [(visible)]="innerDialogSize" [style]="{ width: '450px' }" [header]="innerHeader" [modal]="true"
+          styleClass="p-fluid" [closable]="true" [resizable]="false" [draggable]="false">
+          <ng-template pTemplate="content">
+            <div class="row mt-1">
+              <div class="col-md-8">
+                <div class="form-group">
+                  <label class="">Item Size</label>
+                  <ng-container *ngIf="!isInnerUpdate">
+                    <input type="text" formControlName="ItemSize" class="form-control" required autofocus />
+                  </ng-container>
+                  <ng-container *ngIf="isInnerUpdate">
+                    <input type="text" formControlName="ItemSize" class="form-control" [(ngModel)]="sizeModel$.ItemSize"
+                      required autofocus />
+                  </ng-container>
+                </div>
+              </div>
+              <div class="col-md-4 align-self-center">
+                <div class="checkbox">
+                  <ng-container *ngIf="!isInnerUpdate">
+                    <input type="checkbox" id="innerActive" class="form-checkbox" formControlName="IsActive" required
+                      autofocus />
+                  </ng-container>
+                  <ng-container *ngIf="isInnerUpdate">
+                    <input type="checkbox" id="innerActive" class="form-checkbox" formControlName="IsActive"
+                      [(ngModel)]="sizeModel$.IsActive" required autofocus />
+                  </ng-container>
+                  <label class="form-check-label" for="innerActive">Active</label>
+                </div>
+              </div>
+            </div>
+            <div class="table-responsive custom-table">
+              <table class="table table-striped table-borderless" *ngIf="!isLoadingData">
+                <thead>
+                  <tr>
+                    <th scope="col">Code</th>
+                    <th scope="col">Item Size</th>
+                    <th scope="col">Active</th>
+                    <th scope="col" class="text-center">Action</th>
+                  </tr>
+                </thead>
+                <hr>
+                <tbody>
+                  <tr *ngFor="let item of sizeResponse$; let odd = odd" [ngClass]="{ 'odd-row': odd }">
+                    <td>{{item.ItemSizeCode}}</td>
+                    <td>{{item.ItemSize}}</td>
+                    <td>
+                      <span [class]="item.IsActive == true ? 'success-badge': 'danger-badge' ">{{item.IsActive |
+                        yesNo}}</span>
+                    </td>
+                    <td>
+                      <div class="dropdown text-center">
+                        <button class="three-dots" type="button" id="table-action-menu" data-bs-toggle="dropdown"
+                          aria-expanded="false">
+                          <i class="fa fa-ellipsis-v"></i>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="table-action-menu">
+                          <li><a class="dropdown-item edit cursor-hover cursor-pointer"
+                              (click)="getRowSize(item)">Edit</a></li>
+                          <li><a class="dropdown-item delete cursor-hover cursor-pointer"
+                              (click)="deleteSize(item.ItemSizeCode)">Delete</a></li>
+                        </ul>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div *ngIf="isLoadingData">
+                <app-table-loader></app-table-loader>
+              </div>
+            </div>
+          </ng-template>
+
+          <ng-template pTemplate="footer">
+            <button pButton pRipple label="Cancel" class="p-button-text" (click)="hideDialogSize()"></button>
+            <button pButton pRipple [label]="innerBtn" class="p-button-text" (click)="addorUpdateSize()"></button>
+          </ng-template>
+        </p-dialog>
+      </form>
+
+      <form [formGroup]="formColour">
+        <p-dialog [(visible)]="innerDialogColour" [style]="{ width: '450px' }" [header]="innerHeader" [modal]="true"
+          styleClass="p-fluid" [closable]="true" [resizable]="false" [draggable]="false">
+          <ng-template pTemplate="content">
+            <div class="row mt-1">
+              <div class="col-md-8">
+                <div class="form-group">
+                  <label for="colorActive">Item Colour</label>
+                  <ng-container *ngIf="!isInnerUpdate">
+                    <input type="text" id="colorActive" class="form-control" formControlName="ItemColour" required
+                      autofocus />
+                  </ng-container>
+                  <ng-container *ngIf="isInnerUpdate">
+                    <input type="text" id="colorActive" class="form-control" formControlName="ItemColour"
+                      [(ngModel)]="colourModel$.ItemColour" required autofocus />
+                  </ng-container>
+                </div>
+              </div>
+              <div class="col-md-4 align-self-center">
+                <div class="checkbox">
+                  <ng-container *ngIf="!isInnerUpdate">
+                    <input type="checkbox" class="form-checkbox" id="colorActive" formControlName="IsActive" required
+                      autofocus />
+                  </ng-container>
+                  <ng-container *ngIf="isInnerUpdate">
+                    <input type="checkbox" class="form-checkbox" id="colorActive" formControlName="IsActive"
+                      [(ngModel)]="colourModel$.IsActive" required autofocus />
+                  </ng-container>
+                  <label class="form-check-label">Active</label>
+                </div>
+              </div>
+            </div>
+            <div class="table-responsive custom-table">
+              <table class="table table-striped table-borderless" *ngIf="!isLoadingData">
+                <thead>
+                  <tr>
+                    <th scope="col">Code</th>
+                    <th scope="col">Item Color</th>
+                    <th scope="col">Active</th>
+                    <th scope="col" class="text-center">Action</th>
+                  </tr>
+                </thead>
+                <hr>
+                <tbody>
+                  <tr *ngFor="let item of colourResponse$; let odd = odd" [ngClass]="{ 'odd-row': odd }">
+                    <td>{{item.ItemColourCode}}</td>
+                    <td>{{item.ItemColour}}</td>
+                    <td>
+                      <span [class]="item.IsActive == true ? 'success-badge': 'danger-badge' ">{{item.IsActive |
+                        yesNo}}</span>
+                    </td>
+                    <td>
+                      <div class="dropdown text-center">
+                        <button class="three-dots" type="button" id="table-action-menu" data-bs-toggle="dropdown"
+                          aria-expanded="false">
+                          <i class="fa fa-ellipsis-v"></i>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="table-action-menu">
+                          <li><a class="dropdown-item edit cursor-hover cursor-pointer"
+                              (click)="getRowColour(item)">Edit</a></li>
+                          <li><a class="dropdown-item delete cursor-hover cursor-pointer"
+                              (click)="deleteColour(item.ItemColourCode)">Delete</a></li>
+                        </ul>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div *ngIf="isLoadingData">
+                <app-table-loader></app-table-loader>
+              </div>
+            </div>
+          </ng-template>
+
+          <ng-template pTemplate="footer">
+            <button pButton pRipple label="Cancel" class="p-button-text" (click)="hideDialogColour()"></button>
+            <button pButton pRipple [label]="innerBtn" class="p-button-text" (click)="addorUpdateColour()"></button>
+          </ng-template>
+        </p-dialog>
+      </form>
+
+      <form [formGroup]="formType">
+        <p-dialog [(visible)]="innerDialogType" [style]="{ width: '450px' }" [header]="innerHeader" [modal]="true"
+          styleClass="p-fluid" [closable]="true" [resizable]="false" [draggable]="false">
+          <ng-template pTemplate="content">
+            <div class="row mt-1">
+              <div class="col-md-8">
+                <div class="form-group">
+                  <div class="form-group">
+                    <label>Item Type</label>
+                    <ng-container *ngIf="!isInnerUpdate">
+                      <input type="text" class="form-control" formControlName="ItemType" required autofocus />
+                    </ng-container>
+                    <ng-container *ngIf="isInnerUpdate">
+                      <input type="text" class="form-control" formControlName="ItemType"
+                        [(ngModel)]="typeModel$.ItemType" required autofocus />
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4 align-self-center">
+                <div class="checkbox">
+                  <ng-container *ngIf="!isInnerUpdate">
+                    <input type="checkbox" class="form-checkbox" id="typeActive" formControlName="IsActive" required
+                      autofocus />
+                  </ng-container>
+                  <ng-container *ngIf="isInnerUpdate">
+                    <input type="checkbox" class="form-checkbox" id="typeActive" formControlName="IsActive"
+                      [(ngModel)]="typeModel$.IsActive" required autofocus />
+                  </ng-container>
+                  <label class="form-check-label" for="typeActive">Active</label>
+                </div>
+              </div>
+            </div>
+            <div class="table-responsive custom-table">
+              <table class="table table-striped table-borderless" *ngIf="!isLoadingData">
+                <thead>
+                  <tr>
+                    <th scope="col">Code</th>
+                    <th scope="col">Item Type</th>
+                    <th scope="col">Active</th>
+                    <th scope="col" class="text-center">Action</th>
+                  </tr>
+                </thead>
+                <hr>
+                <tbody>
+                  <tr *ngFor="let item of typeResponse$; let odd = odd" [ngClass]="{ 'odd-row': odd }">
+                    <td>{{item.ItemTypeCode}}</td>
+                    <td>{{item.ItemType}}</td>
+                    <td>
+                      <span [class]="item.IsActive == true ? 'success-badge': 'danger-badge' ">{{item.IsActive |
+                        yesNo}}</span>
+                    </td>
+                    <td>
+                      <div class="dropdown text-center">
+                        <button class="three-dots" type="button" id="table-action-menu" data-bs-toggle="dropdown"
+                          aria-expanded="false">
+                          <i class="fa fa-ellipsis-v"></i>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="table-action-menu">
+                          <li><a class="dropdown-item edit cursor-hover cursor-pointer"
+                              (click)="getRowType(item)">Edit</a></li>
+                          <li><a class="dropdown-item delete cursor-hover cursor-pointer"
+                              (click)="deleteType(item.ItemTypeCode)">Delete</a></li>
+                        </ul>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div *ngIf="isLoadingData">
+                <app-table-loader></app-table-loader>
+              </div>
+            </div>
+          </ng-template>
+
+          <ng-template pTemplate="footer">
+            <button pButton pRipple label="Cancel" class="p-button-text" (click)="hideDialogType()"></button>
+            <button pButton pRipple [label]="innerBtn" class="p-button-text" (click)="addorUpdateType()"></button>
+          </ng-template>
+        </p-dialog>
+      </form>
+
+      <form [formGroup]="formCategory">
+        <p-dialog [(visible)]="innerDialogCategory" [style]="{ width: '450px' }" [header]="innerHeader" [modal]="true"
+          styleClass="p-fluid" [closable]="true" [resizable]="false" [draggable]="false">
+          <ng-template pTemplate="content">
+            <div class="row mt-1">
+              <div class="col-md-8">
+                <div class="form-group">
+                  <label>Item Category</label>
+                  <ng-container *ngIf="!isInnerUpdate">
+                    <input type="text" class="form-control" formControlName="ItemCategory" required autofocus />
+                  </ng-container>
+                  <ng-container *ngIf="isInnerUpdate">
+                    <input type="text" class="form-control" formControlName="ItemCategory"
+                      [(ngModel)]="categoryModel$.ItemCategory" required autofocus />
+                  </ng-container>
+                </div>
+              </div>
+              <div class="col-md-4 align-self-center">
+                <div class="checkbox">
+                  <ng-container *ngIf="!isInnerUpdate">
+                    <input type="checkbox" id="categoryActive" class="form-checkbox" formControlName="IsActive" required
+                      autofocus />
+                  </ng-container>
+                  <ng-container *ngIf="isInnerUpdate">
+                    <input type="checkbox" id="categoryActive" class="form-checkbox" formControlName="IsActive"
+                      [(ngModel)]="categoryModel$.IsActive" required autofocus />
+                  </ng-container>
+                  <label class="form-check-label" for="categoryActive">Active</label>
+                </div>
+              </div>
+            </div>
+            <div class="table-responsive custom-table">
+              <table class="table table-striped table-borderless" *ngIf="!isLoadingData">
+                <thead>
+                  <tr>
+                    <th scope="col">Code</th>
+                    <th scope="col">Item Category</th>
+                    <th scope="col">Active</th>
+                    <th scope="col" class="text-center">Action</th>
+                  </tr>
+                </thead>
+                <hr>
+                <tbody>
+                  <tr *ngFor="let item of categoryResponse$; let odd = odd" [ngClass]="{ 'odd-row': odd }">
+                    <td>{{item.ItemCategoryCode}}</td>
+                    <td>{{item.ItemCategory}}</td>
+                    <td>
+                      <span [class]="item.IsActive == true ? 'success-badge': 'danger-badge' ">{{item.IsActive |
+                        yesNo}}</span>
+                    </td>
+                    <td>
+                      <div class="dropdown text-center">
+                        <button class="three-dots" type="button" id="table-action-menu" data-bs-toggle="dropdown"
+                          aria-expanded="false">
+                          <i class="fa fa-ellipsis-v"></i>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="table-action-menu">
+                          <li><a class="dropdown-item edit cursor-hover cursor-pointer"
+                              (click)="getRowCategory(item)">Edit</a></li>
+                          <li><a class="dropdown-item delete cursor-hover cursor-pointer"
+                              (click)="deleteCategory(item.ItemCategoryCode)">Delete</a></li>
+                        </ul>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div *ngIf="isLoadingData">
+                <app-table-loader></app-table-loader>
+              </div>
+            </div>
+          </ng-template>
+
+          <ng-template pTemplate="footer">
+            <button pButton pRipple label="Cancel" class="p-button-text" (click)="hideDialogCategory()"></button>
+            <button pButton pRipple [label]="innerBtn" class="p-button-text" (click)="addorUpdateCategory()"></button>
+          </ng-template>
+        </p-dialog>
+      </form>
+
+      <form [formGroup]="formGrade">
+        <p-dialog [(visible)]="innerDialogGrade" [style]="{ width: '450px' }" [header]="innerHeader" [modal]="true"
+          styleClass="p-fluid" [closable]="true" [resizable]="false" [draggable]="false">
+          <ng-template pTemplate="content">
+            <div class="row mt-1">
+              <div class="col-md-8">
+                <div class="form-group">
+                  <label>Item Grade</label>
+                  <ng-container *ngIf="!isInnerUpdate">
+                    <input type="text" class="form-control" formControlName="ItemGrade" required autofocus />
+                  </ng-container>
+                  <ng-container *ngIf="isInnerUpdate">
+                    <input type="text" class="form-control" formControlName="ItemGrade"
+                      [(ngModel)]="gradeModel$.ItemGrade" required autofocus />
+                  </ng-container>
+                </div>
+              </div>
+              <div class="col-md-4 align-self-center">
+                <div class="checkbox">
+                  <ng-container *ngIf="!isInnerUpdate">
+                    <input type="checkbox" class="form-checkbox" id="gradeActive" formControlName="IsActive" required
+                      autofocus />
+                  </ng-container>
+                  <ng-container *ngIf="isInnerUpdate">
+                    <input type="checkbox" class="form-checkbox" id="gradeActive" formControlName="IsActive"
+                      [(ngModel)]="gradeModel$.IsActive" required autofocus />
+                  </ng-container>
+                  <label for="gradeActive">Active</label>
+                </div>
+              </div>
+            </div>
+            <div class="table-responsive custom-table">
+              <table class="table table-striped table-borderless" *ngIf="!isLoadingData">
+                <thead>
+                  <tr>
+                    <th scope="col">Code</th>
+                    <th scope="col">Item Grade</th>
+                    <th scope="col">Active</th>
+                    <th scope="col" class="text-center">Action</th>
+                  </tr>
+                </thead>
+                <hr>
+                <tbody>
+                  <tr *ngFor="let item of gradeResponse$; let odd = odd" [ngClass]="{ 'odd-row': odd }">
+                    <td>{{item.ItemGradeCode}}</td>
+                    <td>{{item.ItemGrade}}</td>
+                    <td>
+                      <span [class]="item.IsActive == true ? 'success-badge': 'danger-badge' ">{{item.IsActive |
+                        yesNo}}</span>
+                    </td>
+                    <td>
+                      <div class="dropdown text-center">
+                        <button class="three-dots" type="button" id="table-action-menu" data-bs-toggle="dropdown"
+                          aria-expanded="false">
+                          <i class="fa fa-ellipsis-v"></i>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="table-action-menu">
+                          <li><a class="dropdown-item edit cursor-hover cursor-pointer"
+                              (click)="getRowGrade(item)">Edit</a></li>
+                          <li><a class="dropdown-item delete cursor-hover cursor-pointer"
+                              (click)="deleteGrade(item.ItemGradeCode)">Delete</a></li>
+                        </ul>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div *ngIf="isLoadingData">
+                <app-table-loader></app-table-loader>
+              </div>
+            </div>
+          </ng-template>
+
+          <ng-template pTemplate="footer">
+            <button pButton pRipple label="Cancel" class="p-button-text" (click)="hideDialogGrade()"></button>
+            <button pButton pRipple [label]="innerBtn" class="p-button-text" (click)="addorUpdateGrade()"></button>
+          </ng-template>
+        </p-dialog>
+      </form>
+
+      <form [formGroup]="formManufacturer">
+        <p-dialog [(visible)]="innerDialogManufacturer" [style]="{ width: '450px' }" [header]="innerHeader"
+          [modal]="true" styleClass="p-fluid" [closable]="true" [resizable]="false" [draggable]="false">
+          <ng-template pTemplate="content">
+            <div class="row mt-1">
+              <div class="col-md-8">
+                <div class="form-group">
+                  <label>Item Manufacturer</label>
+                  <ng-container *ngIf="!isInnerUpdate">
+                    <input type="text" class="form-control" formControlName="ItemManufacturer" required autofocus />
+                  </ng-container>
+                  <ng-container *ngIf="isInnerUpdate">
+                    <input type="text" class="form-control" formControlName="ItemManufacturer"
+                      [(ngModel)]="manufacturerModel$.ItemManufacturer" required autofocus />
+                  </ng-container>
+                </div>
+              </div>
+              <div class="col-md-4 align-self-center">
+                <div class="checkbox">
+
+                  <ng-container *ngIf="!isInnerUpdate">
+                    <input type="checkbox" id="manuActive" class="form-checkbox" formControlName="IsActive" required
+                      autofocus />
+                  </ng-container>
+                  <ng-container *ngIf="isInnerUpdate">
+                    <input type="checkbox" id="manuActive" class="form-checkbox" formControlName="IsActive"
+                      [(ngModel)]="manufacturerModel$.IsActive" required autofocus />
+                  </ng-container>
+                  <label class="form-check-label" for="manuActive">Active</label>
+                </div>
+              </div>
+            </div>
+            <div class="table-responsive custom-table">
+              <table class="table table-striped table-borderless" *ngIf="!isLoadingData">
+                <thead>
+                  <tr>
+                    <th scope="col">Code</th>
+                    <th scope="col">Item Manufacturer</th>
+                    <th scope="col">Active</th>
+                    <th scope="col" class="text-center">Action</th>
+                  </tr>
+                </thead>
+                <hr>
+                <tbody>
+                  <tr *ngFor="let item of manufacturerResponse$; let odd = odd" [ngClass]="{ 'odd-row': odd }">
+                    <td>{{item.ItemManufacturerCode}}</td>
+                    <td>{{item.ItemManufacturer}}</td>
+                    <td>
+                      <span [class]="item.IsActive == true ? 'success-badge': 'danger-badge' ">{{item.IsActive |
+                        yesNo}}</span>
+                    </td>
+                    <td>
+                      <div class="dropdown text-center">
+                        <button class="three-dots" type="button" id="table-action-menu" data-bs-toggle="dropdown"
+                          aria-expanded="false">
+                          <i class="fa fa-ellipsis-v"></i>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="table-action-menu">
+                          <li><a class="dropdown-item edit cursor-hover cursor-pointer"
+                              (click)="getRowManufacturer(item)">Edit</a></li>
+                          <li><a class="dropdown-item delete cursor-hover cursor-pointer"
+                              (click)="deleteManufacturer(item.ItemManufacturerCode)">Delete</a></li>
+                        </ul>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div *ngIf="isLoadingData">
+                <app-table-loader></app-table-loader>
+              </div>
+            </div>
+          </ng-template>
+
+          <ng-template pTemplate="footer">
+            <button pButton pRipple label="Cancel" class="p-button-text" (click)="hideDialogManufacturer()"></button>
+            <button pButton pRipple [label]="innerBtn" class="p-button-text"
+              (click)="addorUpdateManufacturer()"></button>
+          </ng-template>
+        </p-dialog>
+      </form>
+
+      <form [formGroup]="formBrand">
+        <p-dialog [(visible)]="innerDialogBrand" [style]="{ width: '450px' }" [header]="innerHeader" [modal]="true"
+          styleClass="p-fluid" [closable]="true" [resizable]="false" [draggable]="false">
+          <ng-template pTemplate="content">
+            <div class="row mt-1">
+              <div class="col-md-8">
+                <div class="form-group">
+                  <label>Item Brand</label>
+                  <ng-container *ngIf="!isInnerUpdate">
+                    <input type="text" class="form-control" formControlName="ItemBrand" required autofocus />
+                  </ng-container>
+                  <ng-container *ngIf="isInnerUpdate">
+                    <input type="text" class="form-control" formControlName="ItemBrand"
+                      [(ngModel)]="brandModel$.ItemBrand" required autofocus />
+                  </ng-container>
+                </div>
+              </div>
+              <div class="col-md-4 align-self-center">
+
+                <div class="checkbox">
+                  <ng-container *ngIf="!isInnerUpdate">
+                    <input type="checkbox" class="form-checkbox" id="brandActive" formControlName="IsActive" required
+                      autofocus />
+                  </ng-container>
+                  <ng-container *ngIf="isInnerUpdate">
+                    <input type="checkbox" class="form-checkbox" id="brandActive" formControlName="IsActive"
+                      [(ngModel)]="brandModel$.IsActive" required autofocus />
+                  </ng-container>
+                  <label for="brandActive" class="form-check-label">Active</label>
+                </div>
+              </div>
+            </div>
+            <div class="table-responsive custom-table">
+              <table class="table table-striped table-borderless" *ngIf="!isLoadingData">
+                <thead>
+                  <tr>
+                    <th scope="col">Code</th>
+                    <th scope="col">Item Brand</th>
+                    <th scope="col">Active</th>
+                    <th scope="col" class="text-center">Action</th>
+                  </tr>
+                </thead>
+                <hr>
+                <tbody>
+                  <tr *ngFor="let item of brandResponse$; let odd = odd" [ngClass]="{ 'odd-row': odd }">
+                    <td>{{item.ItemBrandCode}}</td>
+                    <td>{{item.ItemBrand}}</td>
+                    <td>
+                      <span [class]="item.IsActive == true ? 'success-badge': 'danger-badge' ">{{item.IsActive |
+                        yesNo}}</span>
+                    </td>
+                    <td>
+                      <div class="dropdown text-center">
+                        <button class="three-dots" type="button" id="table-action-menu" data-bs-toggle="dropdown"
+                          aria-expanded="false">
+                          <i class="fa fa-ellipsis-v"></i>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="table-action-menu">
+                          <li><a class="dropdown-item edit cursor-hover cursor-pointer"
+                              (click)="getRowBrand(item)">Edit</a></li>
+                          <li><a class="dropdown-item delete cursor-hover cursor-pointer"
+                              (click)="deleteBrand(item.ItemBrandCode)">Delete</a></li>
+                        </ul>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div *ngIf="isLoadingData">
+                <app-table-loader></app-table-loader>
+              </div>
+            </div>
+          </ng-template>
+
+          <ng-template pTemplate="footer">
+            <button pButton pRipple label="Cancel" class="p-button-text" (click)="hideDialogBrand()"></button>
+            <button pButton pRipple [label]="innerBtn" class="p-button-text" (click)="addorUpdateBrand()"></button>
+          </ng-template>
+        </p-dialog>
+      </form>
+
+      <form [formGroup]="formModel">
+        <p-dialog [(visible)]="innerDialogModel" [style]="{ width: '450px' }" [header]="innerHeader" [modal]="true"
+          styleClass="p-fluid" [closable]="true" [resizable]="false" [draggable]="false">
+          <ng-template pTemplate="content">
+            <div class="row mt-1">
+              <div class="col-md-8">
+                <div class="form-group">
+                  <label class="">Item Model</label>
+                  <ng-container *ngIf="!isInnerUpdate">
+                    <input type="text" class="form-control" formControlName="ItemModel" required autofocus />
+                  </ng-container>
+                  <ng-container *ngIf="isInnerUpdate">
+                    <input type="text" class="form-control" formControlName="ItemModel"
+                      [(ngModel)]="modelModel$.ItemModel" required autofocus />
+                  </ng-container>
+                </div>
+              </div>
+              <div class="col-md-4 align-self-center">
+                <div class="checkbox">
+                  <ng-container *ngIf="!isInnerUpdate">
+                    <input type="checkbox" class="form-checkbox" id="modalActive" formControlName="IsActive" required
+                      autofocus />
+                  </ng-container>
+                  <ng-container *ngIf="isInnerUpdate">
+                    <input type="checkbox" class="form-checkbox" id="modalActive" formControlName="IsActive"
+                      [(ngModel)]="modelModel$.IsActive" required autofocus />
+                  </ng-container>
+                  <label class="form-check-label" for="modalActive">Active</label>
+                </div>
+              </div>
+            </div>
+            <div class="table-responsive custom-table">
+              <table class="table table-striped table-borderless" *ngIf="!isLoadingData">
+                <thead>
+                  <tr>
+                    <th scope="col">Code</th>
+                    <th scope="col">Item Model</th>
+                    <th scope="col">Active</th>
+                    <th scope="col" class="text-center">Action</th>
+                  </tr>
+                </thead>
+                <hr>
+                <tbody>
+                  <tr *ngFor="let item of modelResponse$; let odd = odd" [ngClass]="{ 'odd-row': odd }">
+                    <td>{{item.ItemModelCode}}</td>
+                    <td>{{item.ItemModel}}</td>
+                    <td>
+                      <span [class]="item.IsActive == true ? 'success-badge': 'danger-badge' ">{{item.IsActive |
+                        yesNo}}</span>
+                    </td>
+                    <td>
+                      <div class="dropdown text-center">
+                        <button class="three-dots" type="button" id="table-action-menu" data-bs-toggle="dropdown"
+                          aria-expanded="false">
+                          <i class="fa fa-ellipsis-v"></i>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="table-action-menu">
+                          <li><a class="dropdown-item edit cursor-hover cursor-pointer"
+                              (click)="getRowModel(item)">Edit</a></li>
+                          <li><a class="dropdown-item delete cursor-hover cursor-pointer"
+                              (click)="deleteModel(item.ItemModelCode)">Delete</a></li>
+                        </ul>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div *ngIf="isLoadingData">
+                <app-table-loader></app-table-loader>
+              </div>
+            </div>
+          </ng-template>
+
+          <ng-template pTemplate="footer">
+            <button pButton pRipple label="Cancel" class="p-button-text" (click)="hideDialogModel()"></button>
+            <button pButton pRipple [label]="innerBtn" class="p-button-text" (click)="addorUpdateModel()"></button>
+          </ng-template>
+        </p-dialog>
+      </form>
+
+      <form [formGroup]="formUnit">
+        <p-dialog [(visible)]="innerDialogUnit" [style]="{ width: '500px' }" [header]="innerHeader" [modal]="true"
+          styleClass="p-fluid" [closable]="true" [resizable]="false" [draggable]="false">
+          <ng-template pTemplate="content">
+            <div class="row mt-1">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Item Unit</label>
+                  <ng-container *ngIf="!isInnerUpdate">
+                    <input type="text" class="form-control" formControlName="ItemUnit" required autofocus />
+                  </ng-container>
+                  <ng-container *ngIf="isInnerUpdate">
+                    <input type="text" class="form-control" formControlName="ItemUnit" [(ngModel)]="unitModel$.ItemUnit"
+                      required autofocus />
+                  </ng-container>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label>Short Name</label>
+                  <ng-container *ngIf="!isInnerUpdate">
+                    <input type="text" class="form-control" formControlName="ShortName" required autofocus />
+                  </ng-container>
+                  <ng-container *ngIf="isInnerUpdate">
+                    <input type="text" class="form-control" formControlName="ShortName"
+                      [(ngModel)]="unitModel$.ShortName" required autofocus />
+                  </ng-container>
+                </div>
+              </div>
+              <div class="col-md-3 align-self-center">
+                <div class="checkbox">
+                  <ng-container *ngIf="!isInnerUpdate">
+                    <input type="checkbox" class="form-checkbox" id="unitActive" formControlName="IsActive" required
+                      autofocus />
+                  </ng-container>
+                  <ng-container *ngIf="isInnerUpdate">
+                    <input type="checkbox" class="form-checkbox" id="unitActive" formControlName="IsActive"
+                      [(ngModel)]="unitModel$.IsActive" required autofocus />
+                  </ng-container>
+                  <label class="form-check-label" for="unitActive">Active</label>
+                </div>
+              </div>
+            </div>
+            <div class="table-responsive custom-table">
+              <table class="table table-striped table-borderless" *ngIf="!isLoadingData">
+                <thead>
+                  <tr>
+                    <th scope="col">Code</th>
+                    <th scope="col">Item Unit</th>
+                    <th scope="col">Short Name</th>
+                    <th scope="col">Active</th>
+                    <th scope="col" class="text-center">Action</th>
+                  </tr>
+                </thead>
+                <hr>
+                <tbody>
+                  <tr *ngFor="let item of unitResponse$; let odd = odd" [ngClass]="{ 'odd-row': odd }">
+                    <td>{{item.ItemUnitCode}}</td>
+                    <td>{{item.ItemUnit}}</td>
+                    <td>{{item.ShortName}}</td>
+                    <td>
+                      <span [class]="item.IsActive == true ? 'success-badge': 'danger-badge' ">{{item.IsActive |
+                        yesNo}}</span>
+                    </td>
+                    <td>
+                      <div class="dropdown text-center">
+                        <button class="three-dots" type="button" id="table-action-menu" data-bs-toggle="dropdown"
+                          aria-expanded="false">
+                          <i class="fa fa-ellipsis-v"></i>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="table-action-menu">
+                          <li><a class="dropdown-item edit cursor-hover cursor-pointer"
+                              (click)="getRowUnit(item)">Edit</a></li>
+                          <li><a class="dropdown-item delete cursor-hover cursor-pointer"
+                              (click)="deleteUnit(item.ItemUnitCode)">Delete</a></li>
+                        </ul>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div *ngIf="isLoadingData">
+                <app-table-loader></app-table-loader>
+              </div>
+            </div>
+          </ng-template>
+
+          <ng-template pTemplate="footer">
+            <button pButton pRipple label="Cancel" class="p-button-text" (click)="hideDialogUnit()"></button>
+            <button pButton pRipple [label]="innerBtn" class="p-button-text" (click)="addorUpdateUnit()"></button>
+          </ng-template>
+        </p-dialog>
+      </form>
+    </p-dialog>
+  </form>
+</div>
+
+<div class="loading-popup" *ngIf="loading">
+  <div class="overlay"></div>
+  <div class="popup">
+    <div class="spinner"></div>
+    <p>Generating Report</p>
+  </div>
+</div>
+
+<!-- Response-Error-Message  -->
+<div class="loading-newpopup" *ngIf="loadingerror">
+  <div class="newpopup">
+    <!---<a><img class="ErrorIcon" src="./assets/icon/error.svg" /></a>-->
+    <div class="Errormessage">
+      <p><strong>Error</strong></p>
+      <p>You are not authorized to perform this Operation</p>
+    </div>
+    <button class="btn btn-danger ErrorClosebtn" (click)="hideErrorPopup()">
+      Cancel
+    </button>
+  </div>
+</div>

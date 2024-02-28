@@ -1,0 +1,190 @@
+<app-confirm-dialog></app-confirm-dialog>
+
+<div class="main-container">
+  <div class="container">
+    <app-store-project
+      [showInput2]="false"
+      [showInput1]="false"
+      [componentName]="componentName"
+      [hide]="false"
+    ></app-store-project>
+  </div>
+  <div class="container">
+    <div class="row">
+      <form
+        class="col-lg-12 col-md-12 col-sm-12"
+        [formGroup]="form"
+        (ngSubmit)="save()"
+      >
+        <div class="row text-center" style="font-size: small">
+          <div class="col-lg-12 col-md-12 col-sm-10">
+            <div class="card p-3">
+              <div class="row align-items-stretch">
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                  <label class="float-md-left d-flex float-sm-left"
+                    >Department</label
+                  >
+                  <p-dropdown
+                    formControlName="DepartmentCode"
+                    [options]="deptResponse"
+                    optionValue="DepartmentCode"
+                    optionLabel="DepartmentName"
+                    placeholder="Select Department"
+                    class="text-start"
+                  ></p-dropdown>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                  <label class="float-md-left d-flex float-sm-left"
+                    >Shifts
+                    <span class="astrik">*</span>
+                  </label>
+                  <p-dropdown
+                    formControlName="ShiftCode"
+                    [options]="shifts"
+                    optionValue="ShiftCode"
+                    optionLabel="ShiftName"
+                    placeholder="Select Shift"
+                    class="text-start"
+                  ></p-dropdown>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 align-self-end">
+                  <button
+                    type="submit"
+                    class="btn btn-outline-success mx-1 btnFix"
+                  >
+                    Assign
+                  </button>
+                  <button
+                    type="button"
+                    id="btnRefresh"
+                    class="btn primary-button-color mx-1 btnFix"
+                    (click)="refresh()"
+                  >
+                    Refresh
+                  </button>
+                </div>
+              </div>
+
+              <ng-container *ngIf="hasData">
+                <div class="row align-items-stretch">
+                  <div class="col-sm-2">
+                    <label>Start Time:</label>
+                    <span
+                      ><p>
+                        {{ optionalShift.StartTime | timeFormat }}
+                      </p></span
+                    >
+                  </div>
+                  <div class="col-sm-2">
+                    <label>End Time:</label>
+                    <span
+                      ><p>
+                        {{ optionalShift.EndTime | timeFormat }}
+                      </p></span
+                    >
+                  </div>
+                  <div class="col-sm-2">
+                    <label>Early Start Time:</label>
+                    <span
+                      ><p>
+                        {{ optionalShift.EarlyStartTime | timeFormat }}
+                      </p></span
+                    >
+                  </div>
+                  <div class="col-sm-2">
+                    <label>Early End Time:</label>
+                    <span
+                      ><p>
+                        {{ optionalShift.EarlyEndTime | timeFormat }}
+                      </p></span
+                    >
+                  </div>
+                  <div class="col-sm-2">
+                    <label>Break Start Time:</label>
+                    <span
+                      ><p>
+                        {{ optionalShift.BreakStartTime | timeFormat }}
+                      </p></span
+                    >
+                  </div>
+                  <div class="col-sm-2">
+                    <label>Break End Time:</label>
+                    <span
+                      ><p>
+                        {{ optionalShift.BreakEndTime | timeFormat }}
+                      </p></span
+                    >
+                  </div>
+                  <div class="col-sm-2">
+                    <label>Flexi Early Time:</label>
+                    <span
+                      ><p>
+                        {{ optionalShift.FlexiEarlyTime | timeFormat }}
+                      </p></span
+                    >
+                  </div>
+                  <div class="col-sm-2">
+                    <label>Flexi Late Time:</label>
+                    <span
+                      ><p>
+                        {{ optionalShift.FlexiLateTime | timeFormat }}
+                      </p></span
+                    >
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="row">
+      <p-table
+        [value]="tableResponse"
+        [rows]="6"
+        selectionMode="multiple"
+        dataKey="EmployeeCode"
+        (onHeaderCheckboxToggle)="onHeaderCheckboxToggle($event)"
+        (onRowSelect)="onRowSelect($event)"
+        (onRowUnselect)="onRowUnselect($event)"
+        class="datatable-width"
+        styleClass="p-datatable-sm"
+        responsiveLayout="stack"
+        [breakpoint]="'960px'"
+        [rowHover]="true"
+        [alwaysShowPaginator]="false"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 3rem">
+              <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+            </th>
+            <th style="width: 50px" pSortableColumn="EmployeeCode">
+              Code <p-sortIcon field="EmployeeCode"></p-sortIcon>
+            </th>
+            <th style="width: 50px" pSortableColumn="EmployeeName">
+              Employee Name <p-sortIcon field="EmployeeName"></p-sortIcon>
+            </th>
+            <th
+              style="width: 50px; padding-left: 8px"
+              pSortableColumn="DesignationName"
+            >
+              Designation <p-sortIcon field="DesignationName"></p-sortIcon>
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-m>
+          <tr>
+            <td>
+              <p-tableCheckbox [value]="m"></p-tableCheckbox>
+            </td>
+            <td>{{ m.EmployeeCode }}</td>
+            <td>{{ m.EmployeeName }}</td>
+            <td>{{ m.DesignationName }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</div>

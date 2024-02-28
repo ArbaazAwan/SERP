@@ -1,0 +1,178 @@
+<app-confirm-dialog></app-confirm-dialog>
+
+<div class="main-container">
+  <div class="container">
+    <app-store-project
+      [showInput2]="false"
+      [showInput1]="false"
+      [componentName]="componentName"
+      [hide]="false"
+    >
+    </app-store-project>
+  </div>
+  <div class="container">
+    <div class="row" style="font-size: small">
+      <form
+        class="col-lg-12 col-md-12 col-sm-12"
+        [formGroup]="form"
+        (ngSubmit)="addorUpdate()"
+      >
+        <div class="card p-3">
+          <div class="row align-items-stretch">
+            <div class="col-lg-4 col-md-4 col-sm-12 mb-3">
+              <label class="float-md-left d-flex float-sm-left ml-1 mb-1"
+                >Party Type
+                <span class="astrik">*</span>
+              </label>
+              <input
+                type="text"
+                class="form-control text-xs"
+                placeholder="Enter Party Type Name"
+                formControlName="PartyType"
+                maxlength="30"
+              />
+              <div
+                class="error-field"
+                *ngIf="
+                  formControls['PartyType'].invalid &&
+                  formControls['PartyType'].touched
+                "
+              >
+                Party Type is required
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-12 mb-3">
+              <label class="float-md-left d-flex float-sm-left ml-1 mb-1"
+                >Description
+                <span class="astrik">*</span>
+              </label>
+              <input
+                type="text"
+                class="form-control text-xs"
+                formControlName="Description"
+                placeholder="Enter Description"
+                maxlength="90"
+              />
+              <div
+                class="error-field"
+                *ngIf="
+                  formControls['Description'].invalid &&
+                  formControls['Description'].touched
+                "
+              >
+                Description is required
+              </div>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-12">
+              <div class="form-check form-check-inline mt-4">
+                <input
+                  type="checkbox"
+                  formControlName="IsActive"
+                  style="float: left"
+                />
+                <label class="float-md-left d-flex float-sm-left mb-2 labelChk"
+                  >Active</label
+                >
+              </div>
+            </div>
+          </div>
+          <div class="row align-items-stretch">
+            <div class="col-sm-4"></div>
+            <div
+              class="row justify-content-center"
+              style="align-items: flex-end"
+            >
+              <button
+                type="submit"
+                class="btn btn-outline-success mx-1 btnFix"
+                [disabled]="isUpdate"
+              >
+                Save
+              </button>
+              <button
+                type="submit"
+                id="btnsave"
+                class="btn btn-outline-success btnFix"
+                [disabled]="!isUpdate"
+              >
+                Update
+              </button>
+              <button
+                type="button"
+                id="btnRefresh"
+                class="btn primary-button-color mx-1 btnFix"
+                (click)="refresh()"
+              >
+                Refresh
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="row mt-3">
+      <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="table-responsive card-wrapper custom-table">
+          <p-table
+            [value]="PartyTyperesponse$"
+            *ngIf="PartyTyperesponse$.length > 0"
+            [paginator]="true"
+            [alwaysShowPaginator]="false"
+            [rows]="10"
+            class="datatable-width"
+            styleClass="p-datatable-sm"
+            responsiveLayout="stack"
+            [breakpoint]="'960px'"
+            [rowHover]="true"
+          >
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Code</th>
+                <th>Party Type</th>
+                <th>Description</th>
+                <th>Active</th>
+                <th>Action</th>
+              </tr>
+              <tr>
+                <td colspan="5">
+                  <hr />
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-m>
+              <tr>
+                <td>
+                  <span class="ml-2">{{ m.PartyTypeId }}</span>
+                </td>
+                <td>
+                  <span class="ml-2">{{ m.PartyType }}</span>
+                </td>
+                <td>
+                  <span class="ml-2">{{ m.Description }}</span>
+                </td>
+                <td>
+                  <span class="ml-2">{{ m.IsActive | yesNo }}</span>
+                </td>
+                <td>
+                  <button
+                    pButton
+                    icon="pi pi-pencil"
+                    class="p-button p-button-outlined p-button-rounded p-button-success p-mr-2 mx-1 custom-button-success"
+                    (click)="getSelectedRow(m)"
+                  ></button>
+                  <button
+                    pButton
+                    icon="pi pi-trash"
+                    class="p-button p-button-outlined p-button-rounded p-button-danger p-mr-2 mx-1 custom-button-success"
+                    (click)="delete(m.PartyTypeId)"
+                  ></button>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

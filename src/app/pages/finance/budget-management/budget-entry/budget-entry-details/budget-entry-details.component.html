@@ -1,0 +1,193 @@
+<div class="main-container">
+    <p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog>
+
+    <div class="">
+      <div>
+        <p class="heading">Budget Entry Details</p>
+      </div>
+    </div>
+    <div class="">
+      <div class="row">
+        <form [formGroup]="budgetEntryDetails">
+          <div class="card-wrapper">
+            <div class="row">
+              <div class="col-lg-4 col-md-6 col-sm-12">
+                <div class="form-group">
+                  <label> Budget Code<span class="astrik">*</span></label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="BudgetCode"
+                    [attr.disabled]="true"
+                  />
+                </div>
+              </div>
+  
+              <div class="col-lg-4 col-md-6 col-sm-12">
+                <div class="form-group">
+                  <label> Budget Cycle </label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    [attr.disabled]="true"
+                    formControlName="BudgetCycleTitle"
+                  />
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-6 col-sm-12">
+                <div class="form-group">
+                  <label> Project<span class="astrik">*</span></label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    [attr.disabled]="true"
+                    formControlName="ProjectName"
+                  />
+                </div>
+              </div>
+  
+
+              <div class="col-lg-4 col-md-6 col-sm-12">
+                <div class="form-group">
+                  <label>Revision No<span class="astrik">*</span></label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    [attr.disabled]="true"
+                    formControlName="RevisionNo"
+                  />
+                </div>
+              </div>
+
+              <div class="col-lg-4 col-md-3 col-sm-12">
+                <div class="form-group">
+                  <label class="mb-1 ml-1" for="financial-year"
+                    >Budget Status
+                    <span class="astrik">*</span>
+                  </label>
+                    <p-dropdown
+                      id="Branch"
+                      [options]="budgetStatusList"
+                      [filter]="true"
+                      optionLabel="BudgetStatus"
+                      optionValue="BudgetStatusCode"
+                      formControlName="BudgetStatusCode"
+                      filterBy="BudgetStatus"
+                      [showClear]="false"
+                      placeholder="Select Branch"
+                      [panelStyle]="{ overflow: 'auto' }"
+                      appendTo="body"
+                      [disabled]="budgetMasterList.BudgetStatusCode == 4"
+                    >
+                      <ng-template let-option pTemplate="item">
+                        <div class="option-item">
+                          <div style="float: left; width: 70%">
+                            {{ option.BudgetStatus }}
+                          </div>
+                        </div>
+                      </ng-template>
+                    </p-dropdown>
+                </div>
+              </div>
+              <div class="col-lg-12 mt-3">
+                <div class="buttons-wrapper d-flex align-items-center gap-2">
+                  <button
+                    type="submit"
+                    id="btnsave"
+                    Class="btn-save"
+                    (click)="updateMaster()"
+                  >
+                    Update
+                  </button>
+                  <!-- <h2>{{ChildAccountCodesAndBudget|json}}</h2> -->
+                </div>
+              </div>
+            </div>
+  
+            <!-- <div class="row mt-2">
+              <div class="d-flex align-items-center gap-2">
+                <button
+                  type="button"
+                  id="btnupdate"
+                  
+                  Class="btn-save"
+                 
+                >
+                  Update
+                </button>
+                
+              </div>
+            </div> -->
+          </div>
+        </form>
+      </div>
+     
+  <!-- --------------------------------------------------Details Form End Here------------------------------------------------ -->
+  <div>
+    <div class="divlabelset">
+      <h3 style="margin-left: 23pc; margin-top: 20px; margin-bottom: 20px; font-size: x-large;font-palette: dark;
+      font-style: inherit;
+      padding-top: 5px;">Budget Definition</h3>
+      
+    </div>
+    <p-treeTable #dt [value]="chartResponse2" [rowHover]="true">
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="min-width: 200px" field="AccountName">Account Name</th>
+          <th style="min-width: 200px" field="IsDetail">Actions</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
+        <tr [ttRow]="rowNode">
+          <td>
+            <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+            {{ rowData.AccountName }}
+          </td>
+          <td>
+            <input type="number" [(ngModel)]="rowData.ChildBudget" (change)="checkChildValue(rowData)" 
+            [disabled]="budgetEntryDetails.value.BudgetStatusCode == 4"/>
+          </td>
+        </tr>
+      </ng-template>
+    </p-treeTable>
+  </div>
+  <div class="row mt-2 btn-setting">
+              <div class="d-flex align-items-center gap-2">
+                <button
+                  type="button"
+                  id="btnupdate"
+                  (click)="updateBudgteDetails()"
+                  Class="btn-save"
+                 
+                >
+                  Save
+                </button>
+                
+              </div>
+            </div>
+    </div>
+</div>
+
+
+<!-- Response-Error-Message  -->
+<div class="loading-newpopup" *ngIf="loadingerror">
+  <div class="newpopup">
+    <!---<a><img class="ErrorIcon" src="./assets/icon/error.svg" /></a>-->
+    <div class="Errormessage">
+      <p><strong>Error</strong></p>
+      <p>Value Exceeds the Limit</p>
+    </div>
+    <button class="btn btn-danger ErrorClosebtn" (click)="hideErrorPopup()">
+      OK
+    </button>
+  </div>
+</div>
+
+
+<div class="loading-popup" *ngIf="loading">
+  <div class="overlay"></div>
+  <div class="popup">
+    <div class="spinner"></div>
+    <p style="margin-left: 24px;">Details Saving...</p>
+  </div>
+</div>

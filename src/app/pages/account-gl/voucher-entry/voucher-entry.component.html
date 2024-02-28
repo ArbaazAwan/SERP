@@ -1,0 +1,91 @@
+<ngx-loading-bar [includeSpinner]="false" [height]="'3px'"></ngx-loading-bar>
+<div class="main-container">
+
+  <div class="container">
+    <app-store-project [showInput2]="false" [showInput1]="false" [componentName]="componentName"
+      [hide]="false"></app-store-project>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <form [formGroup]="form" novalidate>
+        <div class="card-wrapper">
+          <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+              <div class="checkbox-wrapper d-flex align-items-center gap-4 flex-wrap">
+                <div class="checkbox" (click)="IncludeAssets()">
+                  <input type="checkbox" class="form-checkbox" formControlName="IncludeAssets" name="IncludeAssets" />
+                  <label class="form-check-label">Assets</label>
+                </div>
+                <div class="checkbox" (click)="IncludeParty()">
+                  <input type="checkbox" class="form-checkbox" formControlName="IncludeParty" name="IncludeParty" />
+                  <label class="form-check-label">Party</label>
+                </div>
+                <div class="checkbox" (click)="IncludeEmployee()">
+                  <input type="checkbox" class="form-checkbox" formControlName="IncludeEmployee"
+                    name="IncludeEmployee" />
+                  <label class="form-check-label"> Employee </label>
+                </div>
+                <div class="checkbox" (click)="IncludeWorkOrder()">
+                  <input type="checkbox" class="form-checkbox" formControlName="IncludeWorkOrder"
+                    name="IncludeWorkOrder" />
+                  <label class="form-check-label">Work Order</label>
+                </div>
+                <div class="checkbox" (click)="IncludeCostCentersLevel1()">
+                  <input type="checkbox" class="form-checkbox" formControlName="IncludeCostCentersLevel1"
+                    name="IncludeCostCentersLevel1" />
+                  <label class="form-check-label">Cost Center I</label>
+                </div>
+                <div class="checkbox" (click)="IncludeCostCentersLevel2()">
+                  <input type="checkbox" class="form-checkbox" formControlName="IncludeCostCentersLevel2"
+                    name="IncludeCostCentersLevel2" />
+                  <label class="form-check-label">Cost Center II</label>
+                </div>
+                <div class="checkbox" (click)="IncludeCostCentersLevel3()">
+                  <input type="checkbox" class="form-checkbox" formControlName="IncludeCostCentersLevel3"
+                    name="IncludeCostCentersLevel3" />
+                  <label class="form-check-label">Cost Center III</label>
+                </div>
+                <div class="checkbox" (click)="IncludeFunctions()">
+                  <input type="checkbox" class="form-checkbox" formControlName="IncludeFunctions"
+                    name="IncludeFunctions" />
+                  <label class="form-check-label">Function</label>
+                </div>
+                <div class="checkbox" (click)="IncludeCashFlowTag1()">
+                  <input type="checkbox" class="form-checkbox" formControlName="IncludeCashFlowTag1"
+                    name="IncludeCashFlowTag1" />
+                  <label class="form-check-label">Cash Flow Tag-I</label>
+                </div>
+                <div class="checkbox" (click)="IncludeCashFlowTag2()">
+                  <input type="checkbox" class="form-checkbox" formControlName="IncludeCashFlowTag2"
+                    name="IncludeCashFlowTag2" />
+                  <label class="form-check-label">Cash Flow Tag-II</label>
+                </div>
+
+              </div>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-lg-12 align-items-start">
+              <button type="button" id="btnsave" (click)="updateAllow()" Class="btn-save">Save</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Response-Error-Message  -->
+<div class="loading-newpopup" *ngIf="loadingerror">
+  <div class="newpopup">
+    <!---<a><img class="ErrorIcon" src="./assets/icon/error.svg" /></a>-->
+    <div class="Errormessage">
+      <p><strong>Error</strong></p>
+      <p>You are not authorized to perform this Operation</p>
+    </div>
+    <button class="btn btn-danger ErrorClosebtn" (click)="hideErrorPopup()">
+      Cancel
+    </button>
+  </div>
+</div>

@@ -1,0 +1,25 @@
+.p-button-success {
+  background: #E1E1E1;
+  border-color: #E1E1E1;
+  color: #8C8C8C;
+  font-size: 13px;
+  padding: 6px;
+}
+.p-button-danger {
+  background: #BF2929;
+  border-color: #BF2929;
+  color: white;
+  font-size: 13px;
+  padding: 6px;
+}
+
+.inputSetting{
+
+  height: 34px;
+  padding: 0px;
+}
+.p-dialog .p-dialog-header{
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}

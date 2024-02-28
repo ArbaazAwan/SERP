@@ -1,0 +1,397 @@
+<app-confirm-dialog></app-confirm-dialog>
+
+<div class="main-container">
+  <div class="">
+    <div>
+      <app-store-project
+        [selectedStore]="selectedStore"
+        [selectedProject]="selectedProject"
+        [componentName]="componentName"
+        (selectedValueChange)="onSelectedOptionChanged($event)"
+        [showInput2]="true"
+        [showInput1]="false"
+      ></app-store-project>
+    </div>
+
+    <div>
+      <div class="">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="card-wrapper">
+              <p-toolbar>
+                <ng-template pTemplate="left">
+                  <div class="d-flex justify-content-between w-100">
+                    <div class="btn-margin d-flex gap-2">
+                      <button
+                        pButton
+                        pRipple
+                        label="Add New"
+                        icon="pi pi-plus-circle one"
+                        class="btn-save"
+                        (click)="addNewDialogue()"
+                      ></button>
+                    </div>
+                    <div class="d-flex float-end">
+                      <!-- <button pButton pRipple label="" icon="pi pi-filter-slash" class="btn-save mx-1" (click)="clearFilter()"
+                        ></button> -->
+                      <button
+                        pButton
+                        pRipple
+                        label=""
+                        icon="pi pi-filter-fill"
+                        class="btn-save"
+                        (click)="filterDialogue()"
+                      ></button>
+                    </div>
+                  </div>
+                </ng-template>
+              </p-toolbar>
+              <div class="table-responsive card-wrapper custom-table">
+                <table
+                  class="table table-striped table-borderless"
+                  *ngIf="!isLoadingData"
+                >
+                  <thead>
+                    <tr>
+                      <th scope="col">IGP No</th>
+                      <th scope="col">Driver</th>
+                      <th scope="col">Store</th>
+                      <th scope="col">Location</th>
+                      <th scope="col">Date</th>
+                      <th scope="col">Purpose</th>
+                      <th scope="col">Open</th>
+                      <th scope="col" class="text-center">Action</th>
+                    </tr>
+                  </thead>
+                  <hr />
+                  <tbody>
+                    <!-- allIGPDataList -->
+                    <tr
+                      *ngFor="let item of allIGPDataList; let odd = odd"
+                      [ngClass]="{ 'odd-row': odd }"
+                    >
+                      <td>{{ item.IGPNo }}</td>
+                      <td>{{ item.Driver }}</td>
+                      <td>{{ item.DepartmentName }}</td>
+                      <td>{{ item.Location }}</td>
+                      <td>{{ item.IGPDate | date : "dd-MMM-yyyy" }}</td>
+                      <td>{{ item.PurposeTitle }}</td>
+                      <td>
+                        <span
+                          [class]="
+                            item.IsOpen == true
+                              ? 'success-badge'
+                              : 'danger-badge'
+                          "
+                          >{{ item.IsOpen | yesNo }}</span
+                        >
+                      </td>
+                      <td>
+                        <div class="dropdown text-center">
+                          <button
+                            class="three-dots"
+                            type="button"
+                            id="table-action-menu"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                          >
+                            <i class="fa fa-ellipsis-v"></i>
+                          </button>
+                          <ul
+                            class="dropdown-menu"
+                            aria-labelledby="table-action-menu"
+                          >
+                            <li>
+                              <a
+                                class="dropdown-item edit cursor-hover cursor-pointer"
+                                (click)="getSelectedRow(item)"
+                                >Edit</a
+                              >
+                            </li>
+                            <li>
+                              <a
+                                class="dropdown-item delete cursor-hover cursor-pointer"
+                                (click)="DeleteIGP(item)"
+                                >Delete</a
+                              >
+                            </li>
+                          </ul>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div *ngIf="isLoadingData">
+                  <app-table-loader></app-table-loader>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Response-Error-Message  -->
+<div class="loading-newpopup" *ngIf="loadingerror">
+  <div class="newpopup">
+    <!---<a><img class="ErrorIcon" src="./assets/icon/error.svg" /></a>-->
+    <div class="Errormessage">
+      <p><strong>Error</strong></p>
+      <p>You are not authorized to perform this Operation</p>
+    </div>
+    <button class="btn btn-danger ErrorClosebtn" (click)="hideErrorPopup()">
+      Cancel
+    </button>
+  </div>
+</div>
+
+<p-dialog
+  header="Filter"
+  [(visible)]="filters"
+  [modal]="true"
+  [style]="{ width: '50vw' }"
+  styleClass="p-fluid"
+>
+  <div class="row ogp-date-input">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+      <div class="card-wrapper">
+        <form [formGroup]="filterForm">
+          <div class="row align-items-center">
+            <div class="col-lg-4 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Status </label>
+                <select class="form-select" formControlName="IsOpenFilter">
+                  <option *ngFor="let c of status" [ngValue]="c" [value]="c">
+                    {{ c }}
+                  </option>
+                </select>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Party </label>
+                <select
+                  class="form-select"
+                  formControlName="PartyCode"
+                  placeholder="Select Party"
+                >
+                  <option
+                    *ngFor="let a of partyResponse$"
+                    [value]="a?.PartyCode"
+                  >
+                    {{ a.PartyName }}
+                  </option>
+                </select>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Purpose</label>
+                <select
+                  class="form-select"
+                  formControlName="PurposeCode"
+                  placeholder="Select Purpose"
+                >
+                  <option
+                    *ngFor="let a of purposeResponse$"
+                    [value]="a?.IGPPurposeId"
+                  >
+                    {{ a.PurposeTitle }}
+                  </option>
+                </select>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Location</label>
+                <select class="form-select" formControlName="Location">
+                  <option
+                    *ngFor="let a of locationResponse$"
+                    [ngValue]="a.LocationName"
+                    [value]="a.LocationName"
+                  >
+                    {{ a.LocationName }}
+                  </option>
+                </select>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label
+                  >Date From
+                  <span class="astrik">*</span>
+                </label>
+                <p-calendar
+                  [showIcon]="true"
+                  class="form-control inputSetting"
+                  formControlName="DateFrom"
+                  appendTo="body"
+                  [dateFormat]="formatDateForInput()"
+                  [placeholder]="formatDateForInput()"
+                ></p-calendar>
+                <!-- <input
+                  type="date"
+                  appendTo="body"
+                  class="form-control"
+                  formControlName="DateFrom"
+                  [placeholder]="formatDateForInput()"
+                /> -->
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label
+                  >Date To
+                  <span class="astrik">*</span>
+                </label>
+                <p-calendar
+                  [showIcon]="true"
+                  class="form-control inputSetting"
+                  formControlName="DateTo"
+                  appendTo="body"
+                  [dateFormat]="formatDateForInput()"
+                  [placeholder]="formatDateForInput()"
+                ></p-calendar>
+              </div>
+            </div>
+          </div>
+          <div class="row d-flex m-auto justify-content-center divAlign">
+            <Button
+              type="button"
+              id="btnviewlist"
+              Class="btn primary-button-color btnFix mt-3 ml-2 mb-2 "
+              (click)="refreshFilterForm()"
+            >
+              Reset
+            </Button>
+            <Button
+              type="button"
+              id="btnviewlist"
+              Class="btn primary-button-color btnFix mt-3 ml-2 mb-2 btn-save"
+              (click)="loadIGPMasterFilteredData()"
+              [disabled]="filterForm.invalid"
+            >
+              Filter
+            </Button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</p-dialog>
+
+<p-dialog
+  header="Create New IGP"
+  [(visible)]="addNew"
+  [modal]="true"
+  [style]="{ width: '50vw' }"
+  styleClass="p-fluid"
+>
+  <div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+      <div class="card-wrapper">
+        <form [formGroup]="igpDataForm" (ngSubmit)="onSubmit()">
+          <div class="row align-items-center">
+            <div class="col-lg-4 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label
+                  >Party
+                  <span class="astrik">*</span>
+                </label>
+                <select
+                  class="form-select"
+                  formControlName="PartyCode"
+                  placeholder="Select Party"
+                >
+                  <option
+                    *ngFor="let a of partyResponse$"
+                    [value]="a?.PartyCode"
+                  >
+                    {{ a.PartyName }}
+                  </option>
+                </select>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Purpose <span class="astrik">*</span> </label>
+                <select
+                  class="form-select"
+                  formControlName="PurposeCode"
+                  placeholder="Select Purpose"
+                >
+                  <option
+                    *ngFor="let a of purposeResponse$"
+                    [value]="a?.OGPPurposeId"
+                  >
+                    {{ a.PurposeTitle }}
+                  </option>
+                </select>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Location <span class="astrik">*</span> </label>
+                <select class="form-select" formControlName="Location">
+                  <option
+                    *ngFor="let a of locationResponse$"
+                    [ngValue]="a.LocationName"
+                    [value]="a.LocationName"
+                  >
+                    {{ a.LocationName }}
+                  </option>
+                </select>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>IGP Date </label>
+                <!-- <p-calendar
+                  class="form-control inputSetting"
+                  formControlName="IGPDate"
+                ></p-calendar> -->
+                <input
+                  type="date"
+                  class="form-control"
+                  formControlName="IGPDate"
+                />
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-12 align-self-center">
+              <div class="checkbox">
+                <input
+                  type="checkbox"
+                  class="form-checkbox"
+                  formControlName="IsOpen"
+                />
+                <label class="form-check-label">Is Open IGP</label>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-12 align-self-right">
+              <div class="buttons-wrapper d-flex align-items-center gap-2">
+                <button
+                  type="submit"
+                  id="btnsave"
+                  class="btn btn-sm"
+                  [ngClass]="igpDataForm.invalid ? 'btn-save' : 'btn-save'"
+                  style="padding: 6px 12px"
+                >
+                  <!-- (click)="Add()" -->
+                  <!-- [disabled]="igpDataForm.invalid" -->
+                  <!-- [ngClass]="igpDataForm.invalid ? 'btn-secondary' : 'btn-save'" -->
+                  Create
+                </button>
+                <button type="submit" Class="btn-update" (click)="refresh()">
+                  Refresh
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</p-dialog>

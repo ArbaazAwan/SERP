@@ -1,0 +1,61 @@
+::ng-deep {
+  //Heading for Modal-popup
+  .p-dialog-draggable .p-dialog-header {
+    background-color: #32a0ef;
+    color: white;
+    height: 40px;
+  }
+  .p-dialog .p-dialog-header .p-dialog-title {
+    font-weight: 400 !important;
+    font-size: 14px !important;
+  }
+  .p-dialog .p-dialog-header {
+    background-color: #32a0ef;
+    color: white;
+    height: 40px;
+  }
+  .p-accordion
+    p-accordiontab:first-child
+    .p-accordion-header
+    .p-accordion-header-link {
+    height: 30px;
+    color: gray;
+    background-color: #6c757d0f;
+    font-size: 12px;
+    margin-bottom: 8px;
+  }
+  .p-accordion
+    .p-accordion-header
+    .p-accordion-header-link
+    .p-accordion-toggle-icon {
+    font-size: 12px;
+  }
+
+  .p-accordion
+    .p-accordion-header:not(.p-disabled)
+    .p-accordion-header-link:focus {
+    box-shadow: none;
+  }
+  .p-accordion p-accordiontab:last-child .p-accordion-content {
+    padding: 10px;
+    font-size: 12px;
+  }
+  .lbaleWidth {
+    width: 60px;
+    font-weight: 500;
+  }
+  .AcclbaleWidth {
+    width: 115px;
+    font-weight: 500;
+  }
+  .customBtn {
+    font-size: 12px !important;
+    border-radius: 10px !important;
+    padding: 5px !important;
+    width: 6.06rem !important;
+    height: 40px;
+  }
+  .customBtn:hover {
+    color: white;
+  }
+}

@@ -1,0 +1,520 @@
+<ngx-loading-bar [includeSpinner]="false" [height]="'3px'"></ngx-loading-bar>
+
+<div class="main-container" (scroll)="onMainContainerScroll($event)">
+  <div [class]="isSticky ? 'sticky-header' : ''">
+    <app-store-project
+      [componentName]="'Employee Applicant Detail'"
+      [showInput2]="true"
+      [showInput1]="true"
+      [showInput3]="true"
+      [hide]="false"
+    ></app-store-project>
+  </div>
+  <form [formGroup]="applicantForm" (ngSubmit)="onSubmit()">
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="card-wrapper pb-6">
+          <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Employee Name <span class="astrik">*</span></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter Employee Name"
+                  formControlName="EmployeeName"
+                />
+                <small
+                  *ngIf="
+                    f['EmployeeName']?.hasError('required') &&
+                    f['EmployeeName']?.touched
+                  "
+                  class="text-danger text-xs"
+                >
+                  Employee Name is required.
+                </small>
+                <small
+                  *ngIf="
+                    f['EmployeeName']?.hasError('pattern') &&
+                    f['EmployeeName']?.touched
+                  "
+                  class="text-danger text-xs"
+                >
+                  Employee Name should only contain letters and spaces.
+                </small>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Father Name <span class="astrik">*</span></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter Father Name"
+                  formControlName="FatherName"
+                />
+                <small
+                  *ngIf="
+                    applicantForm.get('FatherName')?.invalid &&
+                    applicantForm.get('FatherName')?.touched
+                  "
+                  class="text-danger text-xs"
+                >
+                  Father Name is Required
+                </small>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label
+                  >Gatepass Type
+                  <span class="astrik">*</span>
+                </label>
+                <p-dropdown
+                  [style]="{ height: '30px', width: '230px' }"
+                  [options]="gatepassTypelist"
+                  [filter]="true"
+                  optionLabel="GatepassType"
+                  optionValue="GatepassTypeCode"
+                  formControlName="GatepassTypeCode"
+                  filterBy="GatepassType"
+                  [showClear]="false"
+                  [panelStyle]="{ overflow: 'auto' }"
+                  [showClear]="true"
+                  appendTo="body"
+                  placeholder="Select Gatepass Type"
+                >
+                </p-dropdown>
+                <small
+                  *ngIf="
+                    applicantForm.get('GatepassTypeCode')?.invalid &&
+                    applicantForm.get('GatepassTypeCode')?.touched
+                  "
+                  class="text-danger text-xs"
+                >
+                  GatepassType is Required
+                </small>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Gatepass Date From <span class="astrik">*</span></label>
+                <input
+                  type="date"
+                  class="form-control text-xs"
+                  placeholder="Enter Gatepass Date Date"
+                  formControlName="GatepassDateFrom"
+                />
+                <small
+                  *ngIf="
+                    applicantForm.get('GatepassDateFrom')?.invalid &&
+                    applicantForm.get('GatepassDateFrom')?.touched
+                  "
+                  class="text-danger text-xs"
+                >
+                  Date is Required
+                </small>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Gatepass Date To <span class="astrik">*</span></label>
+                <input
+                  type="date"
+                  class="form-control text-xs"
+                  placeholder="Enter Gatepass Date"
+                  formControlName="GatepassDateTo"
+                />
+                <small
+                  *ngIf="
+                    applicantForm.get('GatepassDateTo')?.invalid &&
+                    applicantForm.get('GatepassDateTo')?.touched
+                  "
+                  class="text-danger text-xs"
+                >
+                  Date is Required
+                </small>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>ID Card <span class="astrik">*</span></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter ID Card"
+                  formControlName="CNIC"
+                />
+                <small
+                  *ngIf="f['CNIC']?.invalid && f['CNIC']?.touched"
+                  class="text-danger text-xs"
+                >
+                  ID Card is Required
+                </small>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label
+                  >Gender
+                  <span class="astrik">*</span>
+                </label>
+                <p-dropdown
+                  [style]="{ height: '30px', width: '230px' }"
+                  [options]="GenderList"
+                  [filter]="true"
+                  optionLabel="GenderName"
+                  optionValue="GenderCode"
+                  formControlName="GenderCode"
+                  filterBy="GenderName"
+                  [showClear]="false"
+                  [panelStyle]="{ overflow: 'auto' }"
+                  [showClear]="true"
+                  appendTo="body"
+                  placeholder="Select Gender "
+                >
+                </p-dropdown>
+                <small
+                  *ngIf="f['GenderCode'].invalid && f['GenderCode'].touched"
+                  class="text-danger text-xs"
+                >
+                  Gender is Required
+                </small>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Date Of Joining <span class="astrik">*</span></label>
+                <input
+                  type="date"
+                  class="form-control text-xs"
+                  placeholder="Enter Date Of Joining"
+                  formControlName="DateOfJoining"
+                />
+                <small
+                  *ngIf="
+                    f['DateOfJoining']?.invalid && f['DateOfJoining']?.touched
+                  "
+                  class="text-danger text-xs"
+                >
+                  Date Of Joining is Required
+                </small>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Date Of Birth <span class="astrik">*</span></label>
+                <input
+                  type="date"
+                  class="form-control text-xs"
+                  placeholder="Enter Date Of Birth"
+                  formControlName="DateOfBirth"
+                />
+                <small
+                  *ngIf="f['DateOfBirth']?.invalid && f['DateOfBirth']?.touched"
+                  class="text-danger text-xs"
+                >
+                  Date Of Birth is Required
+                </small>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Mobile No </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter Mobile No"
+                  formControlName="Mobile"
+                />
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Blood Group </label>
+                <p-dropdown
+                  [style]="{ height: '30px', width: '230px' }"
+                  [options]="BloodGroupList"
+                  [filter]="true"
+                  optionLabel="BloodGroupName"
+                  optionValue="BloodGroupCode"
+                  formControlName="BloodGroupCode"
+                  filterBy="BloodGroupName"
+                  [showClear]="false"
+                  [panelStyle]="{ overflow: 'auto' }"
+                  [showClear]="true"
+                  appendTo="body"
+                  placeholder="Select Blood Group "
+                >
+                </p-dropdown>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Religion </label>
+                <p-dropdown
+                  [style]="{ height: '30px', width: '230px' }"
+                  [options]="ReligionList"
+                  [filter]="true"
+                  optionLabel="ReligionName"
+                  optionValue="ReligionCode"
+                  formControlName="ReligionCode"
+                  filterBy="ReligionName"
+                  [showClear]="false"
+                  [panelStyle]="{ overflow: 'auto' }"
+                  [showClear]="true"
+                  appendTo="body"
+                  placeholder="Select Religion "
+                >
+                </p-dropdown>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Marital Status </label>
+                <p-dropdown
+                  [style]="{ height: '30px', width: '230px' }"
+                  [options]="MaritalStatusList"
+                  [filter]="true"
+                  optionLabel="MaritalStatusName"
+                  optionValue="MaritalStatusCode"
+                  formControlName="MaritalStatusCode"
+                  filterBy="MaritalStatusName"
+                  [showClear]="false"
+                  [panelStyle]="{ overflow: 'auto' }"
+                  [showClear]="true"
+                  appendTo="body"
+                  placeholder="Select Marital Status "
+                >
+                </p-dropdown>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Applicant Status </label>
+                <p-dropdown
+                  [style]="{ height: '30px', width: '230px' }"
+                  [options]="applicantStatusList"
+                  [filter]="true"
+                  optionLabel="ApplicantStatus"
+                  optionValue="ApplicantStatusCode"
+                  formControlName="ApplicantStatusCode"
+                  filterBy="ApplicantStatus"
+                  [showClear]="false"
+                  [panelStyle]="{ overflow: 'auto' }"
+                  [showClear]="true"
+                  appendTo="body"
+                  placeholder="Select Applicant Status "
+                >
+                </p-dropdown>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Department </label>
+                <p-dropdown
+                  [style]="{ height: '30px', width: '230px' }"
+                  [options]="Departmentlist"
+                  [filter]="true"
+                  optionLabel="DepartmentName"
+                  optionValue="DepartmentCode"
+                  formControlName="DepartmentCode"
+                  filterBy="DepartmentName"
+                  [showClear]="false"
+                  [panelStyle]="{ overflow: 'auto' }"
+                  [showClear]="true"
+                  appendTo="body"
+                  placeholder="Select Department "
+                >
+                </p-dropdown>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Designation </label>
+                <p-dropdown
+                  [style]="{ height: '30px', width: '230px' }"
+                  [options]="DesignationList"
+                  [filter]="true"
+                  optionLabel="DesignationName"
+                  optionValue="DesignationCode"
+                  formControlName="DesignationCode"
+                  filterBy="DesignationName"
+                  [showClear]="false"
+                  [panelStyle]="{ overflow: 'auto' }"
+                  [showClear]="true"
+                  appendTo="body"
+                  placeholder="Select Designation "
+                >
+                </p-dropdown>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Employee Type </label>
+                <p-dropdown
+                  [style]="{ height: '30px', width: '230px' }"
+                  [options]="employeeTypeList"
+                  [filter]="true"
+                  optionLabel="EmployeeTypeName"
+                  optionValue="EmployeeTypeCode"
+                  formControlName="EmployeeTypeCode"
+                  filterBy="EmployeeTypeName"
+                  [showClear]="false"
+                  [panelStyle]="{ overflow: 'auto' }"
+                  [showClear]="true"
+                  appendTo="body"
+                  placeholder="Select Employee Type Name "
+                >
+                </p-dropdown>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Present Address </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter Present Address"
+                  formControlName="PresentAddress"
+                />
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Present Address Phone No</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter Present Address Phone No"
+                  formControlName="PresentAddressPhoneNo"
+                />
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Permanent Address </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter Permanent Address"
+                  formControlName="PermanentAddress"
+                />
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Permanent Address Phone No</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter Permanent Address Phone No"
+                  formControlName="PermanentAddressPhoneNo"
+                />
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Emergency Contact No </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter Emergency Contact No"
+                  formControlName="EmergencyContactNos"
+                />
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Remarks </label>
+                <textarea
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter Remarks"
+                  formControlName="Remarks"
+                ></textarea>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="d-flex align-items-center isactive">
+                <div class="checkbox">
+                  <input
+                    type="checkbox"
+                    id="active"
+                    class="form-checkbox"
+                    formControlName="IsActive"
+                  />
+                  <label class="form-check-label" for="active">Active</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row float-end">
+            <div class="d-flex align-items-center gap-2">
+              <button
+                type="submit"
+                id="btnsave"
+                class="btn-save"
+                [disabled]="isUpdate"
+              >
+                Save
+              </button>
+              <button
+                type="submit"
+                id="btnupdate"
+                class="btn-update"
+                [disabled]="!isUpdate"
+              >
+                Update
+              </button>
+              <button
+                type="button"
+                id="btnprint"
+                class="btn-update"
+                (click)="employeeApplicantPrintPDF()"
+              >
+                Preview / Print
+              </button>
+              <button
+                type="button"
+                id="btnRefresh"
+                class="btn-refresh"
+                (click)="refresh()"
+              >
+                <img src="../../../../assets/icons/btn-refresh.svg" alt="" />
+              </button>
+            </div>
+            <div class="col-lg-4"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<app-not-authorized *ngIf="isNotAuthorized"></app-not-authorized>
+<app-confirm-dialog></app-confirm-dialog>

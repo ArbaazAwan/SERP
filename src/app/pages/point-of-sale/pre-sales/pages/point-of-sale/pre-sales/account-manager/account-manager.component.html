@@ -1,0 +1,364 @@
+<ngx-loading-bar [includeSpinner]="false" [height]="'3px'"></ngx-loading-bar>
+<p-toast></p-toast>
+<p-confirmDialog #cd [style]="{ width: '30vw' }">
+  <ng-template pTemplate="header">
+    <h3>Delete</h3>
+  </ng-template>
+  <ng-template pTemplate="footer">
+    <button
+      type="button"
+      pButton
+      icon="pi pi-times"
+      label="No"
+      class="p-button-success"
+      (click)="cd.reject()"
+    ></button>
+    <button
+      type="button"
+      pButton
+      icon="pi pi-check"
+      label="Yes"
+      class="p-button-danger"
+      (click)="cd.accept()"
+    ></button>
+  </ng-template>
+</p-confirmDialog>
+
+<div class="main-container">
+  <div class="container mt-1">
+    <app-store-project
+      [showInput2]="false"
+      [showInput1]="false"
+      [componentName]="componentName"
+      [hide]="false"
+    ></app-store-project>
+    <div class="card">
+      <p-toolbar>
+        <ng-template pTemplate="left">
+          <div class="d-flex justify-content-between w-100">
+            <div class="left-side d-flex gap-2">
+              <button
+                pButton
+                pRipple
+                label="Add New"
+                icon="pi pi-plus-circle one"
+                class="btn-save"
+                (click)="openNew(null, 'add')"
+              ></button>
+              <button
+                pButton
+                pRipple
+                label="Preview / Print"
+                icon="pi pi-plus-circle one"
+                class="btn-save"
+              ></button>
+            </div>
+            <!-- <div class="d-flex gap-2">
+              <button pButton pRipple label="" icon="pi pi-filter-slash" class="btn-save" (click)="clearFilter()"
+              *ngIf="FilterForm.get('Name')?.value
+              || FilterForm.get('Phone')?.value
+              || FilterForm.get('Email')?.value
+              || FilterForm.get('Landline')?.value "></button>
+              <button pButton pRipple label="" icon="pi pi-filter-fill" class="btn-save"
+              (click)="openNew(null, 'filter')"></button>
+            </div> -->
+            <div style="text-align: right">
+              <i class="pi pi-search" style="margin: 4px 4px 0 0"></i>
+              <input
+                type="text"
+                pInputText
+                size="50"
+                placeholder="Global Filter"
+                (input)="filterGlobal($event)"
+                style="width: auto"
+                (blur)="clearFilter($event)"
+              />
+            </div>
+          </div>
+        </ng-template>
+      </p-toolbar>
+      <p-treeTable
+        #dt
+        [rowHover]="true"
+        [value]="chartResponse"
+        [globalFilterFields]="['AccManagerName', 'Phone', 'Landline', 'Email']"
+        (onFilter)="expandNode($event)"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="min-width: 200px" field="AccManagerName">Name</th>
+            <th style="min-width: 200px" field="Phone">Phone</th>
+            <th style="min-width: 150px" field="Landline">Landline</th>
+            <th style="min-width: 150px" field="Email">Email</th>
+            <th style="min-width: 200px">Actions</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
+          <tr [ttRow]="rowNode">
+            <td>
+              <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+              {{ rowData.AccManagerName }}
+            </td>
+            <td>{{ rowData.Phone }}</td>
+            <td>{{ rowData.Landline }}</td>
+            <td>{{ rowData.Email }}</td>
+            <td [style]="'right-padding: 0'">
+              <div class="dropdown">
+                <button
+                  class="three-dots"
+                  type="button"
+                  id="table-action-menu"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <i class="fa fa-ellipsis-v"></i>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="table-action-menu">
+                  <li>
+                    <a
+                      class="dropdown-item edit cursor-hover cursor-pointer"
+                      (click)="openNew(rowData, 'edit')"
+                      >Edit</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      class="dropdown-item delete cursor-hover cursor-pointer"
+                      (click)="delete(rowData.AccountManagerCode)"
+                      >Delete</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-treeTable>
+
+      <div *ngIf="isLoadingData">
+        <app-table-loader></app-table-loader>
+      </div>
+    </div>
+  </div>
+
+  <form [formGroup]="AccountManagerForm">
+    <p-dialog
+      [(visible)]="mainDialog"
+      [style]="{ width: '950px', height: '280px' }"
+      [header]="mainHeader"
+      [modal]="true"
+      styleClass="p-fluid"
+      [closable]="false"
+    >
+      <div class="row">
+        <div class="col-lg-3 col-md-6 col-sm-12">
+          <div class="form-group">
+            <label class="float-left">First Name </label>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Account Manager Name"
+              formControlName="FirstName"
+              [attr.disabled]="isEditing ? true : null"
+            />
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12">
+          <div class="form-group">
+            <label class="float-left">Last Name </label>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Account Manager Name"
+              formControlName="LastName"
+              [attr.disabled]="isEditing ? true : null"
+            />
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12">
+          <div class="form-group">
+            <label class="float-left">Parent Account Manager</label>
+            <p-dropdown
+              [options]="ParentCodes"
+              [filter]="true"
+              optionLabel="Name"
+              optionValue="AccountManagerCode"
+              formControlName="ParentManagerCode"
+              filterBy="Name"
+              placeholder="Select Manager"
+              [panelStyle]="{ overflow: 'auto' }"
+              [showClear]="true"
+              (onChange)="changeManager($event)"
+            >
+            </p-dropdown>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-sm-12">
+          <div class="form-group">
+            <label class="float-left">Phone</label>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Phone"
+              formControlName="Phone"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-3 col-md-6 col-sm-12">
+          <div class="form-group">
+            <label class="float-left">Landline</label>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Landline"
+              formControlName="Landline"
+            />
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12">
+          <div class="form-group">
+            <label class="float-left">Email</label>
+            <input
+              type="email"
+              class="form-control"
+              placeholder="Email"
+              formControlName="Email"
+            />
+            <small
+              class="text-xs text-danger float-end"
+              *ngIf="
+                (AccountManagerForm.controls['Email'].dirty ||
+                  AccountManagerForm.controls['Email'].touched) &&
+                AccountManagerForm.hasError('required', 'Email')
+              "
+            >
+              *Email is required
+            </small>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12">
+          <div class="form-group">
+            <label class="float-left">Address</label>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Address"
+              formControlName="Address"
+            />
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-sm-12 align-self-center">
+          <div class="checkbox">
+            <input
+              type="checkbox"
+              id="active"
+              class="form-checkbox"
+              formControlName="IsActive"
+              name="IsActive"
+            />
+            <label class="form-check-label" for="active">Active</label>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="d-flex align-items-center gap-2">
+          <button
+            type="button"
+            id="btnsave"
+            Class="btn-save"
+            (click)="save()"
+            [disabled]="isUpdate"
+          >
+            Save
+          </button>
+          <button
+            type="button"
+            id="btnsave"
+            Class="btn-update"
+            [disabled]="isSave"
+            (click)="update()"
+          >
+            Update
+          </button>
+          <button
+            type="button"
+            id="btnRefresh"
+            class="btn-refresh"
+            (click)="refresh()"
+          >
+            <img src="../../../../assets/icons/btn-refresh.svg" alt="" />
+          </button>
+        </div>
+      </div>
+
+      <ng-template pTemplate="footer">
+        <button
+          pButton
+          pRipple
+          label="Cancel"
+          icon="pi pi-times"
+          class="p-button-text"
+          (click)="hideDialog()"
+        ></button>
+      </ng-template>
+    </p-dialog>
+  </form>
+  <!-- 
+
+
+  <form [formGroup]="FilterForm">
+    <p-dialog [(visible)]="filterDialog" [style]="{ width: '950px', height: '240px' }" [header]="mainHeader"
+      [modal]="true" styleClass="p-fluid" [closable]="false">
+
+      <div class="row">
+        <div class="col-lg-3 col-md-6 col-sm-12">
+          <div class="form-group">
+            <label class="float-left">Name </label>
+            <input type="text" class="form-control" placeholder="Account Manager Name"
+              formControlName="Name"/>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-sm-12">
+          <div class="form-group">
+            <label class="float-left">Phone</label>
+            <input type="text" class="form-control" placeholder="Phone"
+            formControlName="Phone"  />
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12">
+          <div class="form-group">
+            <label class="float-left">Landline</label>
+            <input type="text" class="form-control" placeholder="Landline"
+            formControlName="Landline"  />
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12">
+          <div class="form-group">
+            <label class="float-left">Email</label>
+            <input type="text" class="form-control" placeholder="Email"
+            formControlName="Email" />
+          </div>
+        </div>
+
+       </div>
+      <div class="row">
+        <div class="row d-flex m-auto justify-content-center">
+          <Button type="button" id="btnviewlist" Class="btn primary-button-color btnFix mt-3 ml-2 mb-2"
+            (click)="getFilterList()">
+            Filter List
+          </Button>
+        </div>
+      </div>
+
+      <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+      </ng-template>
+    </p-dialog>
+  </form> -->
+</div>

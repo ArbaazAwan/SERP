@@ -1,0 +1,31 @@
+<p-confirmDialog #cd [style]="{ width: 'auto' }">
+  <ng-template
+    pTemplate="header"
+    style="padding-bottom: 0 !important"
+    class="d-flex align-item-center justify-content-center"
+  >
+    <div class="d-flex align-item-center justify-content-center w-100">
+      <h5 class="delete-header">{{label}}</h5>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="footer">
+    <div class="d-flex justify-content-center button-margins align-item-center">
+      <button
+        type="button"
+        pButton
+        icon="pi pi-times"
+        label="No"
+        class="p-button-success"
+        (click)="cd.reject()"
+      ></button>
+      <button
+        type="button"
+        pButton
+        icon="pi pi-check"
+        label="Yes"
+        class="p-button-danger"
+        (click)="cd.accept()"
+      ></button>
+    </div>
+  </ng-template>
+</p-confirmDialog>

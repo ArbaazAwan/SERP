@@ -1,0 +1,36 @@
+//p-confirm dialog--------------------------------
+// .delete-header{
+//   margin-left: 150px;
+// }
+
+:host ::ng-deep .p-dialog .p-dialog-content {
+  justify-content: center;
+  background: #ffffff;
+  color: #212529;
+  padding: 0rem 1rem 1rem 1rem;
+  padding-bottom: 20px !important;
+}
+
+.button-margins {
+  margin-left: 18px;
+  height: 37px;
+  // align-items: center;
+}
+
+:host ::ng-deep .p-dialog.p-confirm-dialog .p-confirm-dialog-message {
+  margin-left: 0.5rem;
+}
+
+.p-dialog .p-dialog-header{
+  padding-bottom: 0 !important;
+ 
+}
+.p-confirm-dialog .p-dialog-content{
+  padding-bottom: 10px !important;
+}
+
+// .p-dialog {
+//   width: auto !important;
+// }
+
+//----------------------------------------------------------------

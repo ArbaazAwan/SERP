@@ -1,0 +1,273 @@
+<ngx-loading-bar [includeSpinner]="false" [height]="'3px'"></ngx-loading-bar>
+<div class="main-container">
+  <div class="container">
+    <app-store-project
+      [selectedStore]="selectedStore"
+      [selectedProject]="selectedProject"
+      [componentName]="componentName"
+      (selectedValueChange)="onSelectedOptionChanged($event)"
+      [showInput1]="false"
+    ></app-store-project>
+  </div>
+
+  <div class="">
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="card-wrapper">
+          <p-toolbar>
+            <ng-template pTemplate="left">
+              <div class="d-flex justify-content-between w-100">
+                <div class="btn-margin d-flex gap-2">
+                  <button
+                    pButton
+                    pRipple
+                    label="Add New"
+                    icon="pi pi-plus-circle one"
+                    class="btn-save"
+                    (click)="showDialog()"
+                  ></button>
+                </div>
+                <div class="d-flex float-end">
+                  <button
+                    pButton
+                    pRipple
+                    label=""
+                    icon="pi pi-filter-slash"
+                    class="btn-save mx-1"
+                    (click)="clearFilter()"
+                    *ngIf="showClearFilter"
+                  ></button>
+                  <button
+                    pButton
+                    pRipple
+                    label=""
+                    icon="pi pi-filter-fill"
+                    class="btn-save"
+                    (click)="filter()"
+                  ></button>
+                </div>
+              </div>
+            </ng-template>
+          </p-toolbar>
+          <div
+            class="table-responsive card-wrapper custom-table"
+            (scroll)="onMainContainerScroll($event)"
+          >
+            <table
+              class="table table-striped table-borderless"
+              *ngIf="!isLoadingData"
+            >
+              <thead [class]="isSticky ? 'sticky-header' : ''">
+                <tr>
+                  <th>Department</th>
+                  <th>IRN#</th>
+                  <th>IRN Date</th>
+                  <th>Purpose</th>
+                  <th>Locked</th>
+                  <th scope="col" class="text-center">Action</th>
+                </tr>
+              </thead>
+              <hr />
+              <tbody>
+                <tr
+                  *ngFor="let item of tableResponse$; let odd = odd"
+                  [ngClass]="{ 'odd-row': odd }"
+                >
+                  <td>{{ item.DepartmentName }}</td>
+                  <td>{{ item.IRNNo }}</td>
+                  <td>{{ item.IRNDate | date : "dd-MMM-yyyy" }}</td>
+                  <td>{{ item.IRNPurpose }}</td>
+                  <!-- <td>{{ item.IsLocked | yesNo }}</td> -->
+                  <td>
+                    <span
+                      [class]="
+                        item.IsLocked == true ? 'success-badge' : 'danger-badge'
+                      "
+                    >
+                      {{ item.IsLocked | yesNo }}
+                    </span>
+                  </td>
+                  <td>
+                    <div class="dropdown text-center">
+                      <button
+                        class="three-dots"
+                        type="button"
+                        id="table-action-menu"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                      >
+                        <i class="fa fa-ellipsis-v"></i>
+                      </button>
+                      <ul
+                        class="dropdown-menu"
+                        aria-labelledby="table-action-menu"
+                      >
+                        <li>
+                          <a
+                            class="dropdown-item edit cursor-hover cursor-pointer"
+                            (click)="getSelectedRow(item)"
+                            >Edit</a
+                          >
+                        </li>
+                      </ul>
+                    </div>
+                  </td>
+                </tr>
+                <div
+                  class="no-table-data"
+                  *ngIf="tableResponse$.length == 0; $"
+                >
+                  <span>No Data Found</span>
+                </div>
+              </tbody>
+            </table>
+            <div *ngIf="isLoadingData">
+              <app-table-loader></app-table-loader>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Response-Error-Message  -->
+<div class="loading-newpopup" *ngIf="loadingerror">
+  <div class="newpopup">
+    <div class="Errormessage">
+      <p><strong>Error</strong></p>
+      <p>You are not authorized to perform this Operation</p>
+    </div>
+    <button class="btn btn-danger ErrorClosebtn" (click)="hideErrorPopup()">
+      Cancel
+    </button>
+  </div>
+</div>
+
+<!--Create New IRN Dialog-->
+<p-dialog
+  header="You Sure, want to create new Good Receipt Note"
+  [(visible)]="visible"
+  [modal]="true"
+  [style]="{ width: '30%' }"
+  styleClass="p-fluid"
+  [closable]="true"
+>
+  <form [formGroup]="createForm" novalidate>
+    <div class="row">
+      <div class="col-lg-8">
+        <div class="form-group">
+          <label>
+            Purpose
+            <span class="astrik">*</span>
+          </label>
+          <p-dropdown
+            appendTo="body"
+            id="branch"
+            [options]="purposeList"
+            [filter]="true"
+            formControlName="IRNPurpose"
+            optionLabel="value"
+            optionValue="viewValue"
+            filterBy="value"
+            [showClear]="true"
+            placeholder="Purpose"
+            [panelStyle]="{ overflow: 'auto' }"
+          >
+            <ng-template let-option pTemplate="item">
+              <span style="width: 85%; float: left">{{ option.value }}</span>
+            </ng-template>
+          </p-dropdown>
+
+          <div
+            *ngIf="
+              createForm.controls['IRNPurpose'].invalid &&
+              createForm.controls['IRNPurpose'].touched
+            "
+            class="input-error"
+          >
+            Field Required
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+  <ng-template pTemplate="footer">
+    <button type="button" class="btn-save" (click)="addorUpdate()">
+      Create
+    </button>
+  </ng-template>
+</p-dialog>
+
+<!--Filters dialog-->
+<p-dialog
+  [(visible)]="FiltersDialogue"
+  [style]="{ width: '500px', height: 'auto' }"
+  header="Filter Good Receipt Notes"
+  [modal]="true"
+  styleClass="p-fluid"
+  [closable]="true"
+>
+  <div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+      <div class="card-wrapper-modal">
+        <form [formGroup]="viewForm" novalidate>
+          <div class="row">
+            <div class="col-lg-6">
+              <div class="form-group">
+                <label> Date From </label>
+                <input
+                  type="date"
+                  class="form-control"
+                  formControlName="POFromDate"
+                  (change)="dateChange($event)"
+                />
+                <div
+                  *ngIf="
+                    viewForm.controls['POFromDate'].invalid &&
+                    viewForm.controls['POFromDate'].touched
+                  "
+                  class="input-error"
+                >
+                  Field Required
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="form-group">
+                <label> Date To </label>
+                <input
+                  type="date"
+                  class="form-control"
+                  formControlName="POToDate"
+                />
+                <div
+                  *ngIf="
+                    viewForm.controls['POToDate'].invalid &&
+                    viewForm.controls['POToDate'].touched
+                  "
+                  class="input-error"
+                >
+                  Field Required
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    <button
+      type="button"
+      id="btnRefresh"
+      class="btn-refresh"
+      (click)="refreshdetail()"
+    >
+      <img src="../../../../assets/icons/btn-refresh.svg" alt="" />
+    </button>
+    <button type="button" class="btn-save" (click)="loadAllIRNMasters()">
+      View List
+    </button>
+  </ng-template>
+</p-dialog>

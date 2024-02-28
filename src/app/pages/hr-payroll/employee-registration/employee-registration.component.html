@@ -1,0 +1,242 @@
+<div class="row py-2 mt-2">
+  <div class="col-12">
+    <div class="card-body">
+      <div class="px-3">
+        <p-tabView [(activeIndex)]="activeIndex">
+          <p-tabPanel>
+            <ng-template pTemplate="header">
+              <i class="fa fa-info-circle mr-2"></i>
+              <span class="tab-heading text-nowrap">Basic Info</span>
+            </ng-template>
+            <ng-template pTemplate="body">
+              <app-basicinfo
+                [form]="BasicInfoForm"
+                [cities]="cities"
+                [genders]="genders"
+                [employeeTypes]="employeeTypes"
+                [departmentDivisions]="departmentDivisions"
+                [departments]="departments"
+                [designations]="designations"
+                [timeZones]="timeZones"
+              >
+              </app-basicinfo>
+            </ng-template>
+          </p-tabPanel>
+          <p-tabPanel>
+            <ng-template pTemplate="header">
+              <i class="fa fa-user mr-2"></i>
+              <span class="tab-heading text-nowrap">Personal Information</span>
+            </ng-template>
+            <ng-template pTemplate="body">
+              <app-personalinfo
+                [isUpdate]="isUpdate"
+                [form]="PersonalInfoForm"
+                [bloodGroups]="bloodGroups"
+                [nationalities]="nationalities"
+                [religions]="religions"
+                [maritalStatuses]="maritalStatuses"
+                [employeeTypes]="employeeTypes"
+                [disabilityNatures]="disabilityNatures"
+              >
+              </app-personalinfo>
+            </ng-template>
+          </p-tabPanel>
+          <p-tabPanel>
+            <ng-template pTemplate="header">
+              <i class="fa fa-map mr-2"></i>
+              <span class="tab-heading">Addresses</span>
+            </ng-template>
+            <ng-template pTemplate="body">
+              <app-address
+                [Addresses]="Addresses"
+                [cities]="cities"
+                [countries]="countries"
+                [states]="states"
+              >
+              </app-address>
+            </ng-template>
+          </p-tabPanel>
+          <p-tabPanel [disabled]="!isUpdate">
+            <ng-template pTemplate="header">
+              <i class="fa fa-code-branch mr-2"></i>
+              <span class="tab-heading text-nowrap">Branches Division</span>
+            </ng-template>
+            <ng-template pTemplate="body">
+              <app-branch-div [isUpdate]="isUpdate" [generalForm]="generalForm">
+              </app-branch-div>
+            </ng-template>
+          </p-tabPanel>
+          <p-tabPanel [disabled]="!isUpdate">
+            <ng-template pTemplate="header">
+              <i class="fa fa-graduation-cap mr-2"></i>
+              <span class="tab-heading">Qualifications</span>
+            </ng-template>
+            <ng-template pTemplate="body">
+              <app-qualifications [generalForm]="generalForm">
+              </app-qualifications>
+            </ng-template>
+          </p-tabPanel>
+          <p-tabPanel [disabled]="!isUpdate">
+            <ng-template pTemplate="header">
+              <i class="fa fa-briefcase mr-2"></i>
+              <span class="tab-heading text-nowrap"
+                >Professional Experiences</span
+              >
+            </ng-template>
+            <ng-template pTemplate="body">
+              <app-professionalexperiences
+                [form]="ProfessionalExForm"
+                [generalForm]="generalForm"
+              >
+              </app-professionalexperiences>
+            </ng-template>
+          </p-tabPanel>
+          <p-tabPanel [disabled]="!isUpdate">
+            <ng-template pTemplate="header">
+              <i class="fa fa-chalkboard-teacher mr-2"></i>
+              <span class="tab-heading">Trainings</span>
+            </ng-template>
+            <ng-template pTemplate="body">
+              <app-trainings [form]="TrainingForm" [generalForm]="generalForm">
+              </app-trainings>
+            </ng-template>
+          </p-tabPanel>
+        </p-tabView>
+      </div>
+      <div
+        *ngIf="activeIndex < 3"
+        class="mt-2 container-center gap-2 float-end mx-3"
+      >
+        <button
+          type="button"
+          id="btnsave"
+          class="btn-save"
+          [ngClass]="isUpdate ? 'btn btn-secondary' : ''"
+          [disabled]="isUpdate"
+          (click)="addorUpdate()"
+        >
+          Save
+        </button>
+        <button
+          type="button"
+          id="btnsave"
+          class="btn-update"
+          [disabled]="!isUpdate"
+          (click)="addorUpdate()"
+        >
+          Update
+        </button>
+        <button id="btnsave" class="btn-save" [disabled]="isUpdate" (click)="openNew()">
+          Import From Applicants
+        </button>
+        <button
+          type="button"
+          id="btnRefresh"
+          class="btn-refresh"
+          (click)="refresh()"
+        >
+          <img src="../../../../assets/icons/btn-refresh.svg" alt="" />
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="form-screen">
+  <p-dialog
+    [(visible)]="mainDialog"
+    [header]="mainHeader"
+    [modal]="true"
+    styleClass="p-fluid"
+    class="modal-dialog full-screen"
+    [closable]="true"
+  >
+    <div class="mt-2">
+      <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="form-group d-flex justify-content-end">
+          <ng-container>
+            <div class="input-container sticky-input d-flex gap-2">
+              <input
+                class="form-control"
+                placeholder="Search Applicant (Name, CNIC, Designation, Status)"
+                [(ngModel)]="searchInputValue"
+                (change)="filterEmployeeApplicant($event)"
+              />
+              <i class="pi pi-search"></i>
+              <button *ngIf="searchInputValue" class="btn-save" (click)="clearSearchInput()">
+                Clear
+              </button>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-12 col-md-12 col-sm-12 mt-3">
+      <div class="table custom-table table-fix">
+        <p-table
+          class="table table-striped table-borderless"
+          [value]="isFilterApplied ? filteredEmployeeApplicantList : EmployeeApplicantList"
+          [columns]="cols"
+        >
+          <ng-template pTemplate="header" let-columns>
+            <tr>
+              <th
+                class="text-nowrap"
+                *ngFor="let col of columns"
+                [pSortableColumn]="col.field"
+                pResizableColumn
+              >
+                {{ col.header }}
+                <p-sortIcon
+                  [field]="col.field"
+                  *ngIf="col.header !== 'Action'"
+                ></p-sortIcon>
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template
+            pTemplate="body"
+            let-rowData
+            let-columns="columns"
+            let-odd
+          >
+            <tr [ngClass]="{ 'odd-row': odd }">
+              <td *ngFor="let col of columns" class="text-nowrap">
+                <ng-container [ngSwitch]="col.field">
+                  <ng-container *ngSwitchCase="'GatepassDateFrom'">
+                    {{ rowData[col.field] | date }}
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'GatepassDateTo'">
+                    {{ rowData[col.field] | date }}
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'DateOfJoining'">
+                    {{ rowData[col.field] | date }}
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'action'">
+                    <button
+                      class="btn-save"
+                      type="button"
+                      id="table-action-menu"
+                      (click)="importApplicantData(rowData)"
+                    >
+                      Import
+                      <i class="fas fa-file-import"></i>
+                    </button>
+                  </ng-container>
+                  <ng-container *ngSwitchDefault>
+                    {{ rowData[col.field] }}
+                  </ng-container>
+                </ng-container>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+
+        <app-table-loader *ngIf="isLoadingData"></app-table-loader>
+      </div>
+    </div>
+    <ng-template pTemplate="footer"> </ng-template>
+  </p-dialog>
+</div>
+
+<app-not-authorized *ngIf="loadingerror"></app-not-authorized>

@@ -1,0 +1,207 @@
+<div class="dashboard-wrapper">
+  <div class="row">
+    <div class="col-lg-4 col-md-4 col-sm-12">
+      <div class="card-wrapper">
+        <div class="card-content">
+          <div class="card-header mb-3">
+            <h4 class="card-title">Total Sales Amount</h4>
+            <div class="badge success">
+              <i class="fa-solid fa-caret-up mr-1"></i>
+              10%
+            </div>
+          </div>
+          <div class="card-body">
+            <span class="amount">325M</span>
+            <span class="currency">AED</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4 col-md-4 col-sm-12">
+      <div class="card-wrapper">
+        <div class="card-content">
+          <div class="card-header mb-3">
+            <h4 class="card-title">Payable Overdue</h4>
+            <div class="badge danger">
+              <i class="fa-solid fa-caret-up mr-1"></i>
+              10%
+            </div>
+          </div>
+          <div class="card-body">
+            <span class="amount">45.6K</span>
+            <span class="currency">AED</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4 col-md-4 col-sm-12">
+      <div class="card-wrapper">
+        <div class="card-content">
+          <div class="card-header mb-3">
+            <h4 class="card-title">Receivable Overdue</h4>
+            <div class="badge success">
+              <i class="fa-solid fa-caret-up mr-1"></i>
+              15%
+            </div>
+          </div>
+          <div class="card-body">
+            <span class="amount">356.4K</span>
+            <span class="currency">AED</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-lg-8 col-md-8 col-sm-12">
+      <div class="card-wrapper">
+        <div class="card-content">
+          <div class="card-header mb-3">
+            <h4 class="card-title">Revenue v/s Gross Profit</h4>
+          </div>
+          <div class="card-body">
+            <p-chart type="line" [data]="data" [options]="options" height="340px"></p-chart>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-12">
+      <div class="card-wrapper">
+        <div class="card-content">
+          <div class="card-header mb-3">
+            <h4 class="card-title">Notifications</h4>
+          </div>
+          <div class="card-body">
+            <div class="notification-wrapper">
+              <div class="notification">
+                <span class="notify-badge">PO</span>
+                <div class="notification-text">
+                  <span class="notify-text">Payable Overdue</span>
+                  <span class="notify-date">15-07-2023</span>
+                </div>
+              </div>
+              <div class="notification">
+                <span class="notify-badge">PO</span>
+                <div class="notification-text">
+                  <span class="notify-text">Payable Overdue</span>
+                  <span class="notify-date">15-07-2023</span>
+                </div>
+              </div>
+              <div class="notification">
+                <span class="notify-badge">PO</span>
+                <div class="notification-text">
+                  <span class="notify-text">Payable Overdue</span>
+                  <span class="notify-date">15-07-2023</span>
+                </div>
+              </div>
+              <div class="notification">
+                <span class="notify-badge">PO</span>
+                <div class="notification-text">
+                  <span class="notify-text">Payable Overdue</span>
+                  <span class="notify-date">15-07-2023</span>
+                </div>
+              </div>
+              <div class="notification">
+                <span class="notify-badge">PO</span>
+                <div class="notification-text">
+                  <span class="notify-text">Payable Overdue</span>
+                  <span class="notify-date">15-07-2023</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-lg-8 col-md-8 col-sm-12">
+      <div class="row mb-4">
+        <div class="col-lg-8 col-md-12 col-sm-12">
+          <div class="card-wrapper">
+            <div class="card-content">
+              <div class="card-header mb-3">
+                <h4 class="card-title">Top 5 Best Seller</h4>
+              </div>
+              <div class="card-body">
+                <p-chart type="bar" [data]="data" [options]="options" height="270px"></p-chart>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-12 col-sm-12">
+          <div class="d-flex flex-column h-100 justify-content-between">
+            <div class="card-wrapper" style="height: 155px;">
+              <div class="card-content d-flex align-items-start h-100 flex-column">
+                <div class="card-header mb-3">
+                  <h4 class="card-title">Open A/R Invoices</h4>
+                </div>
+                <div class="card-body">
+                  <span class="card-number">23</span>
+                </div>
+              </div>
+            </div>
+            <div class="card-wrapper" style="height: 155px;">
+              <div class="card-content d-flex align-items-start h-100 flex-column">
+                <div class="card-header mb-3">
+                  <h4 class="card-title">Sales Order not delivered</h4>
+                </div>
+                <div class="card-body">
+                  <span class="card-number">12</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row mb-4">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+          <div class="card-wrapper">
+            <div class="card-content">
+              <div class="card-header mb-3">
+                <h4 class="card-title">Assets v/s Liabilities</h4>
+              </div>
+              <div class="card-body">
+                <p-chart type="bar" [data]="assetData" [options]="assetOptions" height="270px"></p-chart>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4 col-md-8 col-sm-12">
+      <div class="card-wrapper">
+        <div class="card-content">
+          <div class="card-header mb-3">
+            <h4 class="card-title">Customer Experience</h4>
+          </div>
+          <div class="card-body">
+            <p-chart type="doughnut" [data]="douData" [options]="douOptions"></p-chart>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-4">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+      <div class="card-wrapper">
+        <div class="card-content">
+          <div class="card-header mb-3">
+            <h4 class="card-title">Profit Margins</h4>
+            <div class="date-wrapper">
+              <!-- <p-calendar [(ngModel)]="date" [showIcon]="true"></p-calendar> -->
+            </div>
+          </div>
+          <div class="card-body">
+            <p-chart type="bar" [data]="assetData" [options]="assetOptions" height="270px"></p-chart>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

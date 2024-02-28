@@ -1,0 +1,337 @@
+<p-confirmDialog #cd [style]="{ width: '30vw' }">
+  <ng-template pTemplate="footer">
+    <button
+      type="button"
+      pButton
+      icon="pi pi-times"
+      label="No"
+      class="p-button-success"
+      (click)="cd.reject()"
+    ></button>
+    <button
+      type="button"
+      pButton
+      icon="pi pi-check"
+      label="Yes"
+      class="p-button-danger"
+      (click)="cd.accept()"
+    ></button>
+  </ng-template>
+</p-confirmDialog>
+
+<div class="main-container">
+  <div class="container">
+    <app-store-project
+      [showInput2]="false"
+      [showInput1]="false"
+      [componentName]="componentName"
+      [hide]="false"
+    ></app-store-project>
+    <!-- <div class="col-lg-12 col-md-12 col-sm-12 mb-2 FormsHeading">
+      <p class="mx-2 my-1">Document Attachments</p>
+    </div> -->
+  </div>
+
+  <div class="container">
+    <div class="row justify-content-flex-start">
+      <form class="col-lg-12 col-md-12 col-sm-10" [formGroup]="form" novalidate>
+        <div class="row text-center" style="font-size: small">
+          <div class="col-lg-12 col-md-12 col-sm-10">
+            <div class="card p-3">
+              <div class="row align-items-stretch g-2 topbar-dropdown">
+                <div
+                  class="col-lg-3 col-md-6 col-sm-12"
+                  style="text-align: left"
+                >
+                  <label class="float-md-left d-flex float-sm-left"
+                    >Document Types
+                  </label>
+                  <p-dropdown
+                    [style]="{ height: '38px', width: '230px' }"
+                    [options]="DocTypeResponse$"
+                    [filter]="true"
+                    optionLabel="DocumentTypeName"
+                    optionValue="DocumentTypeId"
+                    [(ngModel)]="AttachmentType.DocumentTypeId"
+                    [ngModelOptions]="{ standalone: true }"
+                    filterBy="DocumentTypeName,DocumentTypeId"
+                    [showClear]="false"
+                    placeholder="Select Document Type"
+                    [panelStyle]="{ overflow: 'auto' }"
+                    [showClear]="true"
+                    appendTo="body"
+                    (onChange)="changeDocType($event)"
+                  >
+                    <ng-template let-option pTemplate="item">
+                      <div class="option-item">
+                        <div style="float: left; width: 30%">
+                          {{ option.DocumentTypeId }}
+                        </div>
+                        <div style="float: left; width: 70%">
+                          {{ option.DocumentTypeName }}
+                        </div>
+                      </div>
+                    </ng-template>
+                  </p-dropdown>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                  <label class="float-md-left d-flex float-sm-left">
+                    Store
+                  </label>
+                  <div class="group-gap">
+                    <div class="d-block">
+                      <div class=" ">
+                        <p-dropdown
+                          [disabled]="!isStoreDropdownEnabled"
+                          [style]="{ height: '30px' }"
+                          [options]="storeResponse$"
+                          [filter]="true"
+                          optionLabel="DepartmentName"
+                          optionValue="DepartmentCode"
+                          formControlName="StoreCode"
+                          filterBy="DepartmentName,DepartmentCode"
+                          placeholder="Select Store"
+                          [panelStyle]="{ overflow: 'auto' }"
+                          [showClear]="true"
+                          appendTo="body"
+                          (onChange)="changeStore($event)"
+                        >
+                          <ng-template let-option pTemplate="item">
+                            <div class="option-item">
+                              <div class="option-column1">
+                                {{ option.DepartmentCode }}
+                              </div>
+                              <div class="option-column2">
+                                {{ option.DepartmentName }}
+                              </div>
+                            </div>
+                          </ng-template>
+                        </p-dropdown>
+                        <div
+                          *ngIf="
+                            form.controls['StoreCode'].invalid &&
+                            form.controls['StoreCode'].touched
+                          "
+                          style="color: red"
+                        >
+                          Field Required
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                  <label class="float-md-left d-flex float-sm-left">
+                    Project
+                  </label>
+                  <div class="group-gap">
+                    <div class="d-block">
+                      <div class=" ">
+                        <p-dropdown
+                          [disabled]="!isProjectDropdownEnabled"
+                          [style]="{ height: '30px' }"
+                          [options]="projectResponse$"
+                          [filter]="true"
+                          optionLabel="ProjectName"
+                          optionValue="ProjectCode"
+                          formControlName="ProjectCode"
+                          filterBy="ProjectName,ProjectCode"
+                          placeholder="Select Projects"
+                          [panelStyle]="{ overflow: 'auto' }"
+                          [showClear]="true"
+                          appendTo="body"
+                          (onChange)="changeProject($event)"
+                        >
+                          <ng-template let-option pTemplate="item">
+                            <div class="option-item">
+                              <div class="option-column1">
+                                {{ option.ProjectCode }}
+                              </div>
+                              <div class="option-column2">
+                                {{ option.ProjectName }}
+                              </div>
+                            </div>
+                          </ng-template>
+                        </p-dropdown>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                  <label class="float-md-left d-flex float-sm-left"
+                    >Doc No</label
+                  >
+                  <input
+                    style="height: 33px"
+                    type="number"
+                    class="form-control"
+                    formControlName="DocumentNo"
+                    [(ngModel)]="AttachmentType.DocumentNo"
+                  />
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                  <label class="float-md-left d-flex float-sm-left"
+                    >Upload Documents
+                  </label>
+                  <input
+                    style="height: 33px; font-size: 12px"
+                    type="file"
+                    class="form-control"
+                    formControlName="AttachmentPath"
+                    [(ngModel)]="AttachmentType.AttachmentPath"
+                    id="fileUpload"
+                    multiple
+                    (change)="selectFile($event)"
+                  />
+                  <p>{{ fileName }}</p>
+                </div>
+                <div class="col-lg-3" style="text-align: left">
+                  <label class="float-md-left d-flex float-sm-left"
+                    >Attachment Type
+                  </label>
+                  <p-dropdown
+                    [style]="{ height: '38px', width: '230px' }"
+                    [options]="DocAttachmentTypeResponse$"
+                    [filter]="true"
+                    optionLabel="AttachmentTypeTitle"
+                    optionValue="AttachmentTypeId"
+                    [(ngModel)]="AttachmentType.AttachmentTypeId"
+                    [ngModelOptions]="{ standalone: true }"
+                    filterBy="AttachmentTypeTitle,AttachmentTypeId"
+                    [showClear]="false"
+                    placeholder="Select Attachment Type"
+                    [panelStyle]="{ overflow: 'auto' }"
+                    [showClear]="true"
+                    (onChange)="changeAttachmentType($event)"
+                    appendTo="body"
+                  >
+                    <ng-template let-option pTemplate="item">
+                      <div class="option-item">
+                        <div style="float: left; width: 30%">
+                          {{ option.AttachmentTypeId }}
+                        </div>
+                        <div style="float: left; width: 70%">
+                          {{ option.AttachmentTypeTitle }}
+                        </div>
+                      </div>
+                    </ng-template>
+                  </p-dropdown>
+                </div>
+              </div>
+              <!-- <div class="row align-items-stretch">
+                <div class="col-lg-12 col-md-6 col-sm-12 mb-2">
+                  <label class="float-md-left d-flex float-sm-left "
+                    >Remarks</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="Remarks"
+                    [(ngModel)]="AttachmentType.Remarks"
+                  />
+                </div>
+              </div> -->
+              <!-- Buttons-Start -->
+              <div class="row align-items-stretch">
+                <div class="col-sm-4"></div>
+                <div
+                  class="row justify-content-center"
+                  style="align-items: flex-end"
+                >
+                  <ng-container>
+                    <Button
+                      type="button"
+                      id="btnsave"
+                      Class="btn btn-outline-success btnFix mx-1"
+                      (click)="addorUpdate()"
+                      [disabled]="isUpdate"
+                      >Save</Button
+                    >
+                    <Button
+                      type="button"
+                      id="btnsave"
+                      Class="btn btn-outline-success btnFix"
+                      (click)="addorUpdate()"
+                      [disabled]="!isUpdate"
+                      >Update</Button
+                    >
+                  </ng-container>
+                  <Button
+                    type="button"
+                    id="btnRefresh"
+                    class="btn primary-button-color mx-1 btnFix"
+                    (click)="refresh()"
+                    >Refresh</Button
+                  >
+                </div>
+              </div>
+              <!-- Buttons-End -->
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <p-table
+      [value]="AttachmentTyperesponse$"
+      [paginator]="AttachmentTyperesponse$.length > 4 ? true : false"
+      [rows]="10"
+      class="datatable-width"
+      styleClass="p-datatable-sm"
+      responsiveLayout="stack"
+      [breakpoint]="'960px'"
+      [rowHover]="true"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="min-width: 50px">Doc No</th>
+          <th style="min-width: 50px">Document Type</th>
+          <th style="min-width: 50px">Attachment No</th>
+          <th style="min-width: 50px">Attachment Path</th>
+          <th style="min-width: 50px">Attachment Type</th>
+          <th style="min-width: 50px">Action</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-m>
+        <tr>
+          <td>{{ m.DocumentNo }}</td>
+          <td>{{ m.DocumentTypeName }}</td>
+          <td>{{ m.AttachmentTypeId }}</td>
+          <td>{{ m.AttachmentPath }}</td>
+          <td>
+            <p-dropdown
+              [options]="DocAttachmentTypeResponse$"
+              [options]="DocAttachmentTypeResponse$"
+              optionLabel="AttachmentTypeTitle"
+              optionValue="AttachmentTypeId"
+              [(ngModel)]="m.AttachmentTypeId"
+              appendTo="body"
+              (onChange)="onDropdownChange(m, $event)"
+            ></p-dropdown>
+          </td>
+          <td>
+            <button
+              pButton
+              icon="pi pi-pencil"
+              class="p-button p-button-outlined p-button-rounded p-button-success p-mr-2 mx-1 custom-button-success"
+              (click)="getSelectedRow(m)"
+            ></button>
+            <button
+              pButton
+              icon="pi pi-trash"
+              class="p-button p-button-outlined p-button-rounded p-button-danger custom-button-success"
+              (click)="delete(m.BranchCode, m.AttachmentAutoId)"
+            ></button>
+            <button
+              pButton
+              icon="pi pi-eye"
+              class="p-button p-button-outlined p-button-rounded p-button-info p-mr-2 mx-1 custom-button-success"
+              (click)="viewFile(m)"
+            ></button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+  <!-- Grid-End -->
+</div>

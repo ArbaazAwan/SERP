@@ -1,0 +1,354 @@
+<p-confirmDialog #cd [style]="{ width: '30vw' }">
+  <ng-template pTemplate="footer">
+    <button
+      type="button"
+      pButton
+      icon="pi pi-times"
+      label="No"
+      class="p-button-success"
+      (click)="cd.reject()"
+    ></button>
+    <button
+      type="button"
+      pButton
+      icon="pi pi-check"
+      label="Yes"
+      class="p-button-danger"
+      (click)="cd.accept()"
+    ></button>
+  </ng-template>
+</p-confirmDialog>
+
+<div class="mt-2 mb-2 form-title bg-gray-100">
+  <p class="mx-1 my-1">User Menu Rights</p>
+</div>
+<div class="container" style="width: 75%; float: right">
+  <div class="row justify-content-flex-start">
+    <div
+      class="row justify-content-center"
+      style="width: 100%; padding-right: 0px"
+    >
+      <form
+        class="justify-content-center"
+        style="width: 100%"
+        [formGroup]="form"
+        novalidate
+      >
+        <div class="row text-center" style="font-size: small">
+          <div class="col-lg-12 col-md-12 col-sm-10" style="padding-right: 0px">
+            <div class="card p-3">
+              <div class="row align-items-stretch">
+                <div class="col-lg-2"></div>
+                <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+                  <label class="float-md-left d-flex float-sm-left mb-1 ml-1"
+                    ><b>Menu/Module</b>
+                    <span class="astrik">*</span>
+                  </label>
+                  <p-dropdown
+                    [style]="{ height: '38px', width: '235px' }"
+                    [options]="MenuOptions$"
+                    [filter]="true"
+                    optionLabel="MenuName"
+                    optionValue="MenuId"
+                    [(ngModel)]="MenuOptions$.MenuAutoId"
+                    [ngModelOptions]="{ standalone: true }"
+                    filterBy="MenuName"
+                    [showClear]="false"
+                    placeholder="Select Menu"
+                    [panelStyle]="{ overflow: 'auto' }"
+                    [showClear]="true"
+                    (onChange)="changeMenuOptions($event)"
+                  >
+                  </p-dropdown>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+                  <label class="float-md-left d-flex float-sm-left mb-1 ml-1"
+                    ><b>Users</b>
+                    <span class="astrik">*</span>
+                  </label>
+                  <p-dropdown
+                    [style]="{ height: '38px', width: '235px' }"
+                    [options]="User$"
+                    [filter]="true"
+                    optionLabel="Username"
+                    optionValue="UserId"
+                    [(ngModel)]="MenuOptions$.UserId"
+                    [ngModelOptions]="{ standalone: true }"
+                    filterBy="Username"
+                    [showClear]="false"
+                    placeholder="Select Users"
+                    [panelStyle]="{ overflow: 'auto' }"
+                    [showClear]="true"
+                    (onChange)="changeUser($event)"
+                  >
+                  </p-dropdown>
+                </div>
+
+                <div
+                  class="col-lg-2 row justify-content-center mb-3"
+                  style="align-items: flex-end"
+                >
+                  <div
+                    class="row justify-content-start"
+                    style="align-items: baseline"
+                  >
+                    <button
+                      type="button"
+                      class="btn primary-button-color mx-1"
+                      style="width: 8rem; border-radius: 0.5rem"
+                      (click)="loadUserMenuRights()"
+                    >
+                      Fetch Rights
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- <div class="row">
+                  <div
+                    class="col-lg-12 col-md-12 col-sm-10"
+                    style="padding-right: 0px"
+                  >
+                    <p-table
+                      [value]="GridManuOptions$"
+                      [paginator]="GridManuOptions$.length > 10 ? true : false"
+                      [rows]="5"
+                      styleClass="p-datatable-sm"
+                      responsiveLayout="stack"
+                      [rowHover]="true"
+                    >
+                      <ng-template pTemplate="header">
+                        <tr>
+                          <th>Menu Id</th>
+                          <th>Menu Name</th>
+                          <th>CanView</th>
+                          <th>CanAdd</th>
+                          <th>CanUpdate</th>
+                          <th>CanDelete</th>
+                          <th>SpecialRight1</th>
+                          <th>SpecialRight2</th>
+                          <th>SpecialRight3</th>
+                        </tr>
+                      </ng-template>
+                      <ng-template pTemplate="body" let-m>
+                        <tr>
+                          <th style="font-weight: normal">{{ m.MenuId }}</th>
+                          <th style="font-weight: normal">{{ m.MenuName }}</th>
+                          <th scope="row">
+                            <input
+                              class="form-check-input"
+                              type="checkbox"
+                              [checked]="n.CanView"
+                            />
+                          </th>
+                          <th>
+                            <p-tableCheckbox [value]="m" binary="true">{{
+                              m.CanView
+                            }}</p-tableCheckbox>
+                          </th>
+                          <th>
+                            <p-tableCheckbox [value]="m" binary="true">{{
+                              m.CanAdd
+                            }}</p-tableCheckbox>
+                          </th>
+                          <th>
+                            <p-tableCheckbox [value]="m" binary="true">{{
+                              m.CanUpdate
+                            }}</p-tableCheckbox>
+                          </th>
+                          <th>
+                            <p-tableCheckbox [value]="m" binary="true">{{
+                              m.CanDelete
+                            }}</p-tableCheckbox>
+                          </th>
+                          <th>
+                            <p-tableCheckbox [value]="m" binary="true">{{
+                              m.SpecialRight1
+                            }}</p-tableCheckbox>
+                          </th>
+                          <th>
+                            <p-tableCheckbox [value]="m" binary="true">{{
+                              m.SpecialRight2
+                            }}</p-tableCheckbox>
+                          </th>
+                          <th>
+                            <p-tableCheckbox [value]="m" binary="true">{{
+                              m.SpecialRight3
+                            }}</p-tableCheckbox>
+                          </th>
+                        </tr>
+                      </ng-template>
+                    </p-table>
+                  </div>
+                  <div class="col-lg-2"></div>
+                </div> -->
+              <div
+                class="border-top mt-2"
+                style="
+                  border-color: rgb(223, 218, 218);
+                  width: 100%;
+                  border-style: solid;
+                  border-width: 1px;
+                "
+              ></div>
+
+              <div
+                class="col-lg-12 col-md-12 col-sm-10"
+                style="padding-right: 0px"
+              >
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th style="font-weight: bold; font-size: small">
+                        MenuId
+                      </th>
+                      <th style="font-weight: bold; font-size: small">
+                        Menu Name
+                      </th>
+                      <th style="font-weight: bold; font-size: small">
+                        CanView
+                      </th>
+                      <th style="font-weight: bold; font-size: small">
+                        CanAdd
+                      </th>
+                      <th style="font-weight: bold; font-size: small">
+                        CanUpdate
+                      </th>
+                      <th style="font-weight: bold; font-size: small">
+                        CanDelete
+                      </th>
+                      <th style="font-weight: bold; font-size: small">
+                        SpecialRight1
+                      </th>
+                      <th style="font-weight: bold; font-size: small">
+                        SpecialRight2
+                      </th>
+                      <th style="font-weight: bold; font-size: small">
+                        SpecialRight3
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let n of GridManuOptions$">
+                      <th style="font-weight: normal; font-size: small">
+                        {{ n.MenuId }}
+                      </th>
+                      <th style="font-weight: normal; font-size: small">
+                        {{ n.ManuOptionName }}
+                      </th>
+                      <th scope="row">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          [(ngModel)]="n.CanView"
+                          [ngModelOptions]="{ standalone: true }"
+                        />
+                      </th>
+                      <th scope="row">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          [checked]="n.CanAdd"
+                        />
+                      </th>
+                      <th scope="row">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          [checked]="n.CanUpdate"
+                        />
+                      </th>
+                      <th scope="row">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          [checked]="n.CanDelete"
+                        />
+                      </th>
+
+                      <th scope="row">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          [checked]="n.SpecialRight1"
+                        />
+                      </th>
+                      <th scope="row">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          [checked]="n.SpecialRight2"
+                        />
+                      </th>
+                      <th scope="row">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          [checked]="n.SpecialRight3"
+                        />
+                      </th>
+                    </tr>
+                  </tbody>
+                </table>
+                <!-- <div class="row align-items-stretch">
+                  <div class="col-lg-4"></div>
+                  <div class="col-lg-4">
+                    <div class="pagination">
+                      <button
+                        class="btn btn-primary mx-1"
+                        [disabled]="currentPage === 1"
+                        (click)="currentPage = 1"
+                      >
+                        First
+                      </button>
+                      <button
+                        class="btn btn-primary"
+                        [disabled]="currentPage === 1"
+                        (click)="currentPage = currentPage - 1"
+                      >
+                        Previous
+                      </button>
+                      <button
+                        class="btn btn-primary mx-1"
+                        [disabled]="currentPage === getTotalPages()"
+                        (click)="currentPage = currentPage + 1"
+                      >
+                        Next
+                      </button>
+                      <button
+                        class="btn btn-primary"
+                        [disabled]="currentPage === getTotalPages()"
+                        (click)="currentPage = getTotalPages()"
+                      >
+                        Last
+                      </button>
+                    </div>
+                  </div>
+                </div> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="row align-items-stretch mt-2">
+    <div class="col-lg-5"></div>
+    <div
+      class="col-lg-4 row justify-content-center mb-3"
+      style="align-items: flex-end"
+    >
+      <div class="row justify-content-start" style="align-items: baseline">
+        <button
+          type="button"
+          class="btn btn-outline-success mx-1"
+          style="width: 10rem; border-radius: 0.5rem"
+          (click)="save()"
+        >
+          Save User Rights
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

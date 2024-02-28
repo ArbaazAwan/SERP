@@ -1,0 +1,179 @@
+<div class="main-container">
+  <app-store-project
+    [componentName]="componentName"
+    [showInput2]="false"
+  ></app-store-project>
+
+  <div class="row">
+    <form class="col-lg-12 col-md-12 col-sm-12" [formGroup]="form" novalidate>
+      <div class="card p-2">
+        <div class="row mt-2 d-flex align-items-center mx-lg-2">
+          <div class="col-xl-3 col-lg-4 ps-lg-0">
+            <label class="mr-2" for="VoucherType"
+              >Voucher Type<span class="astrik">*</span></label
+            >
+
+            <p-dropdown
+              id="VoucherType"
+              [options]="voucherTypeResponse$"
+              [filter]="true"
+              formControlName="VoucherTypeCode"
+              style="border-color: #ced4da !important"
+              optionLabel="VoucherTypeName"
+              filterBy="VoucherTypeName"
+              [showClear]="true"
+              placeholder="Select VoucherType"
+              [panelStyle]="{ overflow: 'auto' }"
+              (onChange)="changeVoucherType($event)"
+            >
+              <ng-template let-option pTemplate="item">
+                <span style="width: 85%; float: left">
+                  {{ option.VoucherTypeName }}
+                </span>
+              </ng-template>
+            </p-dropdown>
+          </div>
+
+          <div class="col-xl-3 col-lg-4">
+            <label class="float-md-left d-flex float-sm-left mt-md-2"
+              >Date From
+            </label>
+            <input
+              type="date"
+              class="form-control custombox"
+              formControlName="DateFrom"
+            />
+          </div>
+          <!-- dateSet -->
+          <div class="col-xl-3 col-lg-4">
+            <label class="float-md-left d-flex float-sm-left mt-md-2"
+              >Date To
+            </label>
+            <input
+              type="date"
+              class="form-control custombox"
+              formControlName="DateTo"
+            />
+          </div>
+
+          <div class="row justify-content-center">
+            <ng-container>
+              <Button
+                type="button"
+                id="btnviewlist"
+                Class="btn primary-button-color btnFix mt-3 mb-2"
+                (click)="printVoucherReport()"
+                >Preview / Print</Button
+              >
+
+              <Button
+                type="button"
+                id="btnviewlist"
+                Class="btn primary-button-color btnFix mt-3 ml-2 mb-2"
+                (click)="loadVouchersList()"
+                >View List</Button
+              >
+              <Button
+                type="button"
+                id="btnviewlist"
+                Class="btn primary-button-color btnFix mt-3 ml-2 mb-2"
+                (click)="RefreshVouchersList()"
+                >Refresh</Button
+              >
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="col-lg-12 col-md-12 mt-3 p-0">
+    <div class="table-responsive card-wrapper custom-table">
+      <table
+        class="table table-striped table-borderless"
+        *ngIf="!isLoadingData"
+      >
+        <thead class="text-center">
+          <tr>
+            <th scope="col">Voucher Type</th>
+            <th scope="col">Voucher No</th>
+            <th scope="col" class="text-center">Voucher Date</th>
+            <th scope="col">Account Title</th>
+            <!-- <th scope="col" class="text-center">Currency</th>
+          <th scope="col" class="text-center">FC Rate</th> -->
+            <th scope="col">Credit Amount ({{ currencyName }})</th>
+            <th scope="col">Debit Amount ({{ currencyName }})</th>
+            <th scope="col" class="text-center">Posted</th>
+            <th scope="col" class="text-center">Dropped</th>
+            <th scope="col" class="text-center">Action</th>
+            <!-- <th scope="col" class="text-center">Action</th> -->
+          </tr>
+        </thead>
+        <hr />
+        <tbody class="text-center">
+          <tr *ngFor="let item of voucherResponse$">
+            <td>{{ item.VoucherType }}</td>
+            <td>{{ item.VoucherNo }}</td>
+            <td>{{ item.VoucherDate | date : "MMM-d-y" }}</td>
+            <td>{{ item.AccountName }}</td>
+            <!-- <td>{{item.Currency}}</td>
+          <td>{{item.FCRate}}</td> -->
+            <td>{{ item.CreditAmount | roundoff }}</td>
+            <td>{{ item.DebitAmount | roundoff }}</td>
+            <td>
+              <span
+                [class]="
+                  item.IsPosted == true ? 'success-badge' : 'danger-badge'
+                "
+                >{{ item.IsPosted | yesNo }}</span
+              >
+            </td>
+            <td>
+              <span
+                [class]="
+                  item.IsDropped == true ? 'success-badge' : 'danger-badge'
+                "
+                >{{ item.IsDropped | yesNo }}</span
+              >
+            </td>
+            <td>
+              <div class="dropdown text-center">
+                <button
+                  class="three-dots"
+                  type="button"
+                  id="table-action-menu"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <i class="fa fa-ellipsis-v"></i>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="table-action-menu">
+                  <li>
+                    <a
+                      class="dropdown-item edit cursor-hover cursor-pointer"
+                      (click)="getSelectedRow(item)"
+                      >Edit</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+          </tr>
+          <div class="no-data-found" *ngIf="voucherResponse$.length == 0">
+            No Data Found
+          </div>
+        </tbody>
+      </table>
+      <div *ngIf="isLoadingData">
+        <app-table-loader></app-table-loader>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="loading-popup" *ngIf="loading">
+  <div class="overlay"></div>
+  <div class="popup">
+    <div class="spinner"></div>
+    <p class="text-center mt-2 mb-0">Report Generating</p>
+  </div>
+</div>

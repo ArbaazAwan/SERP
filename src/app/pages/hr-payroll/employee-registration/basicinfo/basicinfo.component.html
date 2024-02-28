@@ -1,0 +1,335 @@
+<div class="card-wrapper">
+  <form [formGroup]="form">
+    <div class="row">
+      <div class="col-lg-10">
+        <div class="row basic-info-dropdowns">
+          <div class="col-xxl-3 col-lg-4 col-md-6 col-sm-12 mb-3">
+            <label
+              class="float-md-left d-flex float-sm-left mb-1 ml-1 text-nowrap"
+              >Employee Code</label
+            >
+            <input
+              type="text"
+              class="form-control text-xs"
+              formControlName="EmployeeCode"
+              name="EmployeeCode"
+            />
+          </div>
+          <div class="col-xxl-3 col-lg-4 col-md-6 col-sm-12 mb-4">
+            <label class="float-md-left d-flex float-sm-left mb-1 ml-1"
+              >Employee Name
+              <span class="astrik">*</span>
+            </label>
+            <input
+              type="text"
+              class="form-control text-xs"
+              placeholder="Enter Employee Name"
+              formControlName="EmployeeName"
+              name="EmployeeName"
+            />
+            <small
+              *ngIf="
+                form.get('EmployeeName')?.invalid &&
+                form.get('EmployeeName')?.touched
+              "
+              class="text-danger text-xs"
+            >
+              Employee Name is Required
+            </small>
+          </div>
+          <div class="col-xxl-3 col-lg-4 col-md-6 col-sm-12 mb-3">
+            <label class="float-md-left d-flex float-sm-left mb-1 ml-1"
+              >Father Name
+              <span class="astrik">*</span>
+            </label>
+            <input
+              type="text"
+              class="form-control text-xs"
+              placeholder="Enter Father Name"
+              formControlName="FatherName"
+              name="FatherName"
+            />
+            <small
+              *ngIf="
+                form.controls['FatherName'].invalid &&
+                form.controls['FatherName'].touched
+              "
+              class="text-danger text-xs"
+            >
+              Father Name is Required
+            </small>
+          </div>
+          <div class="col-xxl-3 col-lg-4 col-md-6 col-sm-12 mb-3">
+            <label class="float-md-left d-flex float-sm-left mb-1 ml-1"
+              >ID Card
+              <span class="astrik">*</span>
+            </label>
+            <input
+              type="text"
+              class="form-control text-xs"
+              placeholder="Enter ID Card"
+              formControlName="CNIC"
+              name="CNIC"
+            />
+            <small
+              *ngIf="
+                form.controls['CNIC'].invalid && form.controls['CNIC'].touched
+              "
+              class="text-danger text-xs"
+            >
+              CNIC Required
+            </small>
+          </div>
+          <div class="col-xxl-3 col-lg-4 col-md-6 col-sm-12 mb-12">
+            <label class="float-md-left d-flex float-sm-left mb-1"
+              >Gender
+              <span class="astrik">*</span>
+            </label>
+            <div class="group-gap">
+              <div class="d-block">
+                <div class="mb-3">
+                  <p-dropdown
+                    formControlName="GenderCode"
+                    [options]="genders"
+                    optionLabel="GenderName"
+                    optionValue="GenderCode"
+                    placeholder="Select Gender"
+                  ></p-dropdown>
+                  <small
+                    *ngIf="
+                      form.controls['GenderCode'].invalid &&
+                      form.controls['GenderCode'].touched
+                    "
+                    class="text-danger text-xs"
+                  >
+                    Gender Required
+                  </small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xxl-3 col-lg-4 col-md-6 col-sm-12 mb-3">
+            <label class="float-md-left d-flex float-sm-left mb-1 ml-1"
+              >Mobile
+              <span class="astrik">*</span>
+            </label>
+            <input
+              type="number"
+              class="form-control text-xs"
+              placeholder="Enter Mobile"
+              formControlName="Mobile"
+              name="Mobile"
+            />
+            <small
+              *ngIf="
+                form.controls['Mobile'].invalid &&
+                form.controls['Mobile'].touched
+              "
+              class="text-danger text-xs"
+            >
+              Mobile Number is Required
+            </small>
+          </div>
+          <div class="col-xxl-3 col-lg-4 col-md-6 col-sm-12 mb-12">
+            <label class="float-md-left d-flex float-sm-left mb-1"
+              >Time Zone
+              <span class="astrik">*</span>
+            </label>
+            <div class="group-gap">
+              <div class="d-block">
+                <div class="mb-3">
+                  <p-dropdown
+                    [options]="timeZones"
+                    formControlName="TimeZone"
+                    placeholder="Select Time Zone"
+                    [filter]="true"
+                    filterBy="name"
+                    optionLabel="name"
+                    optionValue="name"
+                  >
+                  </p-dropdown>
+                  <small
+                    *ngIf="
+                      form.controls['TimeZone'].invalid &&
+                      form.controls['TimeZone'].touched
+                    "
+                    class="text-danger text-xs"
+                  >
+                    Time Zone Required
+                  </small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xxl-3 col-lg-4 col-md-6 col-sm-12 mb-12">
+            <label class="float-md-left d-flex float-sm-left mb-1 text-nowrap"
+              >Health Card#
+            </label>
+            <div class="group-gap">
+              <div class="d-block">
+                <div class="mb-3">
+                  <input
+                    type="text"
+                    class="form-control text-xs"
+                    formControlName="HealthInsuranceCardNo"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xxl-3 col-lg-4 col-md-6 col-sm-12 mb-3">
+            <label class="float-md-left d-flex float-sm-left mb-1 ml-1"
+              >Date Of Birth
+              <span class="astrik">*</span>
+            </label>
+            <input
+              type="date"
+              class="form-control text-xs"
+              placeholder="Enter DOB"
+              formControlName="DateOfBirth"
+              name="DateOfBirth"
+            />
+            <small
+              *ngIf="
+                form.controls['DateOfBirth'].invalid &&
+                form.controls['DateOfBirth'].touched
+              "
+              class="text-danger text-xs"
+            >
+              Date of Birth Required
+            </small>
+          </div>
+          <div class="col-xxl-3 col-lg-4 col-md-6 col-sm-12 mb-12">
+            <label class="float-md-left d-flex float-sm-left mb-1 text-nowrap"
+              >Employee Type
+              <span class="astrik">*</span>
+            </label>
+            <div class="group-gap">
+              <div class="d-block">
+                <div class="mb-3">
+                  <p-dropdown
+                    formControlName="EmployeeTypeCode"
+                    [options]="employeeTypes"
+                    optionLabel="EmployeeTypeName"
+                    optionValue="EmployeeTypeCode"
+                    placeholder="Select Employee Type"
+                  ></p-dropdown>
+                  <small
+                    *ngIf="
+                      form.controls['EmployeeTypeCode'].invalid &&
+                      form.controls['EmployeeTypeCode'].touched
+                    "
+                    class="text-danger text-xs"
+                  >
+                    Employee Type is Required
+                  </small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xxl-3 col-lg-4 col-md-6 col-sm-12 mb-12">
+            <label class="float-md-left d-flex float-sm-left mb-1"
+              >Department
+              <span class="astrik">*</span>
+            </label>
+            <div class="group-gap">
+              <div class="d-block">
+                <div class="mb-3">
+                  <p-dropdown
+                    [options]="departments"
+                    optionValue="DepartmentCode"
+                    optionLabel="DepartmentName"
+                    formControlName="DepartmentCode"
+                    placeholder="Select Department"
+                  >
+                  </p-dropdown>
+                  <small
+                    *ngIf="
+                      form.controls['DepartmentCode'].invalid &&
+                      form.controls['DepartmentCode'].touched
+                    "
+                    class="text-danger text-xs"
+                  >
+                    Deptartment is Required
+                  </small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xxl-3 col-lg-4 col-md-6 col-sm-12 mb-12">
+            <label class="float-md-left d-flex float-sm-left mb-1"
+              >Designation
+              <span class="astrik">*</span>
+            </label>
+            <div class="group-gap">
+              <div class="d-block">
+                <div class="mb-3">
+                  <p-dropdown
+                    [options]="designations"
+                    optionValue="DesignationCode"
+                    optionLabel="DesignationName"
+                    formControlName="DesignationCode"
+                    placeholder="Select Designation"
+                  >
+                  </p-dropdown>
+                  <small
+                    *ngIf="
+                      form.controls['DesignationCode'].invalid &&
+                      form.controls['DesignationCode'].touched
+                    "
+                    class="text-danger text-xs"
+                  >
+                    Designation is Required
+                  </small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xxl-3 col-lg-4 col-md-6 col-sm-12 mb-3">
+            <label class="float-md-left d-flex float-sm-left mb-1 ml-1"
+              >AttendifyId
+            </label>
+            <input
+              type="text"
+              class="form-control text-xs"
+              formControlName="AttendifyEmployeeId"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-2 col-md-6 col-sm-12 mt-2">
+        <input
+          type="file"
+          (change)="onFileSelected($event)"
+          id="fileInput"
+          accept=".doc, .docx, .pdf, .jpg, .jpeg, .png"
+          style="display: none"
+        />
+        <label
+          for="fileInput"
+          class="upload-label w-100 d-flex align-items-center justify-content-center"
+          *ngIf="!file"
+        >
+          <div class="">
+            <i class="fa fa-upload"></i>
+            <span>Upload Image</span>
+          </div>
+        </label>
+        <div class="preview-container w-100" *ngIf="file">
+          <span class="remove-button" (click)="clearFile()">
+            <i class="fa fa-times"></i>
+          </span>
+          <div *ngIf="isImage; else otherFile" class="img-container">
+            <img [src]="file" alt="Uploaded Image" class="image-preview" />
+          </div>
+          <ng-template #otherFile>
+            <i class="fa fa-file"></i>
+          </ng-template>
+        </div>
+        <div class="file-name text-nowrap" *ngIf="file">
+          <!-- Selected Image: {{ file.name }} -->
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

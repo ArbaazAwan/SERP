@@ -1,0 +1,2017 @@
+<p-toast></p-toast>
+<p-confirmDialog #cd [style]="{ width: '30vw' }">
+  <ng-template pTemplate="footer">
+    <button
+      type="button"
+      pButton
+      icon="pi pi-times"
+      label="No"
+      class="p-button-success"
+      (click)="cd.reject()"
+    ></button>
+    <button
+      type="button"
+      pButton
+      icon="pi pi-check"
+      label="Yes"
+      class="p-button-danger"
+      (click)="cd.accept()"
+    ></button>
+  </ng-template>
+</p-confirmDialog>
+<div class="mt-2 mb-2 form-title bg-gray-100">
+  <p class="mx-1 my-1">Get All Charts of Items</p>
+</div>
+<div class="container mt-1" style="width: 75%; float: right">
+  <div class="card">
+    <p-toolbar>
+      <ng-template pTemplate="left">
+        <button
+          pButton
+          pRipple
+          label="Create"
+          icon="pi pi-plus"
+          class="p-button-success p-mr-2"
+          style="padding: 5px 5px; font-size: 16px"
+          (click)="openNew()"
+        ></button>
+        <button
+          pButton
+          pRipple
+          label="Preview / Print"
+          icon="pi pi-check"
+          class="p-button-primary p-mr-2"
+          style="padding: 5px 5px; margin-left: 5px; font-size: 16px"
+        ></button>
+      </ng-template>
+      <ng-template pTemplate="right">
+        <span class="p-input-icon-left">
+          <i class="pi pi-search"></i>
+          <input pInputText type="text" placeholder="Search..." />
+        </span>
+      </ng-template>
+    </p-toolbar>
+    <p-treeTable
+      #dt
+      [value]="chartResponse"
+      [rowHover]="true"
+      [globalFilterFields]="['ItemCode', 'ItemName', 'HasDetail', 'IsDetail']"
+    >
+      >
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="min-width: 200px" field="ItemCode">Item Code</th>
+          <th style="min-width: 200px" field="ItemName">Account Name</th>
+          <th style="min-width: 150px" field="HasDetail">Has Details</th>
+          <th style="min-width: 150px" field="IsDetail">Is Details</th>
+          <th style="min-width: 200px">Actions</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
+        <tr [ttRow]="rowNode">
+          <td>
+            <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+            {{ rowData.ItemCode }}
+          </td>
+
+          <td>{{ rowData.ItemName }}</td>
+
+          <td>
+            <ng-container *ngIf="rowData.HasDetail">
+              <input type="checkbox" checked disabled />
+            </ng-container>
+            <ng-container *ngIf="!rowData.HasDetail">
+              <input type="checkbox" disabled />
+            </ng-container>
+          </td>
+          <td>
+            <ng-container *ngIf="rowData.IsDetail">
+              <input type="checkbox" checked disabled />
+            </ng-container>
+            <ng-container *ngIf="!rowData.IsDetail">
+              <input type="checkbox" disabled />
+            </ng-container>
+          </td>
+
+          <td [style]="'right-padding: 0'">
+            <button
+              pButton
+              pRipple
+              icon="pi pi-pencil"
+              class="p-button p-button-outlined p-button-rounded p-button-warning GridEditButton mx-1"
+              (click)="getRow(rowData)"
+            ></button>
+            <button
+              pButton
+              pRipple
+              icon="pi pi-trash"
+              class="p-button p-button-outlined p-button-rounded p-button-danger GridDelButton mx-1"
+              (click)="deleteChartItem(rowData.ItemCode)"
+            ></button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-treeTable>
+  </div>
+</div>
+
+<form [formGroup]="form">
+  <p-dialog
+    [(visible)]="mainDialog"
+    [style]="{ width: '1050px', height: '600px' }"
+    [header]="mainHeader"
+    [modal]="true"
+    styleClass="p-fluid"
+    [closable]="false"
+  >
+    <ng-template pTemplate="content">
+      <div class="row text-center" style="font-size: small">
+        <div class="col-lg-12 col-md-12 col-sm-10">
+          <div class="card p-3">
+            <div class="row align-items-stretch mb-3">
+              <div class="col-lg-4 col-md-6 col-sm-12" style="text-align: left">
+                <label for="description" class="mb-1"
+                  ><b>Parent Item Code</b><span class="astrik">*</span></label
+                >
+                <ng-container *ngIf="!isUpdate">
+                  <p-dropdown
+                    [style]="{ height: '38px' }"
+                    [options]="parentCodeResponse$"
+                    [filter]="true"
+                    optionLabel="ItemName"
+                    optionValue="ItemCode"
+                    filterBy="ItemName"
+                    placeholder="Select Parent Code"
+                    [panelStyle]="{ overflow: 'auto' }"
+                    [showClear]="true"
+                    (onChange)="changeParentCode($event)"
+                  >
+                    <ng-template let-option pTemplate="item">
+                      <div class="option-item">
+                        <div class="option-column1">
+                          {{ option.ItemCode }}
+                        </div>
+                        <div class="option-column2">{{ option.ItemName }}</div>
+                      </div>
+                    </ng-template>
+                  </p-dropdown>
+                </ng-container>
+                <ng-container *ngIf="isUpdate">
+                  <input
+                    type="text"
+                    class="form-control"
+                    [(ngModel)]="parentwithName"
+                    [ngModelOptions]="{ standalone: true }"
+                    [attr.disabled]="true"
+                  />
+                </ng-container>
+              </div>
+              <div class="col-lg-2 col-md-6 col-sm-12">
+                <label class="float-md-left d-flex float-sm-left mb-1 ml-1"
+                  ><b>Item Code</b>
+                  <span class="astrik">*</span>
+                </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter Item Code"
+                  formControlName="ItemCode"
+                  [(ngModel)]="model.ItemCode"
+                  [attr.disabled]="isUpdate ? false : null"
+                />
+              </div>
+              <div class="col-lg-4 col-md-6 col-sm-12">
+                <label class="float-md-left d-flex float-sm-left mb-1 ml-1"
+                  ><b>Item Name</b>
+                  <span class="astrik">*</span>
+                </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter Item Name"
+                  formControlName="ItemName"
+                  [(ngModel)]="model.ItemName"
+                  required
+                />
+                <div
+                  *ngIf="
+                    form.controls['ItemName'].invalid &&
+                    form.controls['ItemName'].touched
+                  "
+                  style="color: red"
+                >
+                  Field Required
+                </div>
+              </div>
+              <div class="col-lg-2 col-md-6 col-sm-12">
+                <label class="float-md-left d-flex float-sm-left mb-1 ml-1"
+                  ><b>Short Name</b>
+                  <span class="astrik">*</span>
+                </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter Short Name"
+                  formControlName="ShortName"
+                  [(ngModel)]="model.ShortName"
+                  required
+                />
+                <div
+                  *ngIf="
+                    form.controls['ShortName'].invalid &&
+                    form.controls['ShortName'].touched
+                  "
+                  style="color: red"
+                >
+                  Field Required
+                </div>
+              </div>
+            </div>
+            <div class="row align-items-stretch mb-3">
+              <div class="col-lg-4 col-md-6 col-sm-12" style="text-align: left">
+                <label class="float-md-left d-flex float-sm-left mb-1 ml-1"
+                  ><b>Store</b>
+                  <span class="astrik">*</span>
+                </label>
+                <p-multiSelect
+                  [style]="{ height: '38px' }"
+                  formControlName="Store"
+                  [options]="storeResponse$"
+                  optionLabel="StoreName"
+                  [required]="!isUpdate"
+                  placeholder="Select Store"
+                  [(ngModel)]="selectedStores"
+                  [maxSelectedLabels]="1"
+                  [selectedItemsLabel]="'{0} items selected'"
+                >
+                </p-multiSelect>
+              </div>
+              <div class="col-lg-3 col-md-6 col-sm-12">
+                <label class="float-md-left d-flex float-sm-left mb-1 ml-1"
+                  ><b>Registration#</b>
+                  <!-- <span class="astrik">*</span> -->
+                </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter Registration No."
+                  formControlName="RegistrationNo"
+                  [(ngModel)]="model.RegistrationNo"
+                  required
+                />
+                <!-- <div
+                  *ngIf="
+                    form.controls['RegistrationNo'].invalid &&
+                    form.controls['RegistrationNo'].touched
+                  "
+                  style="color: red"
+                >
+                  Field Required
+                </div> -->
+              </div>
+              <div class="col-lg-3 col-md-6 col-sm-12">
+                <label class="float-md-left d-flex float-sm-left mb-1 ml-1"
+                  ><b>Serial#</b>
+                  <!-- <span class="astrik">*</span> -->
+                </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter Serial No."
+                  formControlName="ItemSrNo"
+                  [(ngModel)]="model.ItemSrNo"
+                />
+                <!-- <div
+                  *ngIf="
+                    form.controls['ItemSrNo'].invalid &&
+                    form.controls['ItemSrNo'].touched
+                  "
+                  style="color: red"
+                >
+                  Field Required
+                </div> -->
+              </div>
+              <div class="col-lg-2 col-md-6 col-sm-12">
+                <label class="float-md-left d-flex float-sm-left mb-1 ml-1"
+                  ><b>Sale Price</b>
+                  <!-- <span class="astrik">*</span> -->
+                </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter Sale Price"
+                  formControlName="SalePrice"
+                  [(ngModel)]="model.SalePrice"
+                />
+                <!-- <div
+                  *ngIf="
+                    form.controls['SalePrice'].invalid &&
+                    form.controls['SalePrice'].touched
+                  "
+                  style="color: red"
+                >
+                  Field Required
+                </div> -->
+              </div>
+            </div>
+
+            <div class="row align-items-stretch mb-3">
+              <div class="col-lg-3 col-md-6 col-sm-12">
+                <label class="float-md-left d-flex float-sm-left mb-1 ml-1"
+                  ><b>Min Level</b>
+                  <!-- <span class="astrik">*</span> -->
+                </label>
+                <input
+                  type="number"
+                  class="form-control"
+                  placeholder="Enter Min Level"
+                  formControlName="MinLevel"
+                  [(ngModel)]="model.MinLevel"
+                />
+                <!-- <div
+                  *ngIf="
+                    form.controls['MinLevel'].invalid &&
+                    form.controls['MinLevel'].touched
+                  "
+                  style="color: red"
+                >
+                  Field Required
+                </div> -->
+              </div>
+              <div class="col-lg-3 col-md-6 col-sm-12">
+                <label class="float-md-left d-flex float-sm-left mb-1 ml-1"
+                  ><b>Max Level</b>
+                  <!-- <span class="astrik">*</span> -->
+                </label>
+                <input
+                  type="number"
+                  class="form-control"
+                  placeholder="Enter Max Level"
+                  formControlName="MaxLevel"
+                  [(ngModel)]="model.MaxLevel"
+                />
+                <!-- <div
+                  *ngIf="
+                    form.controls['MaxLevel'].invalid &&
+                    form.controls['MaxLevel'].touched
+                  "
+                  style="color: red"
+                >
+                  Field Required
+                </div> -->
+              </div>
+              <div class="col-lg-3 col-md-6 col-sm-12">
+                <label class="float-md-left d-flex float-sm-left mb-1 ml-1"
+                  ><b>Remarks</b>
+                  <!-- <span class="astrik">*</span> -->
+                </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter Remarks "
+                  formControlName="Remarks"
+                  [(ngModel)]="model.Remarks"
+                />
+                <!-- <div
+                  *ngIf="
+                    form.controls['Remarks'].invalid &&
+                    form.controls['Remarks'].touched
+                  "
+                  style="color: red"
+                >
+                  Field Required
+                </div> -->
+              </div>
+              <div class="col-lg-3 col-md-6 col-sm-12">
+                <label class="float-md-left d-flex float-sm-left mb-1">
+                  <b>Size</b>
+                  <!-- <span class="astrik">*</span> -->
+                  <i class="pi pi-plus-circle one" (click)="openNewSize()"></i>
+                </label>
+                <div class="group-gap">
+                  <div class="d-block">
+                    <select
+                      class="form-select"
+                      formControlName="ItemSizeCode"
+                      (change)="changeSize($event)"
+                      [(ngModel)]="model.ItemSizeCode"
+                    >
+                      <option *ngIf="sizeResponse$.length === 0" value="">
+                        No Data Available!
+                      </option>
+                      <option
+                        *ngIf="sizeResponse$.length > 0"
+                        value=""
+                      ></option>
+                      <option
+                        *ngFor="let b of sizeResponse$"
+                        [ngValue]="b"
+                        [value]="b?.ItemSizeCode"
+                      >
+                        {{ b.ItemSize }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <!-- <div
+                  *ngIf="
+                    form.controls['ItemSizeCode'].invalid &&
+                    form.controls['ItemSizeCode'].touched
+                  "
+                  style="color: red"
+                >
+                  Field Required
+                </div> -->
+              </div>
+            </div>
+            <div class="row align-items-stretch mb-3">
+              <div class="col-lg-3 col-md-6 col-sm-12">
+                <label class="float-md-left d-flex float-sm-left mb-1">
+                  <b>Colour</b>
+                  <!-- <span class="astrik">*</span> -->
+                  <i
+                    class="pi pi-plus-circle one"
+                    (click)="openNewColour()"
+                  ></i>
+                </label>
+                <div class="group-gap">
+                  <div class="d-block">
+                    <select
+                      class="form-select"
+                      formControlName="ItemColourCode"
+                      (change)="changeColour($event)"
+                      [(ngModel)]="model.ItemColourCode"
+                    >
+                      <option *ngIf="colourResponse$.length === 0" value="">
+                        No Data Available!
+                      </option>
+                      <option
+                        *ngIf="colourResponse$.length > 0"
+                        value=""
+                      ></option>
+                      <option
+                        *ngFor="let b of colourResponse$"
+                        [ngValue]="b"
+                        [value]="b?.ItemColourCode"
+                      >
+                        {{ b.ItemColour }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <!-- <div
+                  *ngIf="
+                    form.controls['ItemColourCode'].invalid &&
+                    form.controls['ItemColourCode'].touched
+                  "
+                  style="color: red"
+                >
+                  Field Required
+                </div> -->
+              </div>
+              <div class="col-lg-3 col-md-6 col-sm-12">
+                <label class="float-md-left d-flex float-sm-left mb-1">
+                  <b>Item Type</b>
+                  <!-- <span class="astrik">*</span> -->
+                  <i class="pi pi-plus-circle one" (click)="openNewType()"></i>
+                </label>
+                <div class="group-gap">
+                  <div class="d-block">
+                    <select
+                      class="form-select"
+                      formControlName="ItemTypeCode"
+                      (change)="changeType($event)"
+                      [(ngModel)]="model.ItemTypeCode"
+                    >
+                      <option *ngIf="typeResponse$.length === 0" value="">
+                        No Data Available!
+                      </option>
+                      <option
+                        *ngIf="typeResponse$.length > 0"
+                        value=""
+                      ></option>
+                      <option
+                        *ngFor="let b of typeResponse$"
+                        [ngValue]="b"
+                        [value]="b?.ItemTypeCode"
+                      >
+                        {{ b.ItemType }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <!-- <div
+                  *ngIf="
+                    form.controls['ItemTypeCode'].invalid &&
+                    form.controls['ItemTypeCode'].touched
+                  "
+                  style="color: red"
+                >
+                  Field Required
+                </div> -->
+              </div>
+              <div class="col-lg-3 col-md-6 col-sm-12">
+                <label class="float-md-left d-flex float-sm-left mb-1">
+                  <b>Category</b>
+                  <!-- <span class="astrik">*</span> -->
+                  <i
+                    class="pi pi-plus-circle one"
+                    (click)="openNewCategory()"
+                  ></i>
+                </label>
+                <div class="group-gap">
+                  <div class="d-block">
+                    <select
+                      class="form-select"
+                      formControlName="ItemCategoryCode"
+                      (change)="changeCategory($event)"
+                      [(ngModel)]="model.ItemCategoryCode"
+                    >
+                      <option *ngIf="categoryResponse$.length === 0" value="">
+                        No Data Available!
+                      </option>
+                      <option
+                        *ngIf="categoryResponse$.length > 0"
+                        value=""
+                      ></option>
+                      <option
+                        *ngFor="let b of categoryResponse$"
+                        [ngValue]="b"
+                        [value]="b?.ItemCategoryCode"
+                      >
+                        {{ b.ItemCategory }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <!-- <div
+                  *ngIf="
+                    form.controls['ItemCategoryCode'].invalid &&
+                    form.controls['ItemCategoryCode'].touched
+                  "
+                  style="color: red"
+                >
+                  Field Required
+                </div> -->
+              </div>
+              <div class="col-lg-3 col-md-6 col-sm-12">
+                <label class="float-md-left d-flex float-sm-left mb-1">
+                  <b>Grade</b>
+                  <!-- <span class="astrik">*</span> -->
+                  <i class="pi pi-plus-circle one" (click)="openNewGrade()"></i>
+                </label>
+                <div class="group-gap">
+                  <div class="d-block">
+                    <select
+                      class="form-select"
+                      formControlName="ItemGradeCode"
+                      (change)="changeGrade($event)"
+                      [(ngModel)]="model.ItemGradeCode"
+                    >
+                      <option *ngIf="gradeResponse$.length === 0" value="">
+                        No Data Available!
+                      </option>
+                      <option
+                        *ngIf="gradeResponse$.length > 0"
+                        value=""
+                      ></option>
+                      <option
+                        *ngFor="let b of gradeResponse$"
+                        [ngValue]="b"
+                        [value]="b?.ItemGradeCode"
+                      >
+                        {{ b.ItemGrade }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <!-- <div
+                  *ngIf="
+                    form.controls['ItemGradeCode'].invalid &&
+                    form.controls['ItemGradeCode'].touched
+                  "
+                  style="color: red"
+                >
+                  Field Required
+                </div> -->
+              </div>
+            </div>
+            <div class="row align-items-stretch mb-3">
+              <div class="col-lg-3 col-md-6 col-sm-12">
+                <label class="float-md-left d-flex float-sm-left mb-1">
+                  <b>Manufacturer</b>
+                  <!-- <span class="astrik">*</span> -->
+                  <i
+                    class="pi pi-plus-circle one"
+                    (click)="openNewManufacturer()"
+                  ></i>
+                </label>
+                <div class="group-gap">
+                  <div class="d-block">
+                    <select
+                      class="form-select"
+                      formControlName="ItemManufacturerCode"
+                      (change)="changeManufacturer($event)"
+                      [(ngModel)]="model.ItemManufacturerCode"
+                    >
+                      <option
+                        *ngIf="manufacturerResponse$.length === 0"
+                        value=""
+                      >
+                        No Data Available!
+                      </option>
+                      <option
+                        *ngIf="manufacturerResponse$.length > 0"
+                        value=""
+                      ></option>
+                      <option
+                        *ngFor="let b of manufacturerResponse$"
+                        [ngValue]="b"
+                        [value]="b?.ItemManufacturerCode"
+                      >
+                        {{ b.ItemManufacturer }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <!-- <div
+                  *ngIf="
+                    form.controls['ItemManufacturerCode'].invalid &&
+                    form.controls['ItemManufacturerCode'].touched
+                  "
+                  style="color: red"
+                >
+                  Field Required
+                </div> -->
+              </div>
+              <div class="col-lg-3 col-md-6 col-sm-12">
+                <label class="float-md-left d-flex float-sm-left mb-1">
+                  <b>Brand</b>
+                  <!-- <span class="astrik">*</span> -->
+                  <i class="pi pi-plus-circle one" (click)="openNewBrand()"></i>
+                </label>
+                <div class="group-gap">
+                  <div class="d-block">
+                    <select
+                      class="form-select"
+                      formControlName="ItemBrandCode"
+                      (change)="changeBrand($event)"
+                      [(ngModel)]="model.ItemBrandCode"
+                    >
+                      <option *ngIf="brandResponse$.length === 0" value="">
+                        No Data Available!
+                      </option>
+                      <option
+                        *ngIf="brandResponse$.length > 0"
+                        value=""
+                      ></option>
+                      <option
+                        *ngFor="let b of brandResponse$"
+                        [ngValue]="b"
+                        [value]="b?.ItemBrandCode"
+                      >
+                        {{ b.ItemBrand }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <!-- <div
+                  *ngIf="
+                    form.controls['ItemBrandCode'].invalid &&
+                    form.controls['ItemBrandCode'].touched
+                  "
+                  style="color: red"
+                >
+                  Field Required
+                </div> -->
+              </div>
+              <div class="col-lg-3 col-md-6 col-sm-12">
+                <label class="float-md-left d-flex float-sm-left mb-1">
+                  <b>Model</b>
+                  <!-- <span class="astrik">*</span> -->
+                  <i class="pi pi-plus-circle one" (click)="openNewModel()"></i>
+                </label>
+                <div class="group-gap">
+                  <div class="d-block">
+                    <select
+                      class="form-select"
+                      formControlName="ItemModelCode"
+                      (change)="changeModel($event)"
+                      [(ngModel)]="model.ItemModelCode"
+                    >
+                      <option *ngIf="modelResponse$.length === 0" value="">
+                        No Data Available!
+                      </option>
+                      <option
+                        *ngIf="modelResponse$.length > 0"
+                        value=""
+                      ></option>
+                      <option
+                        *ngFor="let b of modelResponse$"
+                        [ngValue]="b"
+                        [value]="b?.ItemModelCode"
+                      >
+                        {{ b.ItemModel }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <!-- <div
+                  *ngIf="
+                    form.controls['ItemModelCode'].invalid &&
+                    form.controls['ItemModelCode'].touched
+                  "
+                  style="color: red"
+                >
+                  Field Required
+                </div> -->
+              </div>
+              <div class="col-lg-3 col-md-6 col-sm-12">
+                <label class="float-md-left d-flex float-sm-left mb-1">
+                  <b>Unit</b>
+                  <!-- <span class="astrik">*</span> -->
+                  <i class="pi pi-plus-circle one" (click)="openNewUnit()"></i>
+                </label>
+                <div class="group-gap">
+                  <div class="d-block">
+                    <select
+                      class="form-select"
+                      formControlName="ItemUnitCode"
+                      (change)="changeUnit($event)"
+                      [(ngModel)]="model.ItemUnitCode"
+                    >
+                      <option *ngIf="unitResponse$.length === 0" value="">
+                        No Data Available!
+                      </option>
+                      <option
+                        *ngIf="unitResponse$.length > 0"
+                        value=""
+                      ></option>
+                      <option
+                        *ngFor="let b of unitResponse$"
+                        [ngValue]="b"
+                        [value]="b?.ItemUnitCode"
+                      >
+                        {{ b.ShortName }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <!-- <div
+                  *ngIf="
+                    form.controls['ItemUnitCode'].invalid &&
+                    form.controls['ItemUnitCode'].touched
+                  "
+                  style="color: red"
+                >
+                  Field Required
+                </div> -->
+              </div>
+            </div>
+            <div class="row align-items-stretch mb-3">
+              <div class="col-lg-8" style="text-align: left">
+                <label class="float-md-left d-flex float-sm-left mb-1 ml-1"
+                  ><b>COA Head</b>
+                </label>
+                <p-dropdown
+                  [style]="{ height: '38px', width: '412px' }"
+                  [options]="coaResponse$"
+                  [filter]="true"
+                  optionLabel="AccountName"
+                  optionValue="AccountCode"
+                  [(ngModel)]="model.AccountCode"
+                  [ngModelOptions]="{ standalone: true }"
+                  filterBy="AccountName,AccountCode"
+                  [showClear]="false"
+                  placeholder="Select COAHead"
+                  [panelStyle]="{ overflow: 'auto' }"
+                  [showClear]="true"
+                  (onChange)="changeCOAHead($event)"
+                  appendTo="body"
+                >
+                  <ng-template let-option pTemplate="item">
+                    <div class="option-item">
+                      <div style="float: left; width: 30%">
+                        {{ option.AccountCode }}
+                      </div>
+                      <div style="float: left; width: 70%">
+                        {{ option.AccountName }}
+                      </div>
+                    </div>
+                  </ng-template>
+                </p-dropdown>
+              </div>
+              <!-- <div class="col-lg-3 col-md-6 col-sm-12">
+                <label class="float-md-left d-flex float-sm-left mb-1">
+                  <b>COA Head</b>
+                  <span class="astrik">*</span>
+                </label>
+                <select class="form-select">
+                  <option *ngIf="coaResponse$.length === 0" value="">
+                    No Data Available!
+                  </option>
+                  <option *ngIf="coaResponse$.length > 0" value=""></option>
+                  <option
+                    *ngFor="let b of coaResponse$"
+                    [ngValue]="b"
+                    [value]="b?.AccountCode"
+                  >
+                    {{ b.AccountName }}
+                  </option>
+                </select>
+              </div> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+      <button
+        pButton
+        pRipple
+        label="Cancel"
+        icon="pi pi-times"
+        class="p-button-text"
+        (click)="hideDialog()"
+      ></button>
+      <button
+        pButton
+        pRipple
+        [label]="mainBtn"
+        icon="pi pi-check"
+        class="p-button-text"
+        (click)="addorUpdate()"
+      ></button>
+    </ng-template>
+
+    <!-- Size Form -->
+    <form [formGroup]="formSize">
+      <p-dialog
+        [(visible)]="innerDialogSize"
+        [style]="{ width: '450px' }"
+        [header]="innerHeader"
+        [modal]="true"
+        styleClass="p-fluid"
+        [closable]="true"
+      >
+        <ng-template pTemplate="content">
+          <div class="row mb-3">
+            <div class="col-md-8">
+              <label class="mb-1">Item Size</label>
+              <ng-container *ngIf="!isInnerUpdate">
+                <input
+                  type="text"
+                  formControlName="ItemSize"
+                  pInputText
+                  required
+                  autofocus
+                />
+              </ng-container>
+              <ng-container *ngIf="isInnerUpdate">
+                <input
+                  type="text"
+                  formControlName="ItemSize"
+                  [(ngModel)]="sizeModel$.ItemSize"
+                  pInputText
+                  required
+                  autofocus
+                />
+              </ng-container>
+            </div>
+            <div class="col-md-4">
+              <label class="float-md-left d-flex float-sm-left mb-3"
+                >Is Active</label
+              >
+              <ng-container *ngIf="!isInnerUpdate">
+                <input
+                  type="checkbox"
+                  style="margin-left: 23%"
+                  formControlName="IsActive"
+                  required
+                  autofocus
+                />
+              </ng-container>
+              <ng-container *ngIf="isInnerUpdate">
+                <input
+                  type="checkbox"
+                  style="accent-color: blue"
+                  formControlName="IsActive"
+                  [(ngModel)]="sizeModel$.IsActive"
+                  required
+                  autofocus
+                />
+              </ng-container>
+            </div>
+          </div>
+          <p-table
+            #dt
+            [value]="sizeResponse$"
+            [rows]="3"
+            class="datatable-width"
+            [paginator]="true"
+            [alwaysShowPaginator]="false"
+            styleClass="p-datatable-sm"
+            responsiveLayout="stack"
+            [breakpoint]="'960px'"
+            [rowHover]="true"
+            dataKey="id"
+            currentPageReportTemplate="{first} to {last} of {totalRecords} entries"
+            [showCurrentPageReport]="true"
+          >
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Code#</th>
+                <th>Item Size</th>
+                <th>Active</th>
+                <th>Edit/Delete</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-m>
+              <tr>
+                <td>{{ m.ItemSizeCode }}</td>
+                <td>{{ m.ItemSize }}</td>
+                <td>{{ m.IsActive }}</td>
+                <td>
+                  <button
+                    pButton
+                    pRipple
+                    icon="pi pi-pencil"
+                    class="p-button-rounded p-button-success p-button-sm p-mr-2 mx-1"
+                    (click)="getRowSize(m)"
+                  ></button>
+                  <button
+                    pButton
+                    pRipple
+                    icon="pi pi-trash"
+                    class="p-button-rounded p-button-danger p-button-sm mx-1"
+                    (click)="deleteSize(m.ItemSizeCode)"
+                  ></button>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </ng-template>
+
+        <ng-template pTemplate="footer">
+          <button
+            pButton
+            pRipple
+            label="Cancel"
+            icon="pi pi-times"
+            class="p-button-text"
+            (click)="hideDialogSize()"
+          ></button>
+          <button
+            pButton
+            pRipple
+            [label]="innerBtn"
+            icon="pi pi-check"
+            class="p-button-text"
+            (click)="addorUpdateSize()"
+          ></button>
+        </ng-template>
+      </p-dialog>
+    </form>
+
+    <!-- <form [formGroup]="formColour">
+      <p-dialog
+        [(visible)]="innerDialogColour"
+        [style]="{ width: '450px' }"
+        [header]="innerHeader"
+        [modal]="true"
+        styleClass="p-fluid"
+        [closable]="true"
+      >
+        <ng-template pTemplate="content">
+          <div class="row mb-3">
+            <div class="col-md-8">
+              <label class="mb-1">Item Colour</label>
+              <ng-container *ngIf="!isInnerUpdate">
+                <input
+                  type="text"
+                  formControlName="ItemColour"
+                  pInputText
+                  required
+                  autofocus
+                />
+              </ng-container>
+              <ng-container *ngIf="isInnerUpdate">
+                <input
+                  type="text"
+                  formControlName="ItemColour"
+                  [(ngModel)]="colourModel$.ItemColour"
+                  pInputText
+                  required
+                  autofocus
+                />
+              </ng-container>
+            </div>
+            <div class="col-md-4">
+              <label class="float-md-left d-flex float-sm-left mb-3"
+                >Is Active</label
+              >
+              <ng-container *ngIf="!isInnerUpdate">
+                <input
+                  type="checkbox"
+                  style="margin-left: 23%"
+                  formControlName="IsActive"
+                  required
+                  autofocus
+                />
+              </ng-container>
+              <ng-container *ngIf="isInnerUpdate">
+                <input
+                  type="checkbox"
+                  style="accent-color: blue"
+                  formControlName="IsActive"
+                  [(ngModel)]="colourModel$.IsActive"
+                  required
+                  autofocus
+                />
+              </ng-container>
+            </div>
+          </div>
+          <p-table
+            #dt
+            [value]="colourResponse$"
+            [rows]="3"
+            class="datatable-width"
+            [paginator]="true"
+            styleClass="p-datatable-sm"
+            responsiveLayout="stack"
+            [breakpoint]="'960px'"
+            [rowHover]="true"
+            dataKey="id"
+            currentPageReportTemplate="{first} to {last} of {totalRecords} entries"
+            [showCurrentPageReport]="true"
+          >
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Code#</th>
+                <th>Item Colour</th>
+                <th>Is Active</th>
+                <th>Edit/Delete</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-m>
+              <tr>
+                <td>{{ m.ItemColourCode }}</td>
+                <td>{{ m.ItemColour }}</td>
+                <td>{{ m.IsActive | yesNo }}</td>
+                <td>
+                  <button
+                    pButton
+                    pRipple
+                    icon="pi pi-pencil"
+                    class="p-button-rounded p-button-success p-button-sm p-mr-2 mx-1"
+                    (click)="getRowColour(m)"
+                  ></button>
+                  <button
+                    pButton
+                    pRipple
+                    icon="pi pi-trash"
+                    class="p-button-rounded p-button-danger p-button-sm mx-1"
+                    (click)="deleteColour(m.ItemColourCode)"
+                  ></button>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </ng-template>
+
+        <ng-template pTemplate="footer">
+          <button
+            pButton
+            pRipple
+            label="Cancel"
+            icon="pi pi-times"
+            class="p-button-text"
+            (click)="hideDialogColour()"
+          ></button>
+          <button
+            pButton
+            pRipple
+            [label]="innerBtn"
+            icon="pi pi-check"
+            class="p-button-text"
+            (click)="addorUpdateColour()"
+          ></button>
+        </ng-template>
+      </p-dialog>
+    </form>
+
+    <form [formGroup]="formType">
+      <p-dialog
+        [(visible)]="innerDialogType"
+        [style]="{ width: '450px' }"
+        [header]="innerHeader"
+        [modal]="true"
+        styleClass="p-fluid"
+        [closable]="true"
+      >
+        <ng-template pTemplate="content">
+          <div class="row mb-3">
+            <div class="col-md-8">
+              <label class="mb-1">Item Type</label>
+              <ng-container *ngIf="!isInnerUpdate">
+                <input
+                  type="text"
+                  formControlName="ItemType"
+                  pInputText
+                  required
+                  autofocus
+                />
+              </ng-container>
+              <ng-container *ngIf="isInnerUpdate">
+                <input
+                  type="text"
+                  formControlName="ItemType"
+                  [(ngModel)]="typeModel$.ItemType"
+                  pInputText
+                  required
+                  autofocus
+                />
+              </ng-container>
+            </div>
+            <div class="col-md-4">
+              <label class="float-md-left d-flex float-sm-left mb-3"
+                >Is Active</label
+              >
+              <ng-container *ngIf="!isInnerUpdate">
+                <input
+                  type="checkbox"
+                  style="margin-left: 20%"
+                  formControlName="IsActive"
+                  required
+                  autofocus
+                />
+              </ng-container>
+              <ng-container *ngIf="isInnerUpdate">
+                <input
+                  type="checkbox"
+                  style="accent-color: blue"
+                  formControlName="IsActive"
+                  [(ngModel)]="typeModel$.IsActive"
+                  required
+                  autofocus
+                />
+              </ng-container>
+            </div>
+          </div>
+          <p-table
+            #dt
+            [value]="typeResponse$"
+            [rows]="3"
+            class="datatable-width"
+            [paginator]="true"
+            styleClass="p-datatable-sm"
+            responsiveLayout="stack"
+            [breakpoint]="'960px'"
+            [rowHover]="true"
+            dataKey="id"
+            currentPageReportTemplate="{first} to {last} of {totalRecords} entries"
+            [showCurrentPageReport]="true"
+          >
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Code#</th>
+                <th>Item Type</th>
+                <th>Is Active</th>
+                <th>Edit/Delete</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-m>
+              <tr>
+                <td>{{ m.ItemTypeCode }}</td>
+                <td>{{ m.ItemType }}</td>
+                <td>{{ m.IsActive | yesNo }}</td>
+                <td>
+                  <button
+                    pButton
+                    pRipple
+                    icon="pi pi-pencil"
+                    class="p-button-rounded p-button-success p-button-sm p-mr-2 mx-1"
+                    (click)="getRowType(m)"
+                  ></button>
+                  <button
+                    pButton
+                    pRipple
+                    icon="pi pi-trash"
+                    class="p-button-rounded p-button-danger p-button-sm mx-1"
+                    (click)="deleteType(m.ItemTypeCode)"
+                  ></button>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </ng-template>
+
+        <ng-template pTemplate="footer">
+          <button
+            pButton
+            pRipple
+            label="Cancel"
+            icon="pi pi-times"
+            class="p-button-text"
+            (click)="hideDialogType()"
+          ></button>
+          <button
+            pButton
+            pRipple
+            [label]="innerBtn"
+            icon="pi pi-check"
+            class="p-button-text"
+            (click)="addorUpdateType()"
+          ></button>
+        </ng-template>
+      </p-dialog>
+    </form>
+
+    <form [formGroup]="formCategory">
+      <p-dialog
+        [(visible)]="innerDialogCategory"
+        [style]="{ width: '450px' }"
+        [header]="innerHeader"
+        [modal]="true"
+        styleClass="p-fluid"
+        [closable]="true"
+      >
+        <ng-template pTemplate="content">
+          <div class="row mb-3">
+            <div class="col-md-8">
+              <label class="mb-1">Item Category</label>
+              <ng-container *ngIf="!isInnerUpdate">
+                <input
+                  type="text"
+                  formControlName="ItemCategory"
+                  pInputText
+                  required
+                  autofocus
+                />
+              </ng-container>
+              <ng-container *ngIf="isInnerUpdate">
+                <input
+                  type="text"
+                  formControlName="ItemCategory"
+                  [(ngModel)]="categoryModel$.ItemCategory"
+                  pInputText
+                  required
+                  autofocus
+                />
+              </ng-container>
+            </div>
+            <div class="col-md-4">
+              <label class="float-md-left d-flex float-sm-left mb-3"
+                >Is Active</label
+              >
+              <ng-container *ngIf="!isInnerUpdate">
+                <input
+                  type="checkbox"
+                  style="margin-left: 20%"
+                  formControlName="IsActive"
+                  required
+                  autofocus
+                />
+              </ng-container>
+              <ng-container *ngIf="isInnerUpdate">
+                <input
+                  type="checkbox"
+                  style="accent-color: blue"
+                  formControlName="IsActive"
+                  [(ngModel)]="categoryModel$.IsActive"
+                  required
+                  autofocus
+                />
+              </ng-container>
+            </div>
+          </div>
+          <p-table
+            #dt
+            [value]="categoryResponse$"
+            [rows]="3"
+            class="datatable-width"
+            [paginator]="true"
+            styleClass="p-datatable-sm"
+            responsiveLayout="stack"
+            [breakpoint]="'960px'"
+            [rowHover]="true"
+            dataKey="id"
+            currentPageReportTemplate="{first} to {last} of {totalRecords} entries"
+            [showCurrentPageReport]="true"
+          >
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Code#</th>
+                <th>Item Category</th>
+                <th>Is Active</th>
+                <th>Edit/Delete</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-m>
+              <tr>
+                <td>{{ m.ItemCategoryCode }}</td>
+                <td>{{ m.ItemCategory }}</td>
+                <td>{{ m.IsActive | yesNo }}</td>
+                <td>
+                  <button
+                    pButton
+                    pRipple
+                    icon="pi pi-pencil"
+                    class="p-button-rounded p-button-success p-button-sm p-mr-2 mx-1"
+                    (click)="getRowCategory(m)"
+                  ></button>
+                  <button
+                    pButton
+                    pRipple
+                    icon="pi pi-trash"
+                    class="p-button-rounded p-button-danger p-button-sm mx-1"
+                    (click)="deleteCategory(m.ItemCategoryCode)"
+                  ></button>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </ng-template>
+
+        <ng-template pTemplate="footer">
+          <button
+            pButton
+            pRipple
+            label="Cancel"
+            icon="pi pi-times"
+            class="p-button-text"
+            (click)="hideDialogCategory()"
+          ></button>
+          <button
+            pButton
+            pRipple
+            [label]="innerBtn"
+            icon="pi pi-check"
+            class="p-button-text"
+            (click)="addorUpdateCategory()"
+          ></button>
+        </ng-template>
+      </p-dialog>
+    </form>
+
+    <form [formGroup]="formGrade">
+      <p-dialog
+        [(visible)]="innerDialogGrade"
+        [style]="{ width: '450px' }"
+        [header]="innerHeader"
+        [modal]="true"
+        styleClass="p-fluid"
+        [closable]="true"
+      >
+        <ng-template pTemplate="content">
+          <div class="row mb-3">
+            <div class="col-md-8">
+              <label class="mb-1">Item Grade</label>
+              <ng-container *ngIf="!isInnerUpdate">
+                <input
+                  type="text"
+                  formControlName="ItemGrade"
+                  pInputText
+                  required
+                  autofocus
+                />
+              </ng-container>
+              <ng-container *ngIf="isInnerUpdate">
+                <input
+                  type="text"
+                  formControlName="ItemGrade"
+                  [(ngModel)]="gradeModel$.ItemGrade"
+                  pInputText
+                  required
+                  autofocus
+                />
+              </ng-container>
+            </div>
+            <div class="col-md-4">
+              <label class="float-md-left d-flex float-sm-left mb-3"
+                >Is Active</label
+              >
+              <ng-container *ngIf="!isInnerUpdate">
+                <input
+                  type="checkbox"
+                  style="margin-left: 20%"
+                  formControlName="IsActive"
+                  required
+                  autofocus
+                />
+              </ng-container>
+              <ng-container *ngIf="isInnerUpdate">
+                <input
+                  type="checkbox"
+                  style="accent-color: blue"
+                  formControlName="IsActive"
+                  [(ngModel)]="gradeModel$.IsActive"
+                  required
+                  autofocus
+                />
+              </ng-container>
+            </div>
+          </div>
+          <p-table
+            #dt
+            [value]="gradeResponse$"
+            [rows]="3"
+            class="datatable-width"
+            [paginator]="true"
+            styleClass="p-datatable-sm"
+            responsiveLayout="stack"
+            [breakpoint]="'960px'"
+            [rowHover]="true"
+            dataKey="id"
+            currentPageReportTemplate="{first} to {last} of {totalRecords} entries"
+            [showCurrentPageReport]="true"
+          >
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Code#</th>
+                <th>Item Grade</th>
+                <th>Is Active</th>
+                <th>Edit/Delete</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-m>
+              <tr>
+                <td>{{ m.ItemGradeCode }}</td>
+                <td>{{ m.ItemGrade }}</td>
+                <td>{{ m.IsActive | yesNo }}</td>
+                <td>
+                  <button
+                    pButton
+                    pRipple
+                    icon="pi pi-pencil"
+                    class="p-button-rounded p-button-success p-button-sm p-mr-2 mx-1"
+                    (click)="getRowGrade(m)"
+                  ></button>
+                  <button
+                    pButton
+                    pRipple
+                    icon="pi pi-trash"
+                    class="p-button-rounded p-button-danger p-button-sm mx-1"
+                    (click)="deleteGrade(m.ItemGradeCode)"
+                  ></button>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </ng-template>
+
+        <ng-template pTemplate="footer">
+          <button
+            pButton
+            pRipple
+            label="Cancel"
+            icon="pi pi-times"
+            class="p-button-text"
+            (click)="hideDialogGrade()"
+          ></button>
+          <button
+            pButton
+            pRipple
+            [label]="innerBtn"
+            icon="pi pi-check"
+            class="p-button-text"
+            (click)="addorUpdateGrade()"
+          ></button>
+        </ng-template>
+      </p-dialog>
+    </form>
+
+    <form [formGroup]="formManufacturer">
+      <p-dialog
+        [(visible)]="innerDialogManufacturer"
+        [style]="{ width: '450px' }"
+        [header]="innerHeader"
+        [modal]="true"
+        styleClass="p-fluid"
+        [closable]="true"
+      >
+        <ng-template pTemplate="content">
+          <div class="row mb-3">
+            <div class="col-md-8">
+              <label class="mb-1">Item Manufacturer</label>
+              <ng-container *ngIf="!isInnerUpdate">
+                <input
+                  type="text"
+                  formControlName="ItemManufacturer"
+                  pInputText
+                  required
+                  autofocus
+                />
+              </ng-container>
+              <ng-container *ngIf="isInnerUpdate">
+                <input
+                  type="text"
+                  formControlName="ItemManufacturer"
+                  [(ngModel)]="manufacturerModel$.ItemManufacturer"
+                  pInputText
+                  required
+                  autofocus
+                />
+              </ng-container>
+            </div>
+            <div class="col-md-4">
+              <label class="float-md-left d-flex float-sm-left mb-3"
+                >Is Active</label
+              >
+              <ng-container *ngIf="!isInnerUpdate">
+                <input
+                  type="checkbox"
+                  style="margin-left: 20%"
+                  formControlName="IsActive"
+                  required
+                  autofocus
+                />
+              </ng-container>
+              <ng-container *ngIf="isInnerUpdate">
+                <input
+                  type="checkbox"
+                  style="accent-color: blue"
+                  formControlName="IsActive"
+                  [(ngModel)]="manufacturerModel$.IsActive"
+                  required
+                  autofocus
+                />
+              </ng-container>
+            </div>
+          </div>
+          <p-table
+            #dt
+            [value]="manufacturerResponse$"
+            [rows]="3"
+            class="datatable-width"
+            [paginator]="true"
+            styleClass="p-datatable-sm"
+            responsiveLayout="stack"
+            [breakpoint]="'960px'"
+            [rowHover]="true"
+            dataKey="id"
+            currentPageReportTemplate="{first} to {last} of {totalRecords} entries"
+            [showCurrentPageReport]="true"
+          >
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Code#</th>
+                <th>Item Manufacturer</th>
+                <th>Is Active</th>
+                <th>Edit/Delete</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-m>
+              <tr>
+                <td>{{ m.ItemManufacturerCode }}</td>
+                <td>{{ m.ItemManufacturer }}</td>
+                <td>{{ m.IsActive | yesNo }}</td>
+                <td>
+                  <button
+                    pButton
+                    pRipple
+                    icon="pi pi-pencil"
+                    class="p-button-rounded p-button-success p-button-sm p-mr-2 mx-1"
+                    (click)="getRowManufacturer(m)"
+                  ></button>
+                  <button
+                    pButton
+                    pRipple
+                    icon="pi pi-trash"
+                    class="p-button-rounded p-button-danger p-button-sm mx-1"
+                    (click)="deleteManufacturer(m.ItemManufacturerCode)"
+                  ></button>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </ng-template>
+
+        <ng-template pTemplate="footer">
+          <button
+            pButton
+            pRipple
+            label="Cancel"
+            icon="pi pi-times"
+            class="p-button-text"
+            (click)="hideDialogManufacturer()"
+          ></button>
+          <button
+            pButton
+            pRipple
+            [label]="innerBtn"
+            icon="pi pi-check"
+            class="p-button-text"
+            (click)="addorUpdateManufacturer()"
+          ></button>
+        </ng-template>
+      </p-dialog>
+    </form>
+
+    <form [formGroup]="formBrand">
+      <p-dialog
+        [(visible)]="innerDialogBrand"
+        [style]="{ width: '450px' }"
+        [header]="innerHeader"
+        [modal]="true"
+        styleClass="p-fluid"
+        [closable]="true"
+      >
+        <ng-template pTemplate="content">
+          <div class="row mb-3">
+            <div class="col-md-8">
+              <label>Item Brand</label>
+              <ng-container *ngIf="!isInnerUpdate">
+                <input
+                  type="text"
+                  formControlName="ItemBrand"
+                  pInputText
+                  required
+                  autofocus
+                />
+              </ng-container>
+              <ng-container *ngIf="isInnerUpdate">
+                <input
+                  type="text"
+                  formControlName="ItemBrand"
+                  [(ngModel)]="brandModel$.ItemBrand"
+                  pInputText
+                  required
+                  autofocus
+                />
+              </ng-container>
+            </div>
+            <div class="col-md-4">
+              <label class="float-md-left d-flex float-sm-left mb-3"
+                >Is Active</label
+              >
+              <ng-container *ngIf="!isInnerUpdate">
+                <input
+                  type="checkbox"
+                  style="margin-left: 20%"
+                  formControlName="IsActive"
+                  required
+                  autofocus
+                />
+              </ng-container>
+              <ng-container *ngIf="isInnerUpdate">
+                <input
+                  type="checkbox"
+                  style="accent-color: blue"
+                  formControlName="IsActive"
+                  [(ngModel)]="brandModel$.IsActive"
+                  required
+                  autofocus
+                />
+              </ng-container>
+            </div>
+          </div>
+          <p-table
+            #dt
+            [value]="brandResponse$"
+            [rows]="3"
+            class="datatable-width"
+            [paginator]="true"
+            styleClass="p-datatable-sm"
+            responsiveLayout="stack"
+            [breakpoint]="'960px'"
+            [rowHover]="true"
+            dataKey="id"
+            currentPageReportTemplate="{first} to {last} of {totalRecords} entries"
+            [showCurrentPageReport]="true"
+          >
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Code#</th>
+                <th>Item Brand</th>
+                <th>Is Active</th>
+                <th>Edit/Delete</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-m>
+              <tr>
+                <td>{{ m.ItemBrandCode }}</td>
+                <td>{{ m.ItemBrand }}</td>
+                <td>{{ m.IsActive | yesNo }}</td>
+                <td>
+                  <button
+                    pButton
+                    pRipple
+                    icon="pi pi-pencil"
+                    class="p-button-rounded p-button-success p-button-sm p-mr-2 mx-1"
+                    (click)="getRowBrand(m)"
+                  ></button>
+                  <button
+                    pButton
+                    pRipple
+                    icon="pi pi-trash"
+                    class="p-button-rounded p-button-danger p-button-sm mx-1"
+                    (click)="deleteBrand(m.ItemBrandCode)"
+                  ></button>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </ng-template>
+
+        <ng-template pTemplate="footer">
+          <button
+            pButton
+            pRipple
+            label="Cancel"
+            icon="pi pi-times"
+            class="p-button-text"
+            (click)="hideDialogBrand()"
+          ></button>
+          <button
+            pButton
+            pRipple
+            [label]="innerBtn"
+            icon="pi pi-check"
+            class="p-button-text"
+            (click)="addorUpdateBrand()"
+          ></button>
+        </ng-template>
+      </p-dialog>
+    </form>
+
+    <form [formGroup]="formModel">
+      <p-dialog
+        [(visible)]="innerDialogModel"
+        [style]="{ width: '450px' }"
+        [header]="innerHeader"
+        [modal]="true"
+        styleClass="p-fluid"
+        [closable]="true"
+      >
+        <ng-template pTemplate="content">
+          <div class="row mb-3">
+            <div class="col-md-8">
+              <label class="mb-1">Item Model</label>
+              <ng-container *ngIf="!isInnerUpdate">
+                <input
+                  type="text"
+                  formControlName="ItemModel"
+                  pInputText
+                  required
+                  autofocus
+                />
+              </ng-container>
+              <ng-container *ngIf="isInnerUpdate">
+                <input
+                  type="text"
+                  formControlName="ItemModel"
+                  [(ngModel)]="modelModel$.ItemModel"
+                  pInputText
+                  required
+                  autofocus
+                />
+              </ng-container>
+            </div>
+            <div class="col-md-4">
+              <label class="float-md-left d-flex float-sm-left mb-3"
+                >Is Active</label
+              >
+              <ng-container *ngIf="!isInnerUpdate">
+                <input
+                  type="checkbox"
+                  style="margin-left: 20%"
+                  formControlName="IsActive"
+                  required
+                  autofocus
+                />
+              </ng-container>
+              <ng-container *ngIf="isInnerUpdate">
+                <input
+                  type="checkbox"
+                  style="accent-color: blue"
+                  formControlName="IsActive"
+                  [(ngModel)]="modelModel$.IsActive"
+                  required
+                  autofocus
+                />
+              </ng-container>
+            </div>
+          </div>
+          <p-table
+            #dt
+            [value]="modelResponse$"
+            [rows]="3"
+            class="datatable-width"
+            [paginator]="true"
+            styleClass="p-datatable-sm"
+            responsiveLayout="stack"
+            [breakpoint]="'960px'"
+            [rowHover]="true"
+            dataKey="id"
+            currentPageReportTemplate="{first} to {last} of {totalRecords} entries"
+            [showCurrentPageReport]="true"
+          >
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Code#</th>
+                <th>Item Model</th>
+                <th>Is Active</th>
+                <th>Edit/Delete</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-m>
+              <tr>
+                <td>{{ m.ItemModelCode }}</td>
+                <td>{{ m.ItemModel }}</td>
+                <td>{{ m.IsActive | yesNo }}</td>
+                <td>
+                  <button
+                    pButton
+                    pRipple
+                    icon="pi pi-pencil"
+                    class="p-button-rounded p-button-success p-button-sm p-mr-2 mx-1"
+                    (click)="getRowModel(m)"
+                  ></button>
+                  <button
+                    pButton
+                    pRipple
+                    icon="pi pi-trash"
+                    class="p-button-rounded p-button-danger p-button-sm mx-1"
+                    (click)="deleteModel(m.ItemModelCode)"
+                  ></button>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </ng-template>
+
+        <ng-template pTemplate="footer">
+          <button
+            pButton
+            pRipple
+            label="Cancel"
+            icon="pi pi-times"
+            class="p-button-text"
+            (click)="hideDialogModel()"
+          ></button>
+          <button
+            pButton
+            pRipple
+            [label]="innerBtn"
+            icon="pi pi-check"
+            class="p-button-text"
+            (click)="addorUpdateModel()"
+          ></button>
+        </ng-template>
+      </p-dialog>
+    </form>
+
+    <form [formGroup]="formUnit">
+      <p-dialog
+        [(visible)]="innerDialogUnit"
+        [style]="{ width: '500px' }"
+        [header]="innerHeader"
+        [modal]="true"
+        styleClass="p-fluid"
+        [closable]="true"
+      >
+        <ng-template pTemplate="content">
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="mb-1">Item Unit</label>
+              <ng-container *ngIf="!isInnerUpdate">
+                <input
+                  type="text"
+                  formControlName="ItemUnit"
+                  pInputText
+                  required
+                  autofocus
+                />
+              </ng-container>
+              <ng-container *ngIf="isInnerUpdate">
+                <input
+                  type="text"
+                  formControlName="ItemUnit"
+                  [(ngModel)]="unitModel$.ItemUnit"
+                  pInputText
+                  required
+                  autofocus
+                />
+              </ng-container>
+            </div>
+            <div class="col-md-3">
+              <label class="mb-1">Short Name</label>
+              <ng-container *ngIf="!isInnerUpdate">
+                <input
+                  type="text"
+                  formControlName="ShortName"
+                  pInputText
+                  required
+                  autofocus
+                />
+              </ng-container>
+              <ng-container *ngIf="isInnerUpdate">
+                <input
+                  type="text"
+                  formControlName="ShortName"
+                  [(ngModel)]="unitModel$.ShortName"
+                  pInputText
+                  required
+                  autofocus
+                />
+              </ng-container>
+            </div>
+            <div class="col-md-3">
+              <label class="float-md-left d-flex float-sm-left mb-3"
+                >Is Active</label
+              >
+              <ng-container *ngIf="!isInnerUpdate">
+                <input
+                  type="checkbox"
+                  style="margin-left: 20%"
+                  formControlName="IsActive"
+                  required
+                  autofocus
+                />
+              </ng-container>
+              <ng-container *ngIf="isInnerUpdate">
+                <input
+                  type="checkbox"
+                  style="accent-color: blue"
+                  formControlName="IsActive"
+                  [(ngModel)]="unitModel$.IsActive"
+                  required
+                  autofocus
+                />
+              </ng-container>
+            </div>
+          </div>
+          <p-table
+            #dt
+            [value]="unitResponse$"
+            [rows]="3"
+            class="datatable-width"
+            [paginator]="true"
+            styleClass="p-datatable-sm"
+            responsiveLayout="stack"
+            [breakpoint]="'960px'"
+            [rowHover]="true"
+            dataKey="id"
+            currentPageReportTemplate="{first} to {last} of {totalRecords} entries"
+            [showCurrentPageReport]="true"
+          >
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Code#</th>
+                <th>Item Unit</th>
+                <th>Short Name</th>
+                <th>Is Active</th>
+                <th>Edit/Delete</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-m>
+              <tr>
+                <td>{{ m.ItemUnitCode }}</td>
+                <td>{{ m.ItemUnit }}</td>
+                <td>{{ m.ShortName }}</td>
+                <td>{{ m.IsActive | yesNo }}</td>
+                <td>
+                  <button
+                    pButton
+                    pRipple
+                    icon="pi pi-pencil"
+                    class="p-button-rounded p-button-success p-button-sm p-mr-2 mx-1"
+                    (click)="getRowUnit(m)"
+                  ></button>
+                  <button
+                    pButton
+                    pRipple
+                    icon="pi pi-trash"
+                    class="p-button-rounded p-button-danger p-button-sm mx-1"
+                    (click)="deleteUnit(m.ItemUnitCode)"
+                  ></button>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </ng-template>
+
+        <ng-template pTemplate="footer">
+          <button
+            pButton
+            pRipple
+            label="Cancel"
+            icon="pi pi-times"
+            class="p-button-text"
+            (click)="hideDialogUnit()"
+          ></button>
+          <button
+            pButton
+            pRipple
+            [label]="innerBtn"
+            icon="pi pi-check"
+            class="p-button-text"
+            (click)="addorUpdateUnit()"
+          ></button>
+        </ng-template>
+      </p-dialog>
+    </form> -->
+  </p-dialog>
+</form>

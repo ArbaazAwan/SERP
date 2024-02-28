@@ -1,0 +1,371 @@
+<div class="main-container">
+  <div class="container">
+    <div class="col-lg-12 col-md-12 col-sm-12 mb-2 FormsHeading">
+      <p class="mx-2 my-1">POS Sale</p>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <form
+        class="col-lg-12 col-md-12 col-sm-12"
+        style="font-size: small"
+        [formGroup]="createForm"
+        novalidate
+      >
+        <div class="card p-3">
+          <div class="row">
+            <div class="col-lg-3">
+              <label class="float-md-left d-flex float-sm-left">
+                Store
+                <span class="astrik">*</span>
+              </label>
+              <div class="group-gap">
+                <div class="d-block">
+                  <div class=" ">
+                    <select
+                      class="form-select"
+                      (change)="changeStore($event)"
+                      formControlName="StoreCode"
+                    >
+                      <option
+                        *ngFor="let b of storeResponse$"
+                        [ngValue]="b"
+                        [value]="b?.DepartmentCode"
+                      >
+                        {{ b.DepartmentName }}
+                      </option>
+                    </select>
+                    <div
+                      *ngIf="
+                        createForm.controls['StoreCode'].invalid &&
+                        createForm.controls['StoreCode'].touched
+                      "
+                      style="color: red"
+                    >
+                      Field Required
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3">
+              <label class="float-md-left d-flex float-sm-left">
+                Project Code
+                <span class="astrik">*</span>
+              </label>
+              <div class="group-gap">
+                <div class="d-block">
+                  <div class=" ">
+                    <select
+                      class="form-select"
+                      formControlName="ProjectCode"
+                      (change)="changeProject($event)"
+                    >
+                      <option
+                        *ngFor="let b of projectResponse$"
+                        [ngValue]="b"
+                        [value]="b?.ProjectCode"
+                      >
+                        {{ b.ProjectName }}
+                      </option>
+                    </select>
+                    <div
+                      *ngIf="
+                        createForm.controls['ProjectCode'].invalid &&
+                        createForm.controls['ProjectCode'].touched
+                      "
+                      style="color: red"
+                    >
+                      Field Required
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-2">
+              <label class="float-md-left d-flex float-sm-left">
+                Sale Type
+                <span class="astrik">*</span>
+              </label>
+              <div class="group-gap">
+                <div class="d-block">
+                  <div class=" ">
+                    <select
+                      class="form-select"
+                      formControlName="SaleType"
+                      (change)="changeSaleType($event)"
+                    >
+                      <option
+                        *ngFor="let b of saleTypeResponse$"
+                        [ngValue]="b"
+                        [value]="b?.SaleTypeCode"
+                      >
+                        {{ b.SaleType }}
+                      </option>
+                    </select>
+                    <div
+                      *ngIf="
+                        createForm.controls['SaleType'].invalid &&
+                        createForm.controls['SaleType'].touched
+                      "
+                      style="color: red"
+                    >
+                      Field Required
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-2">
+              <label class="float-md-left d-flex float-sm-left">
+                Sale Date
+              </label>
+              <input
+                type="date"
+                class="form-control"
+                formControlName="SaleDate"
+                (change)="dateChange($event)"
+                [(ngModel)]="masterResponse$.SaleDate"
+              />
+              <div
+                *ngIf="
+                  createForm.controls['SaleDate'].invalid &&
+                  createForm.controls['SaleDate'].touched
+                "
+                style="color: red"
+              >
+                Field Required
+              </div>
+            </div>
+
+            <div
+              class="col-lg-2 row justify-content-center"
+              style="align-items: flex-end; padding-bottom: 1.5%"
+            >
+              <div
+                class="row justify-content-start mt-3"
+                style="align-items: baseline"
+              >
+                <ng-container>
+                  <button
+                    type="button"
+                    class="btn primary-button-color btnFix mx-1"
+                    (click)="addorUpdate()"
+                  >
+                    Create New
+                  </button>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="row">
+      <form
+        class="col-lg-12 col-md-12 col-sm-12"
+        style="font-size: small"
+        [formGroup]="viewForm"
+        novalidate
+      >
+        <div class="card p-3 mt-2">
+          <div class="row">
+            <div class="col-lg-2">
+              <label class="float-md-left d-flex float-sm-left"> Store </label>
+              <div class="group-gap">
+                <div class="d-block">
+                  <div class=" ">
+                    <select
+                      class="form-select"
+                      (change)="changeStore($event)"
+                      formControlName="StoreCode"
+                    >
+                      <option
+                        *ngFor="let b of storeResponse$"
+                        [ngValue]="b"
+                        [value]="b?.DepartmentCode"
+                      >
+                        {{ b.DepartmentName }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-2">
+              <label class="float-md-left d-flex float-sm-left">
+                Project
+              </label>
+              <div class="group-gap">
+                <div class="d-block">
+                  <div class=" ">
+                    <select
+                      class="form-select"
+                      (change)="changeProject($event)"
+                      formControlName="ProjectCode"
+                    >
+                      <option
+                        *ngFor="let b of projectResponse$"
+                        [ngValue]="b"
+                        [value]="b?.ProjectCode"
+                      >
+                        {{ b.ProjectName }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-2">
+              <label class="float-md-left d-flex float-sm-left">
+                Customer
+              </label>
+              <div class="group-gap">
+                <div class="d-block">
+                  <div class=" ">
+                    <select
+                      class="form-select"
+                      (change)="changeCustomer($event)"
+                      formControlName="CustomerId"
+                    >
+                      <option
+                        *ngFor="let b of customerResponse$"
+                        [ngValue]="b"
+                        [value]="b?.PartyCode"
+                      >
+                        {{ b.PartyName }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-2">
+              <label class="float-md-left d-flex float-sm-left">
+                Date From
+                <span class="astrik">*</span>
+              </label>
+              <input
+                type="date"
+                class="form-control"
+                formControlName="DateFrom"
+              />
+              <div
+                *ngIf="
+                  viewForm.controls['DateFrom'].invalid &&
+                  viewForm.controls['DateFrom'].touched
+                "
+                style="color: red"
+              >
+                Field Required
+              </div>
+            </div>
+            <div class="col-lg-2">
+              <label class="float-md-left d-flex float-sm-left">
+                Date To
+                <span class="astrik">*</span>
+              </label>
+              <input
+                type="date"
+                class="form-control"
+                formControlName="DateTo"
+              />
+              <div
+                *ngIf="
+                  viewForm.controls['DateTo'].invalid &&
+                  viewForm.controls['DateTo'].touched
+                "
+                style="color: red"
+              >
+                Field Required
+              </div>
+            </div>
+            <div
+              class="col-lg-2 row justify-content-center"
+              style="align-items: flex-end; padding-bottom: 1.5%"
+            >
+              <div
+                class="row justify-content-start mt-3"
+                style="align-items: baseline"
+              >
+                <ng-container>
+                  <button
+                    type="button"
+                    class="btn btn-outline-success btnFix mx-1"
+                    (click)="loadAllSaleInvoices()"
+                  >
+                    View List
+                  </button>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <!-- Grid-Start -->
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12">
+        <p-table
+          [value]="tableResponse$"
+          [paginator]="tableResponse$.length > 9 ? true : false"
+          [alwaysShowPaginator]="false"
+          [rows]="9"
+          class="datatable-width"
+          styleClass="p-datatable-sm"
+          responsiveLayout="stack"
+          [breakpoint]="'960%'"
+          [rowHover]="true"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Store</th>
+              <th>Project</th>
+              <th>CreatedOn</th>
+              <th>Sale Invoice#</th>
+              <th>Sale Date</th>
+              <th>Customer</th>
+              <th>SalesMan</th>
+              <th>Action</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-m>
+            <tr>
+              <td>{{ m.Store }}</td>
+              <td>{{ m.ProjectName }}</td>
+              <td>{{ m.CreatedOn | date : "dd-MMM-yyyy" }}</td>
+              <td>{{ m.SaleInvoiceNo }}</td>
+              <td>{{ m.SaleDate | date : "dd-MMM-yyyy" }}</td>
+              <td>{{ m.CustomerName }}</td>
+              <td>{{ m.SalesManName }}</td>
+              <td>
+                <button
+                  pButton
+                  icon="pi pi-pencil"
+                  class="p-button p-button-outlined p-button-rounded p-button-success p-mr-2 mx-1 custom-button-success"
+                  (click)="updateAllow(m)"
+                ></button>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+        <!-- Grid-End -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Response-Error-Message  -->
+<div class="loading-newpopup" *ngIf="loadingerror">
+  <div class="newpopup">
+    <!---<a><img class="ErrorIcon" src="./assets/icon/error.svg" /></a>-->
+    <div class="Errormessage">
+      <p><strong>Error</strong></p>
+      <p>You are not authorized to perform this Operation</p>
+    </div>
+    <button class="btn btn-danger ErrorClosebtn" (click)="hideErrorPopup()">
+      Cancel
+    </button>
+  </div>
+</div>

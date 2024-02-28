@@ -1,0 +1,312 @@
+<div class="main-container" (scroll)="onMainContainerScroll($event)">
+  <div [class]="isSticky ? 'sticky-header' : ''">
+    <app-store-project
+      [componentName]="componentName"
+      [showInput3]="true"
+    ></app-store-project>
+  </div>
+
+  <div>
+    <div class="row">
+      <form class="col-lg-12 col-md-12 col-sm-12" [formGroup]="form" novalidate>
+        <div class="card p-3 mt-2">
+          <div class="row">
+            <div class="col-lg-3 col-md-3">
+              <label class="mr-2" for="Branch">Branch</label>
+              <p-dropdown
+                id="Branch"
+                [options]="Branches"
+                [filter]="true"
+                formControlName="BranchCode"
+                style="border-color: #ced4da !important"
+                optionLabel="BranchName"
+                filterBy="BranchName"
+                [showClear]="true"
+                placeholder="Select Branch"
+                [panelStyle]="{ overflow: 'auto' }"
+                (onChange)="changeBranch($event)"
+              >
+                <ng-template let-option pTemplate="item">
+                  <span style="width: 85%; float: left">{{
+                    option.BranchName
+                  }}</span>
+                </ng-template>
+              </p-dropdown>
+            </div>
+
+            <div class="col-lg-3 col-md-3">
+              <label class="mr-2" for="Project">Project</label>
+
+              <p-dropdown
+                id="Project"
+                [options]="projectResponse$"
+                [filter]="true"
+                formControlName="ProjectCode"
+                style="border-color: #ced4da !important"
+                optionLabel="ProjectName"
+                filterBy="ProjectName"
+                [showClear]="true"
+                placeholder="Select Project"
+                [panelStyle]="{ overflow: 'auto' }"
+                (onChange)="changeProjectCode($event)"
+              >
+                <ng-template let-option pTemplate="item">
+                  <span style="width: 85%; float: left"
+                    >{{ option.ProjectName }}
+                  </span>
+                </ng-template>
+              </p-dropdown>
+            </div>
+
+            <div class="col-lg-3 col-md-3">
+              <label class="mr-2" for="A/C From"
+                >A/C From<span class="astrik">*</span></label
+              >
+
+              <p-dropdown
+                id="A/C From"
+                [options]="accountDescriptionResponse$"
+                [filter]="true"
+                formControlName="AccountCodeFrom"
+                style="border-color: #ced4da !important"
+                optionLabel="AccountName"
+                filterBy="AccountName"
+                [showClear]="true"
+                placeholder="Select Account"
+                [panelStyle]="{ overflow: 'auto' }"
+                (onChange)="changeACDescription($event)"
+              >
+                <ng-template let-option pTemplate="item">
+                  <span style="width: 85%; float: left"
+                    >{{ option.AccountName }}
+                  </span>
+                </ng-template>
+              </p-dropdown>
+            </div>
+
+            <div class="col-lg-3 col-md-3">
+              <label class="mr-2" for="A/C From"
+                >A/C To<span class="astrik">*</span></label
+              >
+
+              <p-dropdown
+                id="A/C From"
+                [options]="accountToResponse$"
+                [filter]="true"
+                formControlName="AccountCodeTo"
+                style="border-color: #ced4da !important"
+                optionLabel="AccountName"
+                filterBy="AccountName"
+                [showClear]="true"
+                placeholder="Select Account"
+                [panelStyle]="{ overflow: 'auto' }"
+                (onChange)="changeACTo($event)"
+              >
+                <ng-template let-option pTemplate="item">
+                  <span style="width: 85%; float: left"
+                    >{{ option.AccountName }}
+                  </span>
+                </ng-template>
+              </p-dropdown>
+            </div>
+          </div>
+          <br />
+          <div class="row">
+            <div class="col-lg-3">
+              <label class="float-md-left d-flex float-sm-left"
+                >Date From<span class="astrik">*</span>
+              </label>
+              <input
+                type="date"
+                class="form-control custombox"
+                formControlName="DateFrom"
+              />
+            </div>
+            <div class="col-lg-3">
+              <label class="float-md-left d-flex float-sm-left"
+                >Date To<span class="astrik">*</span>
+              </label>
+              <input
+                type="date"
+                class="form-control custombox"
+                formControlName="DateTo"
+              />
+            </div>
+          </div>
+
+          <div>
+            <div
+              class="row justify-content-center"
+              style="align-items: baseline"
+            >
+              <ng-container>
+                <Button
+                  type="button"
+                  id="btnviewlist"
+                  Class="btn primary-button-color btnFix "
+                  (click)="pintGeneralLedgerReport()"
+                  [disabled]="form.invalid"
+                  >Preview / Print</Button
+                >
+
+                <Button
+                  type="button"
+                  id="btnviewlist"
+                  Class="btn primary-button-color btnFix mt-3 ml-2 mb-2"
+                  (click)="loadGeneralLedgerReportData()"
+                  [disabled]="form.invalid"
+                  >View List</Button
+                >
+                <Button
+                  type="button"
+                  id="btnviewlist"
+                  Class="btn primary-button-color btnFix mt-3 ml-2 mb-2"
+                  (click)="RefreshVouchersList()"
+                  >Refresh</Button
+                >
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="row" *ngIf="glResponse$.length != 0">
+      <div class="col-lg-12 col-md-12 mt-3">
+        <div class="table-responsive card-wrapper custom-table">
+          <table class="table table-striped table-borderless">
+            <thead>
+              <tr>
+                <th>Account Name :</th>
+                <th>
+                  {{ AccountName1 }}
+                </th>
+              </tr>
+              <tr>
+                <th scope="col">Voucher No</th>
+                <th scope="col">Voucher Type</th>
+                <th scope="col">Naration</th>
+                <th scope="col">Project</th>
+                <th scope="col">Date</th>
+                <th scope="col">Credit Amount</th>
+                <th scope="col">Debit Amount</th>
+                <th scope="col">Balance</th>
+
+                <!-- <th scope="col" class="text-center">Action</th> -->
+              </tr>
+            </thead>
+            <hr />
+            <tbody>
+              <tr *ngFor="let item of glResponse$">
+                <td>{{ item.VoucherNo }}</td>
+                <td>{{ item.VoucherType }}</td>
+                <td>{{ item.Narration }}</td>
+                <td>{{ item.Project }}</td>
+                <td>{{ item.Date | date : "MMM-d-y" }}</td>
+                <td>{{ item.CreditAmount }}</td>
+                <td>{{ item.DebitAmount }}</td>
+                <td>{{ item.Balance }}</td>
+                <!-- <td>
+                    <div class="dropdown text-center">
+                      <button class="three-dots" type="button" id="table-action-menu" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa fa-ellipsis-v"></i>
+                      </button>
+                      <ul class="dropdown-menu" aria-labelledby="table-action-menu">
+                        <li><a class="dropdown-item edit cursor-hover cursor-pointer" (click)="getSelectedRow(item)">Edit</a></li>
+                        <li><a class="dropdown-item delete cursor-hover cursor-pointer" (click)="delete(item.FinancialYearCode)">Delete</a></li>
+                      </ul>
+                    </div>
+                  </td> -->
+              </tr>
+            </tbody>
+            <tfoot>
+              <th scope="col"></th>
+              <th scope="col"></th>
+              <th scope="col"></th>
+              <th scope="col"></th>
+              <th scope="col">Total Cr/Dr</th>
+              <td scope="col">{{ totalCr }}</td>
+              <td scope="col">{{ totalDr }}</td>
+              <td scope="col">{{ totalBlnc1 }}</td>
+            </tfoot>
+          </table>
+          <div *ngIf="isLoadingData">
+            <app-table-loader></app-table-loader>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" *ngIf="glResponse2$.length != 0">
+      <div class="col-lg-12 col-md-12 mt-3">
+        <div class="table-responsive card-wrapper custom-table">
+          <table class="table table-striped table-borderless">
+            <thead>
+              <tr>
+                <th>Account Name :</th>
+                <th>
+                  {{ AccountName2 }}
+                </th>
+              </tr>
+              <tr>
+                <th scope="col">Voucher No</th>
+                <th scope="col">Voucher Type</th>
+                <th scope="col">Naration</th>
+                <th scope="col">Project</th>
+                <th scope="col">Date</th>
+                <th scope="col">Credit Amount</th>
+                <th scope="col">Debit Amount</th>
+                <th scope="col">Balance</th>
+                <!-- <th scope="col" class="text-center">Action</th> -->
+              </tr>
+            </thead>
+            <hr />
+            <tbody>
+              <tr *ngFor="let item of glResponse2$">
+                <td>{{ item.VoucherNo }}</td>
+                <td>{{ item.VoucherType }}</td>
+                <td>{{ item.Narration }}</td>
+                <td>{{ item.Project }}</td>
+                <td>{{ item.Date | date : "MMM-d-y" }}</td>
+                <td>{{ item.CreditAmount }}</td>
+                <td>{{ item.DebitAmount }}</td>
+                <td>{{ item.Balance }}</td>
+                <!-- <td>
+                    <div class="dropdown text-center">
+                      <button class="three-dots" type="button" id="table-action-menu" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa fa-ellipsis-v"></i>
+                      </button>
+                      <ul class="dropdown-menu" aria-labelledby="table-action-menu">
+                        <li><a class="dropdown-item edit cursor-hover cursor-pointer" (click)="getSelectedRow(item)">Edit</a></li>
+                        <li><a class="dropdown-item delete cursor-hover cursor-pointer" (click)="delete(item.FinancialYearCode)">Delete</a></li>
+                      </ul>
+                    </div>
+                  </td> -->
+              </tr>
+            </tbody>
+            <tfoot>
+              <th scope="col"></th>
+              <th scope="col"></th>
+              <th scope="col"></th>
+              <th scope="col"></th>
+              <th scope="col">Total Cr/Dr</th>
+              <td scope="col">{{ totalCr2 }}</td>
+              <td scope="col">{{ totalDr2 }}</td>
+              <td scope="col">{{ totalBlnc2 }}</td>
+            </tfoot>
+          </table>
+          <div *ngIf="isLoadingData">
+            <app-table-loader></app-table-loader>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="loading-popup" *ngIf="loading">
+  <div class="overlay"></div>
+  <div class="popup">
+    <div class="spinner"></div>
+    <p class="text-center mt-2 mb-0">Report Generating</p>
+  </div>
+</div>

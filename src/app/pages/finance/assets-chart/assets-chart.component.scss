@@ -1,0 +1,238 @@
+.inline-radio {
+  display: inline-block;
+  margin-right: 10px;
+  accent-color: rgb(67, 67, 230);
+  font-size: 13px;
+}
+
+.btn-update {
+  background: transparent !important;
+  border: 1px solid #32A0EF !important;
+  color: #32A0EF !important;
+  transition: 0.3s all !important;
+}
+
+.btn-save {
+  background: #32A0EF !important;
+  color: white !important;
+  transition: 0.3s all !important;
+  border: 0 !important;
+}
+
+.three-dots {
+  background: #EBF5FD;
+  border: 0;
+  border-radius: 4px;
+  padding: 6px 10px;
+}
+
+.btn-dropdown {
+  background: #f2f6ff;
+  border: 0;
+  outline: none;
+  border-radius: 5px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.p-button-success {
+  background: #E1E1E1;
+  border-color: #E1E1E1;
+  color: #8C8C8C;
+  font-size: 13px;
+  padding: 6px;
+}
+.p-button-danger {
+  background: #BF2929;
+  border-color: #BF2929;
+  color: white;
+  font-size: 13px;
+  padding: 6px;
+}
+
+
+
+:host ::ng-deep {
+
+  .p-button {
+    padding: 5px 6px;
+  }
+
+  .p-button .p-button-icon-left {
+    margin-right: 0.3rem;
+    font-size: 14px;
+  }
+
+  .btn-update.p-button:enabled:hover {
+    background: #32A0EF !important;
+    color: white !important;
+  }
+
+  .p-button-label {
+    font-size: 12px;
+  }
+
+  p-dropdown {
+    width: 100%;
+  }
+
+  .pi-chevron-down {
+    font-size: 12px;
+  }
+
+ .p-dropdown .p-dropdown-label.p-placeholder {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 10px;
+ }
+ .p-dropdown .p-dropdown-clear-icon {
+    font-size: 12px;
+    top: 16px;
+    right: 30px;
+ }
+
+
+
+
+  .p-treetable .p-treetable-tbody>tr>td {
+    text-align: left;
+    border: 1px solid #dee2e6;
+    border-width: 1px 0 0 0;
+    font-size: smaller;
+    font-family: system-ui;
+    padding: 0rem 1rem;
+  }
+
+  .custom-checkbox:disabled::before {
+    background-color: darkcyan !important;
+    transform: scale(2.5);
+  }
+
+  .p-treetable .p-treetable-thead>tr>th {
+    text-align: left;
+    padding: 0.2rem 1rem;
+    border: 1px solid #dee2e6;
+    border-width: 1px 0 2px 0;
+    font-weight: 600;
+    color: #212529;
+    background: #ffffff;
+    transition: box-shadow 0.15s;
+  }
+
+
+  .p-input-icon-left>.p-inputtext {
+    padding-left: 2rem;
+  }
+
+  .p-button.p-button-icon-only.p-button-rounded {
+    border-radius: 50%;
+    height: 1.8rem;
+    width: 1.8rem;
+    margin: 2px 0px;
+  }
+
+  .p-toolbar {
+    padding: 5px 10px;
+  }
+
+  .p-dropdown-filter {
+    height: 30px;
+  }
+
+  .option-item {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+  }
+
+  .option-column1 {
+    width: 30%;
+  }
+
+  .option-column2 {
+    width: 70%;
+  }
+}
+
+label {
+  display: flex;
+  align-items: center;
+}
+
+.one {
+  flex: 1;
+  text-align: end;
+}
+
+.inline-radio {
+  display: inline-block;
+  margin-right: 10px;
+  accent-color: rgb(67, 67, 230);
+}
+
+// :host ::ng-deep {
+
+//   .p-multiselect-items {
+//     background-color: whitesmoke;
+//   }
+
+//   .p-multiselect-filter {
+//     height: 30px;
+//   }
+
+//   .p-dropdown-filter {
+//     height: 30px;
+//   }
+
+//   .option-item {
+//     display: flex;
+//     justify-content: space-between;
+//     align-items: center;
+//   }
+
+
+//   .p-dialog {
+//     margin-left: 260px;
+//   }
+
+//   .btnCheckBox {
+//     width: auto;
+//     border-radius: 12px;
+//     font-size: 12px;
+//     height: 30px;
+//     padding: 5px;
+//     border: 1px solid #ced4da;
+
+//   }
+
+//   .btnCheckBox:hover {
+//     background-color: white;
+//     color: black;
+//     border: 1px solid #ced4da !important;
+
+//   }
+
+//   .chk {
+//     border: 1px solid #ced4da !important;
+//   }
+
+//   .form-check-inline {
+//     align-items: center !important;
+//     margin-right: 0px !important;
+//   }
+
+//   .form-check-input {
+//     position: static;
+//     margin-top: 3px;
+
+//   }
+
+// }
+
+
+::ng-deep .p-dialog .p-dialog-header .p-dialog-header-icon {
+  color: white!important;
+}

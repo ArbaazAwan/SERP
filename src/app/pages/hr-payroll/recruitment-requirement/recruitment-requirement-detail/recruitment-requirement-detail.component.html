@@ -1,0 +1,236 @@
+<div class="main-container">
+  <div class="card-wrapper">
+    <form [formGroup]="recruitmentRForm" (ngSubmit)="onSubmit()">
+      <div class="row">
+        <!-- RequirementDate -->
+        <div class="form-group col-md-3">
+          <label>Requirement Date <span class="astrik">*</span></label>
+          <input
+            type="date"
+            class="form-control text-xs"
+            placeholder="Enter Requirement Date"
+            formControlName="RequirementDate"
+            name="RequirementDate"
+          />
+          <small
+            class="text-danger text-xs"
+            *ngIf="
+              rControls['RequirementDate'].touched &&
+              rControls['RequirementDate'].invalid
+            "
+          >
+            Requirement Date is Required
+          </small>
+        </div>
+
+        <!-- RequiredTillDate -->
+        <div class="form-group col-md-3">
+          <label>Required Till Date</label>
+          <input
+            type="date"
+            class="form-control text-xs"
+            placeholder="Enter Required Till Date"
+            formControlName="RequiredTillDate"
+            name="RequiredTillDate"
+          />
+        </div>
+
+        <!-- DepartmentCode -->
+        <div class="form-group col-md-3">
+          <label>Department <span class="astrik">*</span></label>
+          <p-dropdown
+            [options]="departmentList"
+            optionLabel="DepartmentName"
+            optionValue="DepartmentCode"
+            formControlName="DepartmentCode"
+            [filter]="true"
+            filterBy="DepartmentName"
+            placeholder="Select Department"
+          >
+          </p-dropdown>
+          <small
+            class="text-danger text-xs"
+            *ngIf="
+              rControls['DepartmentCode'].touched &&
+              rControls['DepartmentCode'].invalid
+            "
+          >
+            Department is Required
+          </small>
+        </div>
+
+        <!-- DesignationCode -->
+        <div class="form-group col-md-3">
+          <label>Designation <span class="astrik">*</span></label>
+          <p-dropdown
+            [options]="designationList"
+            optionLabel="DesignationName"
+            optionValue="DesignationCode"
+            formControlName="DesignationCode"
+            [filter]="true"
+            filterBy="DesignationName"
+            placeholder="Select Designation"
+          >
+          </p-dropdown>
+          <small
+            class="text-danger text-xs"
+            *ngIf="
+              rControls['DesignationCode']?.touched &&
+              rControls['DesignationCode']?.invalid
+            "
+          >
+            Designation is Required
+          </small>
+        </div>
+      </div>
+
+      <div class="row">
+        <!-- SalaryFrom -->
+        <div class="form-group col-md-3">
+          <label>Salary From</label>
+          <input
+            type="number"
+            class="form-control text-xs"
+            placeholder="Enter Salary From"
+            formControlName="SalaryFrom"
+            name="SalaryFrom"
+          />
+          <small
+            class="text-danger text-xs"
+            *ngIf="
+              rControls['SalaryFrom']?.touched &&
+              rControls['SalaryFrom']?.invalid
+            "
+          >
+            SalaryFrom is Invalid
+          </small>
+        </div>
+
+        <!-- SalaryTo -->
+        <div class="form-group col-md-3">
+          <label>Salary To</label>
+          <input
+            type="number"
+            class="form-control text-xs"
+            placeholder="Enter Salary To"
+            formControlName="SalaryTo"
+            name="SalaryTo"
+          />
+          <small
+            class="text-danger text-xs"
+            *ngIf="
+              rControls['SalaryTo']?.touched && rControls['SalaryTo']?.invalid
+            "
+          >
+            Salary To is Invalid
+          </small>
+        </div>
+
+        <!-- HiringDateTime -->
+        <div class="form-group col-md-3">
+          <label>Hiring Date and Time</label>
+          <input
+            type="datetime-local"
+            class="form-control text-xs"
+            placeholder="Enter Hiring Date and Time"
+            formControlName="HiringDateTime"
+            name="HiringDateTime"
+          />
+        </div>
+
+        <!-- EmployeeCode -->
+        <div class="form-group col-md-3">
+          <label>Employee Code</label>
+          <input
+            type="text"
+            class="form-control text-xs"
+            placeholder="Enter Employee Code"
+            formControlName="EmployeeCode"
+            name="EmployeeCode"
+          />
+        </div>
+
+        <!-- TODO: need to implement table -->
+        <!-- RecruitmentTypeCode -->
+        <!-- <div class="form-group col-md-3">
+      <label>Recruitment Type <span class="astrik">*</span></label>
+      <p-dropdown
+        [options]="[]"
+        optionLabel="RecruitmentTypeName"
+        optionValue="RecruitmentTypeCode"
+        formControlName="RecruitmentTypeCode"
+      >
+      </p-dropdown>
+      <small
+        class="text-danger text-xs"
+        *ngIf="
+          rControls['RecruitmentTypeCode']?.touched &&
+          rControls['RecruitmentTypeCode']?.invalid
+        "
+      >
+        RecruitmentType is Required
+      </small>
+    </div> -->
+      </div>
+
+      <div class="row">
+        <!-- ReplacementOfEmployeeCode -->
+        <div class="form-group col-md-3">
+          <label>Replacement Employee Code</label>
+          <input
+            type="text"
+            class="form-control text-xs"
+            placeholder="Enter Replacement Employee Code"
+            formControlName="ReplacementOfEmployeeCode"
+            name="ReplacementOfEmployeeCode"
+          />
+        </div>
+      </div>
+
+      <div class="row">
+        <!-- IsLocked -->
+        <div class="form-group col-md-2">
+          <div class="checkbox">
+            <input
+              type="checkbox"
+              class="form-checkbox"
+              formControlName="IsLocked"
+              name="IsLocked"
+            />
+            <label class="form-check-label">Locked</label>
+          </div>
+        </div>
+
+        <!-- IsApproved -->
+        <div class="form-group col-md-2">
+          <div class="checkbox">
+            <input
+              type="checkbox"
+              class="form-checkbox"
+              formControlName="IsApproved"
+              name="IsApproved"
+            />
+            <label class="form-check-label">Approved</label>
+          </div>
+        </div>
+
+        <!-- IsHired -->
+        <div class="form-group col-md-2">
+          <div class="checkbox">
+            <input
+              type="checkbox"
+              class="form-checkbox"
+              formControlName="IsHired"
+              name="IsHired"
+            />
+            <label class="form-check-label">Hired</label>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-save float-end" type="submit">
+        {{ isUpdate ? "Update" : "Submit" }}
+      </button>
+    </form>
+  </div>
+</div>

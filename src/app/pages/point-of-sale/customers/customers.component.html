@@ -1,0 +1,296 @@
+<app-confirm-dialog></app-confirm-dialog>
+
+<div class="mt-2 mb-2 form-title bg-gray-100">
+  <p class="mx-1 my-1">Customers</p>
+</div>
+<div class="container" style="width: 75%; float: right">
+  <div class="row justify-content-flex-start">
+    <div
+      class="row justify-content-center"
+      style="width: 100%; padding-right: 0px"
+    >
+      <form
+        class="justify-content-center"
+        style="width: 100%"
+        [formGroup]="form"
+        novalidate
+      >
+        <div class="row text-center" style="font-size: small">
+          <div class="col-lg-12 col-md-12 col-sm-10" style="padding-right: 0px">
+            <div class="card p-3">
+              <div class="row align-items-stretch">
+                <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+                  <label class="float-md-left d-flex float-sm-left mb-1 ml-1"
+                    ><b>Name</b><span class="astrik">*</span></label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Enter Name"
+                    formControlName="Name"
+                    name="Name"
+                    [(ngModel)]="customers.Name"
+                  />
+                  <div
+                    *ngIf="
+                      form.controls['Name'].invalid &&
+                      form.controls['Name'].touched
+                    "
+                    style="color: red"
+                  >
+                    Field Required
+                  </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+                  <label class="float-md-left d-flex float-sm-left mb-1 ml-1"
+                    ><b>CNIC</b>
+                    <span class="astrik">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Enter CNIC"
+                    formControlName="CNIC"
+                    name="CNIC"
+                    [(ngModel)]="customers.CNIC"
+                  />
+                  <div
+                    *ngIf="
+                      form.controls['CNIC'].invalid &&
+                      form.controls['CNIC'].touched
+                    "
+                    style="color: red"
+                  >
+                    Field Required
+                  </div>
+                </div>
+
+                <div class="col-lg-2 col-md-6 col-sm-12 mb-3">
+                  <label class="float-md-left d-flex float-sm-left mb-1 ml-1"
+                    ><b>Phone No</b>
+                    <span class="astrik">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Enter Phone No"
+                    formControlName="PhoneNo"
+                    name="PhoneNo"
+                    [(ngModel)]="customers.PhoneNo"
+                  />
+                  <div
+                    *ngIf="
+                      form.controls['PhoneNo'].invalid &&
+                      form.controls['PhoneNo'].touched
+                    "
+                    style="color: red"
+                  >
+                    Field Required
+                  </div>
+                </div>
+
+                <div class="col-lg-2 col-md-6 col-sm-12 mb-3">
+                  <label class="float-md-left d-flex float-sm-left mb-1 ml-1"
+                    ><b>Creadit Days</b>
+                    <span class="astrik">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Enter Creadit Days"
+                    formControlName="CreaditDays"
+                    name="CreaditDays"
+                    [(ngModel)]="customers.CreaditDays"
+                  />
+                  <div
+                    *ngIf="
+                      form.controls['CreaditDays'].invalid &&
+                      form.controls['CreaditDays'].touched
+                    "
+                    style="color: red"
+                  >
+                    Field Required
+                  </div>
+                </div>
+                <div class="col-lg-2 col-md-6 col-sm-12 mb-3">
+                  <label class="float-md-left d-flex float-sm-left mb-1 ml-1"
+                    ><b>Credit Limit</b>
+                    <span class="astrik">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Enter Creadit Limit"
+                    formControlName="CreditLimit"
+                    [(ngModel)]="customers.CreditLimit"
+                    appCommaSeparatedNumber
+                  />
+                  <div
+                    *ngIf="
+                      form.controls['CreditLimit'].invalid &&
+                      form.controls['CreditLimit'].touched
+                    "
+                    style="color: red"
+                  >
+                    Field Required
+                  </div>
+                </div>
+              </div>
+
+              <div class="row align-items-stretch">
+                <div class="col-lg-3">
+                  <label class="float-md-left d-flex float-sm-left mb-1 ml-1">
+                    <b>COA Head</b>
+                    <span class="astrik">*</span>
+                  </label>
+                  <div class="group-gap">
+                    <div class="d-block my-1">
+                      <div class="mb-3">
+                        <select
+                          class="form-select"
+                          (change)="changeCOA($event)"
+                          formControlName="ItemCode"
+                          [(ngModel)]="COAResponse$.ItemCode"
+                        >
+                          <option
+                            *ngFor="let c of COAResponse$"
+                            [ngValue]="c"
+                            [value]="c?.ItemCode"
+                          >
+                            {{ c.ItemName }}
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-1 col-md-6 col-sm-12">
+                  <label class="float-md-left d-flex float-sm-left mb-3"
+                    ><b>IsActive</b></label
+                  >
+                  <input
+                    type="checkbox"
+                    class="form-check-label mt-1"
+                    formControlName="IsActive"
+                    name="IsActive"
+                    style="float: left; margin-left: 10%"
+                    [(ngModel)]="customers.IsActive"
+                  />
+                </div>
+                <div class="col-lg-8 col-md-6 col-sm-12 mb-3">
+                  <label class="float-md-left d-flex float-sm-left mb-1 ml-1"
+                    ><b>Address</b>
+                  </label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Enter Address"
+                    formControlName="Address"
+                    name="Address"
+                    [(ngModel)]="customers.Address"
+                  />
+                  <div
+                    *ngIf="
+                      form.controls['Address'].invalid &&
+                      form.controls['Address'].touched
+                    "
+                    style="color: red"
+                  >
+                    Field Required
+                  </div>
+                </div>
+              </div>
+
+              <div class="row align-items-stretch">
+                <div class="col-sm-4"></div>
+                <div
+                  class="row justify-content-center"
+                  style="align-items: flex-end"
+                >
+                  <ng-container>
+                    <Button
+                      type="button"
+                      id="btnsave"
+                      Class="btn btn-outline-success mx-1"
+                      Style="width: 5rem; border-radius: 2rem;"
+                      (click)="addorUpdate()"
+                      [disabled]="isUpdate"
+                      >Save</Button
+                    >
+                    <Button
+                      type="button"
+                      id="btnsave"
+                      Class="btn btn-outline-success"
+                      Style="width: 7rem; border-radius: 2rem;"
+                      [disabled]="!isUpdate"
+                      (click)="addorUpdate()"
+                      >Update</Button
+                    >
+                  </ng-container>
+                  <Button
+                    type="button"
+                    id="btnRefresh"
+                    class="btn primary-button-color mx-1"
+                    Style="width: 7rem; border-radius: 2rem;"
+                    (click)="refresh()"
+                    >Refresh</Button
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <p-table
+    class="table"
+    [value]="customersresponse$"
+    *ngIf="customersresponse$.length > 0 || tableLength > 4"
+    [paginator]="true"
+    [rows]="4"
+    class="datatable-width"
+    styleClass="p-datatable-sm"
+    responsiveLayout="stack"
+    [breakpoint]="'960px'"
+    [rowHover]="true"
+    [alwaysShowPaginator]="false"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="min-width: 150px">Name</th>
+        <th style="min-width: 100px">CNIC</th>
+        <th style="min-width: 100px">PhoneNo</th>
+        <th style="min-width: 100px">Credit Limit</th>
+        <th style="min-width: 100px">IsActive</th>
+        <th style="min-width: 100px">Action</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-m>
+      <tr>
+        <td>{{ m.Name }}</td>
+        <td>{{ m.CNIC }}</td>
+        <td>{{ m.PhoneNo }}</td>
+        <td>{{ m.CreditLimit | number }}</td>
+        <td>{{ m.IsActive }}</td>
+        <td>
+          <button
+            pButton
+            icon="pi pi-pencil"
+            class="p-button-rounded p-button-success p-mr-2 mx-1"
+            (click)="getSelectedRow(m)"
+          ></button>
+          <button
+            pButton
+            icon="pi pi-trash"
+            class="p-button-rounded p-button-danger p-mr-2 mx-1"
+            (click)="delete(m.CustomerId)"
+          ></button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+<!-- Grid-End -->

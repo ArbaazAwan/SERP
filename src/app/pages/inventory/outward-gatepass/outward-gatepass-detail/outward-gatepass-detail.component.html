@@ -1,0 +1,507 @@
+<ngx-loading-bar [includeSpinner]="false" [height]="'3px'"></ngx-loading-bar>
+<app-confirm-dialog></app-confirm-dialog>
+<div class="main-container">
+  <div class="">
+    <div>
+      <p class="heading">Outward Gatepass Details</p>
+    </div>
+  </div>
+  <div class="">
+    <div class="row">
+      <form [formGroup]="masterForm">
+        <div class="card-wrapper">
+          <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label> OGP No<span class="astrik">*</span></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="OGPNo"
+                  [attr.disabled]="true"
+                />
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label> Party<span class="astrik">*</span></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [attr.disabled]="true"
+                  formControlName="PartyName"
+                />
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label> Store<span class="astrik">*</span></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [attr.disabled]="true"
+                  formControlName="DepartmentName"
+                />
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Location<span class="astrik">*</span></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [attr.disabled]="true"
+                  formControlName="Location"
+                />
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Purpose<span class="astrik">*</span></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [attr.disabled]="true"
+                  formControlName="PurposeTitle"
+                />
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-12 ogp-date-input">
+              <div class="form-group">
+                <label>OGP Date</label>
+                <p-calendar
+                  [showIcon]="true"
+                  class="form-control inputSetting"
+                  formControlName="OGPDate"
+                  [dateFormat]="formatDateForInput()"
+                  [placeholder]="formatDateForInput()"
+                ></p-calendar>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Driver</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="Driver"
+                />
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label> Vehicle No </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter Vehicle No"
+                  formControlName="VehicleNo"
+                />
+              </div>
+            </div>
+
+            <div class="col-lg-8 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label> Remarks </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter Your Remarks"
+                  formControlName="Remarks"
+                  name="Remarks"
+                />
+              </div>
+            </div>
+            <div class="col-lg-2 col-md-6 col-sm-12 align-self-center">
+              <div class="checkbox">
+                <input
+                  type="checkbox"
+                  class="form-checkbox"
+                  formControlName="IsOpen"
+                  [attr.disabled]="true"
+                />
+                <label class="form-check-label" for="locked">
+                  Open OGP <span class="astrik">*</span></label
+                >
+              </div>
+            </div>
+            <div class="col-lg-2 col-md-6 col-sm-12 align-self-center">
+              <div class="checkbox">
+                <input
+                  type="checkbox"
+                  class="form-checkbox"
+                  formControlName="IsReturnable"
+                />
+                <label class="form-check-label" for="locked">
+                  Returnable
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mt-2">
+            <div class="d-flex align-items-center gap-2">
+              <button
+                type="button"
+                id="btnupdate"
+                Class="btn-save"
+                (click)="UpdateMasterDetails()"
+              >
+                Update
+              </button>
+
+              <button
+                type="button"
+                id="btnprint"
+                Class="btn-update"
+                (click)="printOgpDetails()"
+              >
+                Preview / Print
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="row">
+      <!-- --------------------------------- OGP DETALS FORM---------------------------------------------------------- -->
+      <form [formGroup]="detailForm">
+        <div class="card-wrapper mt-3">
+          <div class="row align-items-stretch">
+            <div class="col-lg-4 col-md-6 col-sm-12" *ngIf="IsOpen == false">
+              <div class="form-group">
+                <label> Item Description <span class="astrik">*</span> </label>
+                <p-dropdown
+                  [style]="{ height: '38px', width: '235px' }"
+                  [options]="StoreItemResponse$"
+                  [filter]="true"
+                  optionLabel="ItemName"
+                  optionValue="Code"
+                  (onChange)="changeStoreItem($event.value)"
+                  formControlName="ItemCode"
+                  filterBy="ItemName"
+                  [showClear]="false"
+                  placeholder="Select Item"
+                  [panelStyle]="{ overflow: 'auto' }"
+                  [showClear]="true"
+                  appendTo="body"
+                >
+                </p-dropdown>
+              </div>
+            </div>
+            <div class="col-lg-1 col-md-6 col-sm-12" *ngIf="IsOpen == false">
+              <div class="form-group">
+                <label> Unit <span class="astrik">*</span> </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="UnitCode"
+                  [attr.disabled]="true"
+                />
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 col-sm-12" *ngIf="IsOpen == true">
+              <div class="form-group">
+                <label> Item Description <span class="astrik">*</span> </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="ItemName"
+                  placeholder="Item Description"
+                />
+              </div>
+            </div>
+            <div class="col-lg-1 col-md-6 col-sm-12" *ngIf="IsOpen == true">
+              <div class="form-group">
+                <label> Unit <span class="astrik">*</span> </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="ItemUnit"
+                  placeholder="Unit"
+                />
+              </div>
+            </div>
+
+            <div class="col-lg-2 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Contract Type </label>
+                <select class="form-select" formControlName="ContractType">
+                  <option *ngFor="let c of contracts" [ngValue]="c" [value]="c">
+                    {{ c }}
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label> Contract No </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="ContractNo"
+                  placeholder="Contract No"
+                />
+              </div>
+            </div>
+
+            <div class="col-lg-2 col-md-6 col-sm-12" *ngIf="!IsOpen">
+              <div class="form-group">
+                <label> Qty <span class="astrik">*</span></label>
+                <input
+                  type="number"
+                  class="form-control"
+                  formControlName="IssuedQty"
+                  placeholder="Issued Qty"
+                  (blur)="openGRNS()"
+                />
+                <div class="input-error m-2">
+                  Selected Quantity = {{ totalQuantity }}
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-2 col-md-6 col-sm-12" *ngIf="IsOpen == true">
+              <div class="form-group">
+                <label> Qty <span class="astrik">*</span></label>
+                <input
+                  type="number"
+                  class="form-control"
+                  formControlName="IssuedQty"
+                  placeholder="Issued Qty"
+                />
+              </div>
+            </div>
+            <div class="col-lg-12 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label> Remarks </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter Your Remarks"
+                  formControlName="Remarks"
+                  name="Remarks"
+                />
+              </div>
+            </div>
+
+            <div class="row mt-3">
+              <div class="d-flex align-items-center gap-2">
+                <button
+                  type="button"
+                  id="btnsave"
+                  Class="btn-save"
+                  (click)="saveOGPDetails()"
+                  [disabled]="isUpdate"
+                >
+                  Save
+                </button>
+                <button
+                  type="button"
+                  id="btnupdate"
+                  Class="btn-update"
+                  [disabled]="!isUpdate"
+                  (click)="UpdateOGPDetail()"
+                >
+                  Update
+                </button>
+                <button type="button" id="btnRefresh" class="btn-refresh">
+                  <img
+                    src="../../../../assets/icons/btn-refresh.svg"
+                    alt=""
+                    (click)="refreshDeails()"
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-12 col-md-12 mt-3">
+        <div class="table-responsive card-wrapper custom-table">
+          <table class="table table-striped table-borderless">
+            <thead>
+              <tr>
+                <th scope="col">Sr.</th>
+                <th scope="col">Item Name</th>
+                <th scope="col">Unit</th>
+                <th scope="col">Contract Type</th>
+                <th scope="col">Issued Quantity</th>
+                <th scope="col" class="text-center">Action</th>
+              </tr>
+            </thead>
+            <hr />
+            <tbody>
+              <tr
+                *ngFor="let m of detailsData; let odd = odd"
+                [ngClass]="{ 'odd-row': odd }"
+              >
+                <td>{{ m.OGP_PK }}</td>
+                <td>{{ m.ItemName }}</td>
+                <td>{{ m.ItemUnit }}</td>
+                <td>{{ m.ContractType }}</td>
+                <td>{{ m.IssuedQty }}</td>
+                <td>
+                  <div class="dropdown text-center">
+                    <button
+                      class="three-dots"
+                      type="button"
+                      id="table-action-menu"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      <i class="fa fa-ellipsis-v"></i>
+                    </button>
+                    <ul
+                      class="dropdown-menu"
+                      aria-labelledby="table-action-menu"
+                    >
+                      <li>
+                        <a
+                          class="dropdown-item edit cursor-hover cursor-pointer"
+                          (click)="getSelectedRow(m)"
+                          >Edit</a
+                        >
+                      </li>
+                      <li>
+                        <a
+                          class="dropdown-item delete cursor-hover cursor-pointer"
+                          (click)="deleteOGPDetail(m.OGP_PK)"
+                          >Delete</a
+                        >
+                      </li>
+                    </ul>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <!-- <div *ngIf="isLoadingData">
+            <app-table-loader></app-table-loader>
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- <div class="loading-popup" *ngIf="loading">
+    <div class="overlay"></div>
+    <div class="popup">
+      <div class="spinner"></div>
+      <p>Report Generating</p>
+    </div>
+  </div> -->
+</div>
+
+<!-- Response-Error-Message  -->
+<!-- <div class="loading-newpopup" *ngIf="loadingerror">
+  <div class="newpopup">
+    <div class="Errormessage">
+      <p><strong>Error</strong></p>
+      <p>You are not authorized to perform this Operation</p>
+    </div>
+    <button class="btn btn-danger ErrorClosebtn" (click)="hideErrorPopup()">
+      Cancel
+    </button>
+  </div>
+</div> -->
+
+<p-dialog
+  [(visible)]="issuedialog"
+  [style]="{ width: '900px', height: '500px' }"
+  [header]="'Copy From Stock'"
+  [modal]="true"
+  styleClass="p-fluid"
+  [closable]="true"
+>
+  <p style="text-align: left; color: red; float: left">
+    Total Issued Quantity should equal to
+    {{ detailForm.value.IssuedQty }}
+  </p>
+
+  <p style="text-align: right; color: blue">
+    Total Selected Qty
+    {{ totalQuantity }}
+  </p>
+
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      pRipple
+      label="Cancel"
+      icon="pi pi-times"
+      class="p-button-text"
+      (click)="hideIssueDialog()"
+    ></button>
+    <button
+      pButton
+      pRipple
+      label="Add"
+      icon="pi pi-check"
+      class="p-button-text"
+      [disabled]="calculationBtn"
+      (click)="checkIssueQty()"
+    ></button>
+  </ng-template>
+
+  <div class="row">
+    <div class="col-lg-12 col-md-12">
+      <div
+        class="table-responsive card-wrapper custom-table"
+        (scroll)="onMainContainerScroll($event)"
+      >
+        <table
+          class="table table-striped table-borderless"
+          *ngIf="!isLoadingData"
+        >
+          <thead [class]="isSticky ? 'sticky-header' : ''">
+            <tr>
+              <th scope="col">Sr#</th>
+              <th scope="col">GRN #</th>
+              <th scope="col">Date</th>
+              <th scope="col">Rate</th>
+              <th scope="col">Stock Qty</th>
+              <th scope="col" class="text-center">Issue Qty</th>
+            </tr>
+          </thead>
+          <hr />
+          <tbody>
+            <tr
+              *ngFor="let m of issueResponse$; let odd = odd"
+              [ngClass]="{ 'odd-row': odd }"
+            >
+              <td>{{ m.GRNSrNo }}</td>
+              <td>{{ m.GRNNo }}</td>
+              <td>{{ m.GRNDate | date : "dd-MMM-yyyy" }}</td>
+              <td>{{ m.Rate }}</td>
+              <td>{{ m.StockQty }}</td>
+              <td>
+                <input
+                  pInputText
+                  type="number"
+                  class="form-control mx-auto"
+                  style="width: 100px"
+                  [ngModelOptions]="{ standalone: true }"
+                  [(ngModel)]="m.IssQty"
+                  (change)="collectiveQuantity(m)"
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div *ngIf="isLoadingData">
+          <app-table-loader></app-table-loader>
+        </div>
+      </div>
+    </div>
+  </div>
+</p-dialog>

@@ -1,0 +1,197 @@
+.UserData {
+  font-size: 12px;
+  // line-height: 35px;
+}
+
+.UserProfile {
+  color: #32a0ef;
+  // margin-bottom: 16px;
+  margin-left: 10px;
+}
+
+#branch,
+#storeInput,
+#projectInput {
+  width: 70%;
+}
+
+.profile-icon {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.profile-icon .fa-circle-user {
+  font-size: 24px;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 120px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.dropdown-content.show {
+  display: block;
+}
+
+.dropdown-content p-menubar {
+  border: none;
+}
+
+.dropdown-content p-menubar .p-menuitem {
+  padding: 8px 16px;
+  text-decoration: none;
+  display: block;
+  color: #333;
+}
+
+.dropdown-content p-menubar .p-menuitem:hover {
+  background-color: #ddd;
+}
+
+.dropdown-content p-menubar .p-menuitem .pi {
+  margin-right: 8px;
+}
+
+.dropdown-content p-menubar .p-submenu-icon {
+  display: none;
+}
+
+:host ::ng-deep {
+  .p-dropdown-empty-message {
+    padding: 0rem 1.5rem;
+    color: #212529;
+    background: transparent;
+    font-size: 13px;
+  }
+
+  .p-dropdown-clear-icon {
+    top: 57%;
+    font-size: 12px;
+    right: 33px !important;
+  }
+
+  .p-dropdown-panel .p-dropdown-header {
+    padding: 5px;
+  }
+
+  .p-dropdown-panel .p-dropdown-header .p-dropdown-filter {
+    height: 23px !important;
+  }
+
+  .p-dropdown-filter-icon {
+    top: 55%;
+    font-size: 14px;
+  }
+}
+
+.UserContainer {
+  position: relative;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+
+  &:hover {
+    .DropdownContent {
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+
+  .fa-user {
+    font-size: 20px;
+    color: black;
+  }
+
+  .login-info {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    justify-content: end;
+
+    .account-title {
+      text-transform: capitalize;
+      color: black;
+      font-weight: 700;
+      font-size: 12px;
+    }
+
+    .login-time {
+      font-size: 12px;
+      color: black;
+    }
+  }
+
+  .DropdownContent {
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    background-color: white;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 99;
+    right: 0;
+    top: 40px;
+    border-radius: 10px;
+    padding: 7px;
+    transition: 0.3s all;
+
+    a {
+      padding: 10px 6px;
+      text-decoration: none;
+      display: block;
+      color: #333;
+      font-weight: 500;
+      cursor: pointer;
+      font-size: 13px;
+
+      &:hover {
+        background-color: rgba(235, 245, 253, 1);
+        border-radius: 5px;
+      }
+    }
+  }
+
+}
+
+
+
+.UserProfile {
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.login-info {
+  flex: 1;
+  float: left;
+  text-align: right;
+  padding-bottom: 5px;
+}
+
+.login-info h3,
+.login-info p {
+  margin: 0;
+  padding: 0;
+}
+
+.DashHeading {
+  font-weight: 600;
+  font-size: 16px;
+  text-transform: capitalize;
+  color: black;
+}
+
+.store-label {
+  font-size: 12px;
+  color: black;
+  font-weight: 600;
+  margin-right: 5px;
+}
+// .p-dropdown .p-dropdown-clearable .p-dropdown-label{
+//   margin-right:13px !important;
+// }

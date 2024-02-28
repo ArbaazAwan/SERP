@@ -1,0 +1,1050 @@
+<ngx-loading-bar [includeSpinner]="false" [height]="'3px'"></ngx-loading-bar>
+
+<app-confirm-dialog></app-confirm-dialog>
+
+<div class="main-container">
+  <div class="">
+    <p>Sales Lead Generation</p>
+  </div>
+  <div class="">
+    <form [formGroup]="Masterform" novalidate>
+      <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-10">
+          <div class="card-wrapper">
+            <div class="row">
+              <div class="col-lg-3 col-md-6 col-sm-12 d-none">
+                <div class="form-group">
+                  <label>Lead Code </label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="LeadCode"
+                    [(ngModel)]="LeadMasterResponse$[0].LeadCode"
+                    [attr.disabled]="true"
+                  />
+                  <div
+                    *ngIf="
+                      Masterform.controls['LeadCode'].invalid &&
+                      Masterform.controls['LeadCode'].touched
+                    "
+                    class="input-error"
+                  >
+                    Field Required
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="form-group">
+                  <label>Opportunity<span class="astrik">*</span></label>
+                  <div class="d-flex align-items-center gap-2">
+                    <p-dropdown
+                      [style]="{ width: '95%' }"
+                      [options]="openStatusLeadOpportunities"
+                      [filter]="true"
+                      optionLabel="OpportunityName"
+                      optionValue="OpportunityCode"
+                      [(ngModel)]="OpportunityCode"
+                      [ngModelOptions]="{ standalone: true }"
+                      filterBy="OpportunityName"
+                      placeholder="Opportunity"
+                      [panelStyle]="{ overflow: 'auto' }"
+                      [showClear]="true"
+                      (onChange)="getLeadOpportunityDetail($event)"
+                    >
+                    </p-dropdown>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="form-group">
+                  <label
+                    >Lead Name
+                    <span class="astrik">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Enter Lead Name"
+                    formControlName="LeadName"
+                    [(ngModel)]="LeadMasterResponse$[0].LeadName"
+                  />
+                </div>
+              </div>
+              <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="form-group">
+                  <label>Account Manager </label>
+                  <p-dropdown
+                    [disabled]="isUpdate"
+                    [options]="allAccountManagers"
+                    [filter]="true"
+                    optionLabel="Name"
+                    optionValue="AccountManagerCode"
+                    formControlName="AccountManagerCode"
+                    filterBy="Name"
+                    placeholder="Account Manager"
+                    [panelStyle]="{ overflow: 'auto' }"
+                    [showClear]="true"
+                    (onChange)="changeAccountManager($event)"
+                  >
+                  </p-dropdown>
+                </div>
+              </div>
+
+              <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="form-group">
+                  <label> Customer Name<span class="astrik">*</span></label>
+                  <div class="d-flex align-items-center gap-2">
+                    <p-dropdown
+                      [style]="{ width: '95%' }"
+                      [options]="customerResponse$"
+                      [filter]="true"
+                      optionLabel="PartyName"
+                      optionValue="PartyCode"
+                      [(ngModel)]="LeadMasterResponse$[0].PartyCode"
+                      [ngModelOptions]="{ standalone: true }"
+                      filterBy="PartyName"
+                      placeholder="Select customer"
+                      [panelStyle]="{ overflow: 'auto' }"
+                      [showClear]="true"
+                      (onChange)="changeCustomers($event)"
+                    >
+                    </p-dropdown>
+                    <button class="btn-dropdown" (click)="openNewCustomer()">
+                      <img src="../../.././../assets/icons/plus.svg" alt="" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="form-group">
+                  <label
+                    >Contact Person
+                    <span class="astrik">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Enter Contact Person "
+                    formControlName="ContactPerson"
+                    [(ngModel)]="LeadMasterResponse$[0].ContactPerson"
+                  />
+                </div>
+              </div>
+              <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="form-group">
+                  <label
+                    >Period
+                    <span class="astrik">*</span>
+                  </label>
+                  <select
+                    class="form-select"
+                    formControlName="Period"
+                    [(ngModel)]="LeadMasterResponse$[0].Period"
+                    [attr.disabled]="true"
+                    (change)="calculateClosingDate()"
+                  >
+                    <option>Month</option>
+                    <option>Week</option>
+                    <option>Days</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="form-group">
+                  <label>
+                    {{ getLabel() }}
+                    <span class="astrik">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Enter {{ getLabel() }}"
+                    [attr.disabled]="true"
+                    formControlName="Duration"
+                    [(ngModel)]="LeadMasterResponse$[0].Duration"
+                    (change)="calculateClosingDate()"
+                  />
+                </div>
+              </div>
+              <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="form-group">
+                  <label>Start Date </label>
+                  <input
+                    type="date"
+                    class="form-control"
+                    formControlName="StartDate"
+                    [attr.disabled]="true"
+                    [(ngModel)]="LeadMasterResponse$[0].StartDate"
+                    (change)="calculateClosingDate()"
+                  />
+                </div>
+              </div>
+              <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="form-group">
+                  <label>Closing Date </label>
+                  <input
+                    type="date"
+                    class="form-control"
+                    formControlName="ClosingDate"
+                    [attr.disabled]="true"
+                    [attr.disabled]="true"
+                    [(ngModel)]="LeadMasterResponse$[0].ClosingDate"
+                  />
+                </div>
+              </div>
+              <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="form-group">
+                  <label
+                    >Potential Amount
+                    <span class="astrik">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="PotentialAmount"
+                    [attr.disabled]="true"
+                    [ngModel]="LeadMasterResponse$[0].PotentialAmount | number"
+                    (change)="calculateTotalAmount()"
+                    (input)="formatInput1($event)"
+                    appCommaSeparatedNumber
+                  />
+                </div>
+              </div>
+
+              <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="form-group">
+                  <label
+                    >Gross Profit %
+                    <span class="astrik">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="GrossProfitPercentage"
+                    [attr.disabled]="true"
+                    [ngModel]="
+                      LeadMasterResponse$[0].GrossProfitPercentage | number
+                    "
+                    (change)="calculateTotalAmount()"
+                    (input)="formatInput2($event)"
+                    appCommaSeparatedNumber
+                  />
+                </div>
+              </div>
+              <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="form-group">
+                  <label>Amount </label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="TotalAmount"
+                    [ngModel]="LeadMasterResponse$[0].TotalAmount | number"
+                    [attr.disabled]="true"
+                    (input)="formatInput3($event)"
+                  />
+                </div>
+              </div>
+
+              <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="form-group">
+                  <label>
+                    Status
+                    <span class="astrik">*</span>
+                  </label>
+                  <div class="d-flex align-items-center gap-2">
+                    <p-dropdown
+                      [style]="{ width: '95%' }"
+                      [options]="Statusresponse$"
+                      [filter]="true"
+                      optionLabel="StatusTitle"
+                      optionValue="StatusCode"
+                      [(ngModel)]="StatusCode"
+                      [panelStyle]="{ overflow: 'auto' }"
+                      [showClear]="true"
+                      (onChange)="changeStatus($event)"
+                    >
+                    </p-dropdown>
+                    <button class="btn-dropdown" (click)="openNewStatus()">
+                      <img src="../../.././../assets/icons/plus.svg" alt="" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="form-group">
+                  <label>
+                    Level of Interest
+                    <span class="astrik">*</span>
+                  </label>
+                  <div class="d-flex align-items-center gap-2">
+                    <p-dropdown
+                      [style]="{ width: '95%' }"
+                      [options]="LevelOfInterestresponse$"
+                      [filter]="true"
+                      optionLabel="LevelOfInterestTitle"
+                      optionValue="LevelOfInterestCode"
+                      [(ngModel)]="LeadMasterResponse$[0].LevelOfInterestCode"
+                      [ngModelOptions]="{ standalone: true }"
+                      filterBy="LevelOfInterestTitle"
+                      placeholder="Select Status"
+                      [panelStyle]="{ overflow: 'auto' }"
+                      [showClear]="true"
+                      (onChange)="changeLevelOfInterest($event)"
+                    >
+                    </p-dropdown>
+                    <button
+                      class="btn-dropdown"
+                      (click)="openNewLevelOfInterest()"
+                    >
+                      <img src="../../.././../assets/icons/plus.svg" alt="" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="form-group">
+                  <label>Remarks </label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="Remarks"
+                    [(ngModel)]="LeadMasterResponse$[0].Remarks"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="d-flex align-items-center gap-2">
+                <button
+                  type="button"
+                  id="btnupdate"
+                  class="btn-save"
+                  (click)="updateMaster()"
+                >
+                  Update
+                </button>
+                <button
+                  type="button"
+                  class="btn-save"
+                  (click)="openUploadDoc()"
+                >
+                  Upload Document
+                </button>
+                <button
+                  type="button"
+                  id="btnRefresh"
+                  class="btn-refresh"
+                  (click)="refresh()"
+                >
+                  <img src="../../../../assets/icons/btn-refresh.svg" alt="" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <form [formGroup]="Detailform" novalidate>
+      <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-10">
+          <div class="card-wrapper mt-3">
+            <div class="row">
+              <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="form-group">
+                  <label>Step Date </label>
+                  <p-calendar
+                    class="form-control inputSetting"
+                    formControlName="StepDate"
+                    [dateFormat]="formatDateForInput()"
+                    [placeholder]="formatDateForInput()"
+                    [(ngModel)]="LeadDetailResponse$.StepDate"
+                  ></p-calendar>
+                </div>
+              </div>
+              <div class="col-lg-3 col-md-6 col-sm-12">
+                <!-- <div class="form-group">
+                  <label>Employee Name
+                    <span class="astrik">*</span>
+                  </label>
+                  <input type="text" class="form-control" formControlName="EmployeeName"
+                    [(ngModel)]="LeadDetailResponse$.EmployeeName" />
+                </div> -->
+
+                <div class="form-group">
+                  <label>Account Manager </label>
+                  <p-dropdown
+                    [disabled]="isUpdate"
+                    [options]="allAccountManagers"
+                    [filter]="true"
+                    optionLabel="Name"
+                    optionValue="Name"
+                    formControlName="AccountManagerName"
+                    filterBy="Name"
+                    placeholder="Account Manager"
+                    [panelStyle]="{ overflow: 'auto' }"
+                    [showClear]="true"
+                  >
+                  </p-dropdown>
+                </div>
+              </div>
+              <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="form-group">
+                  <label>
+                    Stage
+                    <span class="astrik">*</span>
+                  </label>
+                  <div class="d-flex align-items-center gap-2">
+                    <p-dropdown
+                      [style]="{ width: '95%' }"
+                      [options]="stagesresponse$"
+                      [filter]="true"
+                      formControlName="StageCode"
+                      optionLabel="StageName"
+                      optionValue="StageCode"
+                      [(ngModel)]="LeadDetailResponse$.StageCode"
+                      filterBy="StageName"
+                      placeholder="Select Stage"
+                      [panelStyle]="{ overflow: 'auto' }"
+                      [showClear]="true"
+                      (onChange)="changeStage($event)"
+                      appendTo="body"
+                    >
+                    </p-dropdown>
+                    <button class="btn-dropdown" (click)="openNewStage()">
+                      <img src="../../../../assets/icons/plus.svg" alt="" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="form-group">
+                  <label
+                    >Lead %
+                    <span class="astrik">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="LeadPercentage"
+                    [(ngModel)]="LeadDetailResponse$.LeadPercentage"
+                    [attr.disabled]="true"
+                  />
+                </div>
+              </div>
+
+              <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="form-group">
+                  <label>Documents</label>
+                  <input
+                    type="file"
+                    class="form-control"
+                    formControlName="ImagePath"
+                    id="fileUpload"
+                    (change)="selectFiles($event)"
+                    multiple
+                    accept="image/jpeg, image/png, image/gif, application/pdf, image/x-eps, image/webp"
+                  />
+                </div>
+              </div>
+              <div class="col-lg-2 col-md-6 col-sm-12">
+                <div class="form-group">
+                  <label
+                    >Ref Doc Type
+                    <span class="astrik">*</span>
+                  </label>
+                  <div class="d-flex align-items-center gap-2">
+                    <p-dropdown
+                      [style]="{ width: '95%' }"
+                      [options]="saleTypeResponse$"
+                      [filter]="true"
+                      optionLabel="SaleType"
+                      optionValue="SaleTypeCode"
+                      [(ngModel)]="LeadDetailResponse$.ReferenceSaleTypeCode"
+                      [ngModelOptions]="{ standalone: true }"
+                      filterBy="SaleType"
+                      placeholder="Select Document Type"
+                      [panelStyle]="{ overflow: 'auto' }"
+                      [showClear]="true"
+                      (onChange)="changeDocType($event)"
+                      appendTo="body"
+                    >
+                    </p-dropdown>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-2 col-md-6 col-sm-12">
+                <div class="form-group">
+                  <label
+                    >Ref Doc #
+                    <span class="astrik">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="ReferenceSaleInvoiceNo"
+                    [(ngModel)]="LeadDetailResponse$.ReferenceSaleInvoiceNo"
+                  />
+                </div>
+              </div>
+              <div class="col-lg-5 col-md-6 col-sm-12">
+                <div class="form-group">
+                  <label>Remarks </label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="Remarks"
+                    [(ngModel)]="LeadDetailResponse$.Remarks"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="d-flex align-items-center gap-2">
+                <button
+                  type="button"
+                  id="btnsave"
+                  class="btn-save"
+                  [disabled]="isUpdate"
+                  (click)="addorUpdateDetail()"
+                >
+                  Save
+                </button>
+                <button
+                  type="button"
+                  id="btnupdate"
+                  class="btn-update"
+                  [disabled]="!isUpdate"
+                  (click)="addorUpdateDetail()"
+                >
+                  Update
+                </button>
+                <button
+                  type="button"
+                  id="btnRefresh"
+                  class="btn-refresh"
+                  (click)="refresh()"
+                >
+                  <img src="../../../../assets/icons/btn-refresh.svg" alt="" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+    <!-- ================Detail-Form-End================ -->
+
+    <!-- <p-table [value]="DetailTableResponse$" *ngIf="DetailTableResponse$.length > 0 || tableLength > 0"
+      [paginator]="true" [rows]="4" class="datatable-width" styleClass="p-datatable-sm" responsiveLayout="stack"
+      [breakpoint]="'960%'" [rowHover]="true">
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="min-width: 100%">Step#</th>
+          <th style="min-width: 100%">Date</th>
+          <th style="min-width: 100%">Employee</th>
+          <th style="min-width: 100%">Stage</th>
+          <th style="min-width: 100%">Lead %</th>
+          <th style="min-width: 100%">Remarks</th>
+          <th style="min-width: 100%">Action</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-m>
+        <tr>
+          <td>{{ m.StepCode }}</td>
+          <td>{{ m.StepDate | date : "MM/dd/yyyy" }}</td>
+          <td>{{ m.EmployeeName }}</td>
+          <td>{{ m.StageName }}</td>
+          <td>{{ m.LeadPercentage }}</td>
+          <td>{{ m.Remarks }}</td>
+          <td>
+
+            <div class="dropdown text-center">
+              <button class="three-dots" type="button" id="table-action-menu" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                <i class="fa fa-ellipsis-v"></i>
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="table-action-menu">
+                <li><a class="dropdown-item edit cursor-hover cursor-pointer"
+                  (click)="openNewDocuments(m)">View</a></li>
+                  <li><a class="dropdown-item edit cursor-hover cursor-pointer"
+                    (click)="remarks(m)">Add Remarks</a></li>
+                <li><a class="dropdown-item edit cursor-hover cursor-pointer"
+                  (click)="getSelectedRow(m)">Edit</a></li>
+                <li><a class="dropdown-item delete cursor-hover cursor-pointer"
+                  (click)="delete(m.LeadCode, m.StepCode)">Delete</a></li>
+              </ul>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table> -->
+    <div class="table-responsive card-wrapper custom-table mt-3">
+      <table
+        class="table table-striped table-borderless"
+        *ngIf="!isLoadingData"
+      >
+        <thead>
+          <tr>
+            <!-- <th>Step#</th> -->
+            <th>Date</th>
+            <th>Account Manager</th>
+            <th>Stage</th>
+            <th>Lead %</th>
+            <th>Remarks</th>
+            <th scope="col" class="text-center">Action</th>
+          </tr>
+        </thead>
+        <hr />
+        <tbody>
+          <tr
+            *ngFor="let item of DetailTableResponse$; let odd = odd"
+            [ngClass]="{ 'odd-row': odd }"
+          >
+            <!-- <td>{{ item.StepCode }}</td> -->
+            <td>{{ item.StepDate | date : "MM/dd/yyyy" }}</td>
+            <td>{{ item.AccountManagerName }}</td>
+            <td>{{ item.StageName }}</td>
+            <td>{{ item.LeadPercentage }}</td>
+            <td *ngIf="item.Remarks != 'null' && item.Remarks != 'undefined'">
+              {{ item.Remarks }}
+            </td>
+            <td *ngIf="item.Remarks == 'null' || item.Remarks == 'undefined'">
+              --
+            </td>
+            <td>
+              <div class="dropdown text-center">
+                <button
+                  class="three-dots"
+                  type="button"
+                  id="table-action-menu"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <i class="fa fa-ellipsis-v"></i>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="table-action-menu">
+                  <li>
+                    <a
+                      class="dropdown-item edit cursor-hover cursor-pointer"
+                      (click)="getSelectedRow(item)"
+                      >Edit</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      class="dropdown-item edit cursor-hover cursor-pointer"
+                      (click)="openNewDocuments(item)"
+                      >View</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      class="dropdown-item edit cursor-hover cursor-pointer"
+                      (click)="remarks(item)"
+                      >Add Remarks</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      class="dropdown-item delete cursor-hover cursor-pointer"
+                      (click)="delete(item.LeadCode, item.StepCode)"
+                      >Delete</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div *ngIf="isLoadingData">
+        <app-table-loader></app-table-loader>
+      </div>
+    </div>
+    <!-- Grid-End -->
+  </div>
+</div>
+
+<!-- customer-popup start-->
+<p-dialog
+  [(visible)]="productDialog"
+  [style]="{ width: '1050px', height: '600px' }"
+  [header]="headerCustomer"
+  [modal]="true"
+  styleClass="p-fluid"
+  [closable]="false"
+>
+  <app-addnewvariable></app-addnewvariable>
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      pRipple
+      label="Cancel"
+      icon="pi pi-times"
+      class="p-button-text"
+      (click)="hideDialogCustomer()"
+    ></button>
+  </ng-template>
+</p-dialog>
+<!-- Stage-popup start-->
+<p-dialog
+  [(visible)]="productDialogStage"
+  [style]="{ width: '950px', height: '600px' }"
+  [modal]="true"
+  styleClass="p-fluid"
+  [closable]="false"
+  [showHeader]="true"
+>
+  <div class="">
+    <app-lead-stages [displayHeader]="displayHeader"></app-lead-stages>
+  </div>
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      pRipple
+      label="Cancel"
+      icon="pi pi-times"
+      class="p-button-text"
+      (click)="hideDialogStage()"
+    ></button>
+  </ng-template>
+</p-dialog>
+<!-- Status-popup start-->
+<p-dialog
+  [(visible)]="productDialogStatus"
+  [style]="{ width: '950px', height: '600px' }"
+  [header]="headerStatus"
+  [modal]="true"
+  [showHeader]="true"
+  styleClass="p-fluid"
+  [closable]="false"
+>
+  <div class="">
+    <app-lead-status [displayHeader]="displayHeader"></app-lead-status>
+  </div>
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      pRipple
+      label="Cancel"
+      icon="pi pi-times"
+      class="p-button-text"
+      (click)="hideDialogStatus()"
+    ></button>
+  </ng-template>
+</p-dialog>
+<!-- LevelOfInterest-popup start-->
+<p-dialog
+  [(visible)]="productDialogLevelOfInterest"
+  [style]="{ width: '950px', height: '600px' }"
+  [header]="headerLevelOfInterest"
+  [modal]="true"
+  styleClass="p-fluid"
+  [showHeader]="true"
+  [closable]="false"
+>
+  <div class="">
+    <app-levelof-interest
+      [displayHeader]="displayHeader"
+    ></app-levelof-interest>
+  </div>
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      pRipple
+      label="Cancel"
+      icon="pi pi-times"
+      class="p-button-text"
+      (click)="hideDialogLevelOfInterest()"
+    ></button>
+  </ng-template>
+</p-dialog>
+<!-- Documents-popup start-->
+<p-dialog
+  [(visible)]="productDialogDocuments"
+  [style]="{ width: '700px', height: '900px' }"
+  [header]="headerDocuments"
+  [modal]="true"
+  styleClass="p-fluid"
+  [showHeader]="false"
+  [closable]="false"
+>
+  <div class="mid-container">
+    <app-documents *ngIf="!shouldReloadDocuments"></app-documents>
+  </div>
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      pRipple
+      label="Cancel"
+      icon="pi pi-times"
+      class="p-button-text"
+      (click)="hideDialogDocuments()"
+    ></button>
+  </ng-template>
+</p-dialog>
+
+<form [formGroup]="RemarksForm">
+  <p-dialog
+    [(visible)]="RemarksDialogue"
+    [style]="{ width: '600px', height: '600px' }"
+    header="Add Remarks"
+    [modal]="true"
+    styleClass="p-fluid"
+    [closable]="false"
+  >
+    <div class="row">
+      <div class="col-lg-12 col-md-6 col-sm-12">
+        <div class="d-flex align-items-center gap-2">
+          <div class="form-group w-100">
+            <label>Remarks</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="Remarks"
+              [(ngModel)]="LeadRemarks.Remarks"
+            />
+          </div>
+          <button
+            class="btn-save mt-2"
+            (click)="saveRemarks()"
+            *ngIf="remarksBtnUpdate == false"
+          >
+            Save
+          </button>
+          <button
+            class="btn-save mt-2"
+            (click)="UpdateRemarks()"
+            *ngIf="remarksBtnUpdate == true"
+          >
+            Update
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-12 col-md-12 mt-3">
+        <div class="table-responsive card-wrapper custom-table">
+          <table
+            class="table table-striped table-borderless"
+            *ngIf="!isLoadingData"
+          >
+            <thead>
+              <tr>
+                <th scope="col">Remarks</th>
+                <th scope="col">Add By User</th>
+                <th scope="col">Remarks Time</th>
+                <th scope="col" class="text-center">Action</th>
+              </tr>
+            </thead>
+            <hr />
+            <tbody>
+              <tr
+                *ngFor="let item of remarksResponse; let odd = odd"
+                [ngClass]="{ 'odd-row': odd }"
+              >
+                <td>{{ item.Remarks }}</td>
+                <td>{{ item.CreatedBy }}</td>
+                <td>{{ item.CreatedOn | date : "h:mm a" }}</td>
+
+                <td>
+                  <div class="dropdown text-center">
+                    <button
+                      class="three-dots"
+                      type="button"
+                      id="table-action-menu"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      <i class="fa fa-ellipsis-v"></i>
+                    </button>
+                    <ul
+                      class="dropdown-menu"
+                      aria-labelledby="table-action-menu"
+                    >
+                      <li>
+                        <a
+                          class="dropdown-item edit cursor-hover cursor-pointer"
+                          (click)="getSelectedRemarks(item)"
+                          >Edit</a
+                        >
+                      </li>
+                      <li>
+                        <a
+                          class="dropdown-item delete cursor-hover cursor-pointer"
+                          (click)="deleteRemarks(item.RemarksId)"
+                          >Delete</a
+                        >
+                      </li>
+                    </ul>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div *ngIf="isLoadingData">
+            <app-table-loader></app-table-loader>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+      <button
+        pButton
+        pRipple
+        label="Cancel"
+        icon="pi pi-times"
+        class="p-button-text"
+        (click)="remarksClose()"
+      ></button>
+    </ng-template>
+  </p-dialog>
+</form>
+
+<!--upload documents -->
+<p-dialog
+  [(visible)]="uploadDoc"
+  [style]="{ width: '900px' }"
+  [header]="'Upload Documents'"
+  [modal]="true"
+  styleClass="p-fluid"
+  [closable]="true"
+>
+  <ng-template pTemplate="content">
+    <form [formGroup]="UploadDocform" novalidate>
+      <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-10">
+          <div class="row">
+            <!-- <div class="col-lg-4 col-md-6 col-sm-12 mb-12">
+              <div class="form-group">
+                <label>Document Id<span class="astrik">*</span></label>
+                <input type="number" class="form-control" formControlName="DocumentId" name="DocumentId"
+                  [(ngModel)]="documentMaxId[0].DocumentId" [attr.disabled]="true" />
+              </div>
+            </div> -->
+            <div class="col-lg-8 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Description <span class="astrik">*</span></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="Description"
+                  placeholder="Enter Description "
+                />
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Documents</label>
+                <input
+                  type="file"
+                  class="form-control"
+                  formControlName="ImagePath"
+                  id="fileUpload"
+                  (change)="selectFiles($event)"
+                  multiple
+                  accept="image/jpeg,image/gif,image/png,application/pdf,image/x-eps"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="d-flex align-items-center gap-2">
+              <button
+                type="button"
+                id="btnsave"
+                class="btn-save"
+                (click)="saveDocument()"
+              >
+                Save
+              </button>
+              <button
+                type="button"
+                id="btnupdate"
+                class="btn-update"
+                (click)="HideUploadDoc()"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <p-table
+      #dt
+      [value]="documentResponse"
+      class="datatable-width"
+      styleClass="p-datatable-sm"
+      responsiveLayout="stack"
+      [breakpoint]="'960px'"
+      [rowHover]="true"
+      dataKey="id"
+      [alwaysShowPaginator]="false"
+      currentPageReportTemplate="{first} to {last} of {totalRecords} entries"
+      [showCurrentPageReport]="true"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th>DocumentId#</th>
+          <th>Description</th>
+          <th>ImagePath</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-m>
+        <tr>
+          <td>{{ m.DocumentId }}</td>
+          <td>{{ m.Description }}</td>
+          <td>{{ m.AttachmentPath }}</td>
+          <td>
+            <button
+              pButton
+              icon="pi pi-eye"
+              class="p-button p-button-outlined p-button-rounded p-button-primary GridEditButton mx-1"
+              (click)="ViewDocuments(m)"
+            ></button>
+            <button
+              pButton
+              icon="pi pi-trash"
+              class="p-button p-button-outlined p-button-rounded p-button-danger custom-button-success p-mr-2 mx-1"
+              (click)="deleteDoc(m)"
+            ></button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      pRipple
+      label="Cancel"
+      icon="pi pi-times"
+      class="p-button-text"
+      (click)="HideUploadDoc()"
+    ></button>
+  </ng-template>
+</p-dialog>
+
+<p-dialog
+  header="Document Viewer"
+  [(visible)]="displayDocumentDialog"
+  [modal]="true"
+  [responsive]="true"
+  [baseZIndex]="10000"
+  (onHide)="closeDocumentViewDialog()"
+  [style]="{ width: '950px', height: '600px' }"
+>
+  <div *ngIf="imagePathOnServer">
+    <img [src]="imagePathOnServer" alt="Document" style="width: 100%" />
+  </div>
+</p-dialog>

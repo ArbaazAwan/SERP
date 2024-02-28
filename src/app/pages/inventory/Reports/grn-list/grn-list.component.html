@@ -1,0 +1,177 @@
+<div class="main-container">
+  <div class="container">
+    <div class="col-lg-12 col-md-12 col-sm-12 mb-2 FormsHeading">
+      <p class="mx-2 my-1">GRN List</p>
+    </div>
+    <form
+      class="justify-content-center"
+      style="width: 100%"
+      [formGroup]="form"
+      novalidate
+    >
+      <div
+        class="row text-center"
+        style="font-size: small; display: flex; justify-content: center"
+      >
+        <div class="col-lg-12 col-md-12 col-sm-12">
+          <div class="card p-3">
+            <div class="row mt-2 mb-2">
+              <div class="col-xl-3 col-lg-4">
+                <label class="float-md-left d-flex float-sm-left">
+                  Store
+                  <span class="astrik">*</span>
+                </label>
+                <div class="group-gap">
+                  <div class="d-block my-1">
+                    <div class="mb-3">
+                      <p-dropdown
+                        id="StoreCode"
+                        [options]="storeResponse$"
+                        [filter]="true"
+                        formControlName="StoreCode"
+                        style="border-color: #ced4da !important"
+                        optionLabel="DepartmentName"
+                        optionValue="DepartmentCode"
+                        filterBy="DepartmentName"
+                        [showClear]="true"
+                        placeholder="Select Store"
+                        [panelStyle]="{ overflow: 'auto' }"
+                      >
+                        <ng-template let-option pTemplate="item">
+                          <span style="width: 85%; float: left">{{
+                            option.DepartmentName
+                          }}</span>
+                        </ng-template>
+                      </p-dropdown>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-3 col-lg-4">
+                <label class="float-md-left d-flex float-sm-left"
+                  >Date From
+                </label>
+                <input
+                  type="date"
+                  class="form-control custombox"
+                  formControlName="DateFrom"
+                />
+              </div>
+              <div class="col-xl-3 col-lg-4">
+                <label class="float-md-left d-flex float-sm-left"
+                  >Date To
+                </label>
+                <input
+                  type="date"
+                  class="form-control custombox"
+                  formControlName="DateTo"
+                />
+              </div>
+
+              <div class="col-xl-3 col-lg-4">
+                <label class="float-md-left d-flex float-sm-left">
+                  Locked Status
+                  <span class="astrik">*</span>
+                </label>
+                <div class="group-gap">
+                  <div class="d-block my-1">
+                    <div class="mb-3">
+                      <p-dropdown
+                        id="LockedStatus"
+                        [options]="lockStatus"
+                        [filter]="true"
+                        formControlName="LockedStatus"
+                        optionLabel="name"
+                        optionValue="value"
+                        filterBy="name"
+                        [showClear]="true"
+                        placeholder="Select Status"
+                        [panelStyle]="{ overflow: 'auto' }"
+                      >
+                        <ng-template let-option pTemplate="item">
+                          <span style="width: 85%; float: left">{{
+                            option.name
+                          }}</span>
+                        </ng-template>
+                      </p-dropdown>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row align-items-stretch">
+                <div class="col-sm-4"></div>
+                <div
+                  class="row justify-content-center"
+                  style="align-items: flex-end"
+                >
+                  <ng-container>
+                    <Button
+                      type="button"
+                      id="btnviewlist"
+                      Class="btn primary-button-color btnFix mt-3 mb-2"
+                      (click)="printGRNListReport()"
+                      >Preview / Print</Button
+                    >
+                    <Button
+                      type="button"
+                      id="btnviewlist"
+                      Class="btn primary-button-color btnFix mt-3 ml-2 mb-2"
+                      (click)="getGRNList()"
+                      >View List</Button
+                    >
+                    <Button
+                      type="button"
+                      id="btnviewlist"
+                      Class="btn primary-button-color btnFix mt-3 ml-2 mb-2"
+                      (click)="refresh()"
+                      >Refresh</Button
+                    >
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="col-lg-12 col-md-12 mt-3 p-0">
+      <div class="table-responsive card-wrapper custom-table">
+        <table class="table table-striped table-borderless">
+          <thead>
+            <tr>
+              <th scope="col">GRN No</th>
+              <th scope="col">GRN Date</th>
+              <th scope="col">Party Challan No</th>
+              <th scope="col">Party</th>
+              <th scope="col">GRN Purpose</th>
+              <th scope="col">Is Locked</th>
+              <th scope="col">Party Bill No</th>
+              <th scope="col">Challan Date</th>
+              <th scope="col">Remarks</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let grn of GNRList">
+              <td>{{ grn.GRNNo }}</td>
+              <td>{{ grn.GRNDate | date : "MMM-d-y" }}</td>
+              <td>{{ grn.PartyChallanNo }}</td>
+              <td>{{ grn.Party }}</td>
+              <td>{{ grn.GRNPurpose }}</td>
+              <td>{{ grn.IsLocked }}</td>
+              <td>{{ grn.PartyBillNo }}</td>
+              <td>{{ grn.ChallanDate | date : "MMM-d-y" }}</td>
+              <td>{{ grn.Remarks }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="loading-popup" *ngIf="loading">
+  <div class="overlay"></div>
+  <div class="popup">
+    <div class="spinner"></div>
+    <p class="text-center mt-2 mb-0">Report Generating</p>
+  </div>
+</div>

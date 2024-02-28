@@ -1,0 +1,369 @@
+<ngx-loading-bar [includeSpinner]="false" [height]="'3px'"></ngx-loading-bar>
+<app-confirm-dialog></app-confirm-dialog>
+<div class="main-container">
+  <div class="container">
+    <app-store-project
+      [componentName]="componentName"
+      [showInput2]="false"
+    ></app-store-project>
+  </div>
+  <!-- New Gird -->
+  <div class="">
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="card-wrapper">
+          <p-toolbar>
+            <ng-template pTemplate="left">
+              <div class="d-flex justify-content-between w-100">
+                <div class="gap-2">
+                  <button
+                    pButton
+                    pRipple
+                    label="Add New"
+                    icon="pi pi-plus-circle one"
+                    class="btn-save"
+                    (click)="addNew()"
+                  ></button>
+                  <button
+                    pButton
+                    pRipple
+                    label="Preview / Print"
+                    icon="pi pi-print"
+                    class="btn-save ms-2"
+                  ></button>
+                </div>
+                <div class="d-flex float-end">
+                  <button
+                    pButton
+                    pRipple
+                    label=""
+                    icon="pi pi-filter-slash"
+                    class="btn-save mx-1"
+                    (click)="clearFilter()"
+                    *ngIf="showClearFilter"
+                  ></button>
+                  <button
+                    pButton
+                    pRipple
+                    label=""
+                    icon="pi pi-filter-fill"
+                    class="btn-save"
+                    (click)="filter()"
+                  ></button>
+                </div>
+              </div>
+            </ng-template>
+          </p-toolbar>
+          <div class="table-responsive custom-table mt-2">
+            <table
+              class="table table-striped table-borderless"
+              *ngIf="!isLoadingData"
+            >
+              <thead>
+                <tr>
+                  <th scope="col">Voucher Type Name</th>
+                  <th scope="col">Voucher No</th>
+                  <th scope="col" class="text-center">Voucher Date</th>
+                  <th scope="col">Credit Amount</th>
+                  <th scope="col">Debit Amount</th>
+                  <th scope="col" class="text-center">Posted</th>
+                  <th scope="col" class="text-center">Dropped</th>
+                  <th scope="col" class="text-center">Action</th>
+                </tr>
+              </thead>
+              <hr />
+              <tbody>
+                <tr
+                  *ngFor="let item of voucherResponse$; let odd = odd"
+                  [ngClass]="{ 'odd-row': odd }"
+                >
+                  <td>{{ item.VoucherTypeName }}</td>
+                  <td>{{ item.VoucherNoForDisplay }}</td>
+                  <td>{{ item.VoucherDate | date : "dd-MMM-yyyy" }}</td>
+                  <td>{{ item.CreditAmount | roundoff }}</td>
+                  <td>{{ item.DebitAmount | roundoff }}</td>
+                  <td>
+                    <span
+                      [class]="
+                        item.IsPosted == true ? 'success-badge' : 'danger-badge'
+                      "
+                      >{{ item.IsPosted | yesNo }}</span
+                    >
+                  </td>
+                  <td>
+                    <span
+                      [class]="
+                        item.IsDropped == true
+                          ? 'success-badge'
+                          : 'danger-badge'
+                      "
+                      >{{ item.IsDropped | yesNo }}</span
+                    >
+                  </td>
+                  <td>
+                    <div class="dropdown text-center">
+                      <button
+                        class="three-dots"
+                        type="button"
+                        id="table-action-menu"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                      >
+                        <i class="fa fa-ellipsis-v"></i>
+                      </button>
+                      <ul
+                        class="dropdown-menu"
+                        aria-labelledby="table-action-menu"
+                      >
+                        <li>
+                          <a
+                            class="dropdown-item edit cursor-hover cursor-pointer"
+                            (click)="getSelectedRow(item)"
+                            >Edit</a
+                          >
+                        </li>
+                        <li>
+                          <a
+                            class="dropdown-item delete cursor-hover cursor-pointer"
+                            (click)="delete(item.VoucherId)"
+                            >Delete</a
+                          >
+                        </li>
+                      </ul>
+                    </div>
+                  </td>
+                </tr>
+                <div class="no-data-found" *ngIf="voucherResponse$.length == 0">
+                  No Data Found
+                </div>
+              </tbody>
+            </table>
+            <div *ngIf="isLoadingData">
+              <app-table-loader></app-table-loader>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Response-Error-Message  -->
+<div class="loading-newpopup" *ngIf="loadingerror">
+  <div class="newpopup">
+    <div class="Errormessage">
+      <p><strong>Error</strong></p>
+      <p>You are not authorized to perform this Operation</p>
+    </div>
+    <button class="btn btn-danger ErrorClosebtn" (click)="hideErrorPopup()">
+      Cancel
+    </button>
+  </div>
+</div>
+<p-dialog
+  [(visible)]="AddNewDialogue"
+  [style]="{ width: '600px' }"
+  header="Create Voucher"
+  [modal]="true"
+  styleClass="p-fluid"
+  [closable]="true"
+>
+  <div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+      <div class="card-wrapper-modal">
+        <form [formGroup]="form" novalidate>
+          <div class="row align-items-center">
+            <div class="col-lg-4 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label
+                  >Voucher Type
+                  <span class="astrik">*</span>
+                </label>
+                <p-dropdown
+                  [style]="{ width: '245px' }"
+                  [options]="voucherTypeResponse$"
+                  [filter]="true"
+                  formControlName="VoucherTypeCode"
+                  optionLabel="VoucherTypeName"
+                  optionValue="VoucherTypeCode"
+                  filterBy="VoucherTypeName"
+                  placeholder="Voucher Type"
+                  [panelStyle]="{ overflow: 'auto' }"
+                  [showClear]="true"
+                  appendTo="body"
+                  (onChange)="changeVoucherType($event)"
+                >
+                </p-dropdown>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label
+                  >Financial Year
+                  <span class="astrik">*</span>
+                </label>
+                <p-dropdown
+                  [style]="{ width: '245px' }"
+                  [options]="voucherYearResponse$"
+                  [filter]="true"
+                  formControlName="FinancialYearCode"
+                  optionLabel="YearTitle"
+                  optionValue="FinancialYearCode"
+                  filterBy="YearTitle"
+                  placeholder="Financial Year"
+                  [panelStyle]="{ overflow: 'auto' }"
+                  [showClear]="true"
+                  appendTo="body"
+                  (onChange)="changeFinancialYear($event)"
+                >
+                </p-dropdown>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Financial Month <span class="astrik">*</span> </label>
+                <p-dropdown
+                  [style]="{ width: '245px' }"
+                  [options]="voucherMonthResponse$"
+                  [filter]="true"
+                  formControlName="FinancialMonthCode"
+                  optionLabel="MonthTitle"
+                  optionValue="FinancialMonthCode"
+                  filterBy="MonthTitle"
+                  placeholder="Financial Month"
+                  [panelStyle]="{ overflow: 'auto' }"
+                  [showClear]="true"
+                  appendTo="body"
+                  (onChange)="changeFinancialMonth($event)"
+                >
+                </p-dropdown>
+              </div>
+            </div>
+          </div>
+          <!-- <div class="row mt-2">
+            <div class="buttons-wrapper d-flex align-items-center gap-2">
+              <button type="button" Class="btn-update" (click)="add()" [disabled]="!IsEnabled">Create</button>
+            </div>
+          </div> -->
+        </form>
+      </div>
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    <!-- <button type="button" Class="btn-update" (click)="add()" [disabled]="!IsEnabled">Create</button> -->
+
+    <button type="button" Class="btn-update" (click)="hideaddNew()">
+      Cancel
+    </button>
+    <button
+      type="button"
+      Class="btn-save px-3"
+      (click)="add()"
+      [disabled]="!IsEnabled"
+    >
+      Create
+    </button>
+  </ng-template>
+</p-dialog>
+<p-dialog
+  [(visible)]="FiltersDialogue"
+  [style]="{ width: '600px' }"
+  header="Filter"
+  [modal]="true"
+  styleClass="p-fluid"
+  [closable]="true"
+>
+  <div class="row pd">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+      <div class="card-wrapper-modal">
+        <form [formGroup]="filterForm">
+          <div class="row align-items-center">
+            <div class="col-lg-4 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label
+                  >Voucher Type
+                  <span class="astrik">*</span>
+                </label>
+                <p-dropdown
+                  [style]="{ width: '245px' }"
+                  [options]="voucherTypeResponse$"
+                  [filter]="true"
+                  formControlName="VoucherTypeCode"
+                  optionLabel="VoucherTypeName"
+                  optionValue="VoucherTypeCode"
+                  filterBy="VoucherTypeName"
+                  placeholder="Voucher Type"
+                  [panelStyle]="{ overflow: 'auto' }"
+                  [showClear]="true"
+                  appendTo="body"
+                  (onChange)="changeVoucherType($event)"
+                >
+                </p-dropdown>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label
+                  >Financial Year
+                  <span class="astrik">*</span>
+                </label>
+                <p-dropdown
+                  [style]="{ width: '245px' }"
+                  [options]="voucherYearResponse$"
+                  [filter]="true"
+                  formControlName="FinancialYearCode"
+                  optionLabel="YearTitle"
+                  optionValue="FinancialYearCode"
+                  filterBy="YearTitle"
+                  placeholder="Financial Year"
+                  [panelStyle]="{ overflow: 'auto' }"
+                  [showClear]="true"
+                  appendTo="body"
+                  (onChange)="changeFinancialYear($event)"
+                >
+                </p-dropdown>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Financial Month <span class="astrik">*</span> </label>
+                <p-dropdown
+                  [style]="{ width: '245px' }"
+                  [options]="voucherMonthResponse$"
+                  [filter]="true"
+                  formControlName="FinancialMonthCode"
+                  optionLabel="MonthTitle"
+                  optionValue="FinancialMonthCode"
+                  filterBy="MonthTitle"
+                  placeholder="Financial Month"
+                  [panelStyle]="{ overflow: 'auto' }"
+                  [showClear]="true"
+                  appendTo="body"
+                  (onChange)="changeFinancialMonth($event)"
+                >
+                </p-dropdown>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    <button
+      type="button"
+      id="btnRefresh"
+      class="btn-refresh"
+      (click)="refresh()"
+    >
+      <img src="../../../../assets/icons/btn-refresh.svg" alt="" />
+    </button>
+    <button
+      type="button"
+      id="btnviewlist"
+      Class="btn-save px-3"
+      (click)="loadVouchers()"
+    >
+      View List
+    </button>
+  </ng-template>
+</p-dialog>

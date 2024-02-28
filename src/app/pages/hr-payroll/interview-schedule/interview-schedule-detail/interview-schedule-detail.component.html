@@ -1,0 +1,158 @@
+<form [formGroup]="interviewSForm" (ngSubmit)="onSubmit()">
+  <div class="row">
+    <!-- CandidateName -->
+    <div class="form-group col-md-3">
+      <label>Candidate Name <span class="astrik">*</span></label>
+      <input
+        type="text"
+        class="form-control text-xs"
+        placeholder="Enter Candidate Name"
+        formControlName="CandidateName"
+        name="CandidateName"
+      />
+      <div class="input-error">
+        <div *ngIf="formControls['CandidateName'].errors?.['required'] && formControls['CandidateName'].touched">
+          Candidate Name is required.
+        </div>
+        <div *ngIf="formControls['CandidateName'].errors?.['minlength'] && formControls['CandidateName'].touched">
+          Candidate Name must be at least 2 characters.
+        </div>
+        <div *ngIf="formControls['CandidateName'].errors?.['maxlength'] && formControls['CandidateName'].touched">
+          Candidate Name cannot exceed 50 characters.
+        </div>
+      </div>
+    </div>
+
+    <!-- CandidateEmail -->
+    <div class="form-group col-md-3">
+      <label>Candidate Email <span class="astrik">*</span></label>
+      <input
+        type="email"
+        class="form-control text-xs"
+        placeholder="Enter Candidate Email"
+        formControlName="CandidateEmail"
+        name="CandidateEmail"
+      />
+      <div class="input-error">
+        <div
+          *ngIf="formControls['CandidateEmail'].errors?.['required'] && formControls['CandidateEmail'].touched"
+        >
+          Candidate Email is required.
+        </div>
+        <div
+          *ngIf="formControls['CandidateEmail'].errors?.['email'] && formControls['CandidateEmail'].touched"
+        >
+          Invalid email format.
+        </div>
+      </div>
+    </div>
+
+    <!-- ContactNo -->
+    <div class="form-group col-md-3">
+      <label>Contact Number <span class="astrik">*</span></label>
+      <input
+        type="tel"
+        class="form-control text-xs"
+        placeholder="Enter Contact Number"
+        formControlName="ContactNo"
+        name="ContactNo"
+      />
+      <div class="input-error">
+        <div *ngIf="formControls['ContactNo'].errors?.['required'] && formControls['ContactNo'].touched">
+          Contact Number is required.
+        </div>
+        <div *ngIf="formControls['ContactNo'].errors?.['maxlength'] && formControls['ContactNo'].touched">
+          Contact Number cannot exceed 20 characters.
+        </div>
+      </div>
+
+    </div>
+
+    <!-- InterviewOn -->
+    <div class="form-group col-md-3">
+      <label>Interview On <span class="astrik">*</span></label>
+      <input
+        type="datetime-local"
+        class="form-control text-xs"
+        formControlName="InterviewOn"
+        name="InterviewOn"
+      />
+      <div class="input-error">
+        <div *ngIf="formControls['InterviewOn'].errors?.['required'] && formControls['InterviewOn'].touched">
+          Interview date is required.
+        </div>
+      </div>
+    </div>
+
+    <!-- InterviewBy -->
+    <div class="form-group col-md-3">
+      <label>Interview By</label>
+      <p-dropdown
+        formControlName="InterviewBy"
+        [options]="employeeList"
+        optionLabel="EmployeeName"
+        optionValue="EmployeeCode"
+        placeholder="Select Interviewer"
+        [filter]="true"
+        filterBy="EmployeeName"
+      >
+      </p-dropdown>
+    </div>
+
+    <!-- InterviewStatusCode -->
+    <div class="form-group col-md-3">
+      <label>Interview Status</label>
+      <p-dropdown
+        [options]="interviewStatusList"
+        optionLabel="InterviewStatusText"
+        optionValue="InterviewStatusCode"
+        formControlName="InterviewStatusCode"
+        placeholder="Select Interview Status"
+      >
+      </p-dropdown>
+    </div>
+
+    <!-- Remarks -->
+    <div class="form-group col-md-3">
+      <label>Remarks</label>
+      <textarea
+        class="form-control text-xs"
+        placeholder="Enter Remarks"
+        formControlName="Remarks"
+        name="Remarks"
+      ></textarea>
+    </div>
+
+    <!-- CVPath -->
+    <div class="form-group col-md-3">
+      <label>Upload CV <span class="astrik">*</span></label>
+      <input
+        type="file"
+        class="form-control"
+        id="fileUpload"
+        formControlName="CVPathValidation"
+        (change)="onFileSelect($event)"
+        accept="image/jpeg, image/png, image/gif,
+          application/pdf, image/x-eps, image/webp"
+      />
+      <div class="input-error">
+        <div *ngIf="formControls['CVPathValidation'].errors?.['required'] && formControls['CVPathValidation'].touched">
+          CV is required.
+        </div>
+      </div>
+    </div>
+    <div class="mt-2 container-center gap-2">
+      <button class="btn-save float-end mx-2 mt-1" type="submit">
+        {{ isUpdate ? "Update" : "Create" }}
+      </button>
+      <button
+        type="button"
+        id="btnRefresh"
+        class="btn-refresh float-end"
+        (click)="refresh()"
+      >
+        <img src="../../../../assets/icons/btn-refresh.svg" alt="" />
+      </button>
+    </div>
+  </div>
+</form>

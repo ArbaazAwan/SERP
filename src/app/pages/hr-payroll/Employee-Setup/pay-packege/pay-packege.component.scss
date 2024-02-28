@@ -1,0 +1,46 @@
+
+::ng-deep{
+  .p-dropdown-panel .p-dropdown-header .p-dropdown-filter{
+    height:30px !important;
+    font-size:12px !important;
+    }
+    .p-inputtext{
+      height: 30px !important;
+      font-size: 12px;
+    }
+
+  .p-multiselect-panel {
+    height: 30px !important;
+    width: 100% !important;
+  }
+  .p-multiselect {
+    width: 100% !important;
+
+}
+.p-dropdown-items-wrapper{
+  font-size: 12px !important;
+}
+.p-dropdown.p-dropdown-clearable .p-dropdown-label{
+  align-items: center !important;
+  display: flex !important;
+}
+}
+.loading-newpopup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.newpopup {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}

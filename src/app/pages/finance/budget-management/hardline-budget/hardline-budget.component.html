@@ -1,0 +1,205 @@
+<div class="main-container" (scroll)="onMainContainerScroll($event)">
+  <div [class]="isSticky ? 'sticky-header' : ''">
+    <app-store-project
+      [componentName]="componentName"
+      [hide]="false"
+    ></app-store-project>
+    <app-confirm-dialog></app-confirm-dialog>
+  </div>
+
+
+  <div class="row mt-3">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+          <div class="card-wrapper">
+            <p-toolbar>
+              <ng-template pTemplate="left">
+                <button
+                  pButton
+                  pRipple
+                  label="Add New"
+                  icon="pi pi-plus-circle one"
+                  class="btn-add"
+                  (click)="openNew()"
+                  style="margin-right: 4px"
+                ></button>
+              </ng-template>
+            </p-toolbar>
+      <div class="table-responsive card-wrapper custom-table table-width">
+        <p-table
+          class="datatable-width"
+          styleClass="p-datatable-sm"
+          [value]="budgeTransferList"
+          responsiveLayout="stack"
+          [breakpoint]="'960px'"
+          [paginator]="true"
+          [alwaysShowPaginator]="false"
+          [rows]="10"
+          [rowHover]="true"
+          [globalFilterFields]="[
+            'FinancialYear',
+            'CycleName',
+            'DateFrom',
+            'DateTo'
+          ]"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th pSortableColumn="CycleName" class="text-nowrap">
+                Budget Code
+                <p-sortIcon field="CycleName"></p-sortIcon>
+              </th>
+              <th pSortableColumn="CycleName" class="text-nowrap">
+                Budget Name
+                <p-sortIcon field="CycleName"></p-sortIcon>
+              </th>
+              <th pSortableColumn="BranchCode" class="text-nowrap">
+                Transfer Date
+                <p-sortIcon field="BranchCode"></p-sortIcon>
+              </th>
+              <th pSortableColumn="ProjectCode" class="text-nowrap">
+                Locked
+                <p-sortIcon field="ProjectCode"></p-sortIcon>
+              </th>
+              <th pSortableColumn="FinancialYear" class="text-nowrap">
+                Approved
+                <p-sortIcon field="FinancialYear"></p-sortIcon>
+              </th>
+              <th scope="col" class="text-center">Action</th>
+            </tr>
+            <tr>
+              <td colspan="7">
+                <hr />
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-item>
+            <tr>
+              <td>
+                <span class="ml-2">
+                  {{ item.BudgetCode }}
+                </span>
+              </td>
+
+              <td>
+                <span class="ml-2">
+                  {{ item.BudgetCycleTitle }}
+                </span>
+              </td>
+              <td>
+                <span class="ml-2">
+                  {{ item.TransferDate }}
+                </span>
+              </td>
+              <td>
+                <span
+                  [class]="
+                    item.IsLocked == true ? 'success-badge' : 'danger-badge'
+                  "
+                  >{{ item.IsLocked | yesNo }}</span
+                >
+              </td>
+              <td>
+                <span
+                  [class]="
+                    item.IsApproved == true ? 'success-badge' : 'danger-badge'
+                  "
+                  >{{ item.IsApproved | yesNo }}</span
+                >
+              </td>
+              <td>
+                <div class="dropdown text-center ml-2">
+                  <button
+                    class="three-dots"
+                    type="button"
+                    id="table-action-menu"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    <i class="fa fa-ellipsis-v"></i>
+                  </button>
+                  <ul class="dropdown-menu" aria-labelledby="table-action-menu">
+                    <li>
+                      <a
+                        class="dropdown-item edit cursor-hover cursor-pointer"
+                        (click)="updateMaster(item)"
+                        >Edit</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        class="dropdown-item delete cursor-hover cursor-pointer"
+                       (click)="delete(item)" >Delete</a
+                      >
+                    </li>
+                  </ul>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+    </div>
+  </div>
+</div>
+
+<div class="full-screen">
+  <p-dialog
+    [(visible)]="mainDialog"
+    header="Create New Entry"
+    [modal]="true"
+    styleClass="p-fluid"
+    class="modal-dialog full-screen"
+    [closable]="true"
+  >
+    <form [formGroup]="hardlineForm">
+      <div class="row">
+        <div class="col-lg-6 col-md-3 col-sm-12">
+          <div class="form-group">
+            <label class="mb-1 ml-1"
+              >Budget
+              <span class="astrik">*</span>
+            </label>
+            <p-dropdown
+              id="Branch"
+              [options]="budgeCycletListList"
+              [filter]="true"
+              optionLabel="BudgetCycleTitle"
+              optionValue="BudgetCode"
+              formControlName="BudgetCode"
+              filterBy="BudgetCycleTitle"
+              [showClear]="false"
+              placeholder="Select Branch"
+              [panelStyle]="{ overflow: 'auto' }"
+              appendTo="body"
+              (onChange)="onSelectBudget($event)"
+            >
+              <ng-template let-option pTemplate="item">
+                <div class="option-item">
+                  <div style="float: left; width: 70%">
+                    {{ option.BudgetCycleTitle }}
+                  </div>
+                </div>
+              </ng-template>
+            </p-dropdown>
+          </div>
+        </div>
+      </div>
+    </form>
+    <ng-template pTemplate="footer">
+      <div class="mt-2">
+        <button type="button" id="btnsave" class="btn-save" (click)="create()" [disabled]="hardlineForm.invalid">
+          Create
+        </button>
+        <button
+          type="button"
+          id="btnRefresh"
+          class="btn-refresh"
+          (click)="refresh()"
+        >
+          <img src="../../../../assets/icons/btn-refresh.svg" alt="" />
+        </button>
+      </div>
+    </ng-template>
+  </p-dialog>
+</div>

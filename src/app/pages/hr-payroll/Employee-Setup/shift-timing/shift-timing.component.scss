@@ -1,0 +1,180 @@
+
+.btnCheckBox{
+  width: 4.1rem;
+  margin-top: 2px;
+  margin-left: 4px;
+  border-radius: 12px;
+  font-size: 12px;
+  height: 30px;
+  padding: 5px;
+  border: 1px solid #ced4da;
+
+}
+
+.btnCheckBox:hover{
+  background-color: white;
+  color: black;
+  border:  1px solid #ced4da !important;
+
+}
+.chk{
+  border:  1px solid #ced4da !important;
+}
+.form-check{
+  padding-left: 0.5rem !important;
+}
+.form-check-inline{
+  align-items: center !important;
+  margin-right: 0px !important;
+}
+.labelChk{
+  margin-left: 18px;
+  margin-top: 2px;
+}
+
+input[type="time"] {
+  border: none;
+  color: #2a2c2d;
+  width: 170px;
+}
+
+input[type="time"]::-webkit-datetime-edit-fields-wrapper {
+  display: flex;
+}
+
+input[type="time"]::-webkit-datetime-edit-text {
+  padding: 9px 3px;
+}
+
+input[type="time"]::-webkit-datetime-edit-hour-field {
+  background-color: #f2f4f5;
+  border-radius: 15%;
+  padding: 8px 11px;
+  color: #2a2c2d;
+}
+
+input[type="time"]::-webkit-datetime-edit-minute-field {
+  color: #2a2c2d;
+  background-color: #f2f4f5;
+  border-radius: 15%;
+  padding: 8px 11px;
+}
+
+input[type="time"]::-webkit-datetime-edit-ampm-field {
+  background-color: #6082b6;
+  border-radius: 15%;
+  color: #fff;
+  padding: 8px 11px;
+}
+
+input[type="time"]::-webkit-clear-button {
+  display: none;
+}
+
+input[type="time"]::-webkit-inner-spin-button {
+  display: none;
+}
+
+input[type="time"]:focus {
+  outline: none;
+  border: none;
+}
+//for clock time
+
+
+
+
+::ng-deep ngx-material-timepicker-content{
+
+ --body-background-color: #fff;
+--primary-font-family: 'Roboto',sans-serif;
+--button-color:#4f4cb0  !important;
+ --dial-active-color: #fff;
+ --dial-inactive-color: rgba(255, 255, 255, .5);
+ --dial-background-color: #4f4cb0 !important;
+ --dial-editable-active-color: #4f4cb0 !important;
+ --dial-editable-background-color: #fff;
+ --clock-face-time-active-color: #fff;
+ --clock-face-time-inactive-color: #6c6c6c;
+ --clock-face-inner-time-inactive-color: #929292;
+ --clock-face-time-disabled-color: #c5c5c5;
+ --clock-face-background-color: #f0f0f0;
+ --clock-hand-color: #4f4cb0 !important;
+
+}
+
+
+::ng-deep .clock-face{
+  height: 180px !important;
+  width: 180px !important;
+
+}
+::ng-deep .clock-face__number--outer{
+  height: calc(180px / 2 - 20px) !important;
+}
+::ng-deep .timepicker{
+
+  width:210px !important;
+}
+::ng-deep .timepicker__actions{
+  padding:3px !important;
+}
+
+::ng-deep .clock-face__clock-hand{
+  height: 60px !important;
+    width: 2px;
+    transform-origin: 0 100%;
+    position: absolute;
+    top: calc(50% - 60px) !important;
+}
+::ng-deep .timepicker-dial__control{
+  font-size: 30px !important;
+  width: 32px !important;
+}
+::ng-deep .timepicker-dial__time{
+  font-size: 30px !important;
+}
+::ng-deep  .timepicker__header {
+  padding: 0px 48px !important;
+}
+::ng-deep .timepicker-period__btn{
+  font-size: 11px!important;
+}
+
+::ng-deep.clock-face__clock-hand:after {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background-color: inherit;
+    position: absolute;
+    bottom: -3px;
+    left: -2.9px!important;
+
+}
+
+
+.loading-newpopup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.newpopup {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+
+
+
+//  timepicker__body ng-tns-c266-51

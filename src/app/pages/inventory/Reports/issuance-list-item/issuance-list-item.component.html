@@ -1,0 +1,159 @@
+<div class="main-container">
+  <div class="container">
+    <div class="col-lg-12 col-md-12 col-sm-12 mb-2 FormsHeading">
+      <p class="mx-2 my-1">Issuance List Items</p>
+    </div>
+    <div class="">
+      <form
+        class="justify-content-center"
+        style="width: 100%"
+        [formGroup]="form"
+        novalidate
+      >
+        <div
+          class="row text-center"
+          style="font-size: small; display: flex; justify-content: center"
+        >
+          <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="card p-3">
+              <div class="row mt-2">
+                <div class="col-xl-3 col-lg-4">
+                  <label class="float-md-left d-flex float-sm-left">
+                    Store
+                    <span class="astrik">*</span>
+                  </label>
+                  <div class="group-gap">
+                    <div class="d-block my-1">
+                      <div class="mb-3">
+                        <p-dropdown
+                          id="StoreCode"
+                          [options]="storeResponse$"
+                          [filter]="true"
+                          formControlName="StoreCode"
+                          optionLabel="DepartmentName"
+                          optionValue="DepartmentCode"
+                          filterBy="DepartmentName"
+                          [showClear]="true"
+                          placeholder="Select Store"
+                          [panelStyle]="{ overflow: 'auto' }"
+                        >
+                          <ng-template let-option pTemplate="item">
+                            <span style="width: 85%; float: left">{{
+                              option.DepartmentName
+                            }}</span>
+                          </ng-template>
+                        </p-dropdown>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xl-3 col-lg-4">
+                  <label class="float-md-left d-flex float-sm-left"
+                    >Date From
+                  </label>
+                  <input
+                    type="date"
+                    class="form-control custombox"
+                    formControlName="DateFrom"
+                  />
+                </div>
+                <div class="col-xl-3 col-lg-4">
+                  <label class="float-md-left d-flex float-sm-left"
+                    >Date To
+                  </label>
+                  <input
+                    type="date"
+                    class="form-control custombox"
+                    formControlName="DateTo"
+                  />
+                </div>
+
+                <div
+                  class="row justify-content-center"
+                  style="align-items: flex-end; padding-bottom: 1.5%"
+                >
+                  <div
+                    class="row justify-content-start"
+                    style="align-items: baseline"
+                  >
+                    <div class="row justify-content-center">
+                      <ng-container>
+                        <Button
+                          type="button"
+                          id="btnviewlist"
+                          Class="btn primary-button-color btnFix mt-3 mb-2"
+                          (click)="storeIssuanceListReport()"
+                          >Preview / Print</Button
+                        >
+
+                        <Button
+                          type="button"
+                          id="btnviewlist"
+                          Class="btn primary-button-color btnFix mt-3 ml-2 mb-2"
+                          (click)="getStoreIssuanceList()"
+                          >View List</Button
+                        >
+                        <Button
+                          type="button"
+                          id="btnviewlist"
+                          Class="btn primary-button-color btnFix mt-3 ml-2 mb-2"
+                          (click)="refresh()"
+                          >Refresh</Button
+                        >
+                      </ng-container>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+      <div class="col-lg-12 col-md-12 mt-3 p-0">
+        <div class="table-responsive card-wrapper custom-table">
+          <table class="table table-striped table-borderless">
+            <thead>
+              <tr>
+                <th scope="col">Issuance No</th>
+                <th scope="col">Issuance Date</th>
+                <th scope="col">Iss To Dept</th>
+                <th scope="col">Item</th>
+                <th scope="col">Unit</th>
+                <th scope="col">Actual Rate</th>
+                <th scope="col">Avg Rate</th>
+                <th scope="col">Last Purchase Rate</th>
+                <th scope="col">Issued Quantity</th>
+                <th scope="col">Value</th>
+                <th scope="col">Work Order</th>
+                <th scope="col">Demand No</th>
+              </tr>
+            </thead>
+            <tbody *ngIf="storeIssuanceList.length !== 0">
+              <tr *ngFor="let item of storeIssuanceList">
+                <td>{{ item.IssuanceNo }}</td>
+                <td>{{ item.IssuanceDate | date : "MMM-d-y" }}</td>
+                <td>{{ item.IssToDept }}</td>
+                <td>{{ item.Item }}</td>
+                <td>{{ item.Unit }}</td>
+                <td>{{ item.ActualRate }}</td>
+                <td>{{ item.AvgRate }}</td>
+                <td>{{ item.LastPurRate }}</td>
+                <td>{{ item.IssuedQty }}</td>
+                <td>{{ item.Value }}</td>
+                <td>{{ item.WorkOrder }}</td>
+                <td>{{ item.DemandNo }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="loading-popup" *ngIf="loading">
+      <div class="overlay"></div>
+      <div class="popup">
+        <div class="spinner"></div>
+        <p class="text-center mt-2 mb-0">Report Generating</p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,1298 @@
+<ngx-loading-bar [includeSpinner]="false" [height]="'3px'"></ngx-loading-bar>
+
+<app-confirm-dialog></app-confirm-dialog>
+
+<div class="main-container">
+  <div class="">
+    <div>
+      <p class="heading">{{ componentName }} detail</p>
+    </div>
+  </div>
+
+  <div class="">
+    <div class="row">
+      <form
+        class="col-lg-12 col-md-12 col-sm-12"
+        [formGroup]="Masterform"
+        novalidate
+      >
+        <div class="card-wrapper mb-3">
+          <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>{{ componentName }}#</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="SaleInvoiceNo"
+                  [(ngModel)]="masterResponse$.SaleInvoiceNo"
+                  [attr.disabled]="true"
+                />
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Store</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="Store"
+                  [(ngModel)]="masterResponse$.Store"
+                  [attr.disabled]="true"
+                />
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Project </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="ProjectName"
+                  [attr.disabled]="true"
+                  [(ngModel)]="masterResponse$.ProjectName"
+                />
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Document Type</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [attr.disabled]="true"
+                  [(ngModel)]="masterResponse$.SaleType"
+                  [ngModelOptions]="{ standalone: true }"
+                />
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Customer</label>
+                <p-dropdown
+                  [options]="customerResponse$"
+                  [filter]="true"
+                  optionLabel="PartyName"
+                  optionValue="PartyCode"
+                  formControlName="CustomerId"
+                  [(ngModel)]="masterResponse$.CustomerId"
+                  filterBy="PartyName"
+                  placeholder="Select Customer"
+                  [panelStyle]="{ overflow: 'auto' }"
+                  [showClear]="true"
+                  (onChange)="changeCustomers($event)"
+                >
+                </p-dropdown>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Sales Person</label>
+                <p-dropdown
+                  [style]="{ width: '95%' }"
+                  [options]="saleResponse$"
+                  [filter]="true"
+                  optionLabel="Name"
+                  optionValue="SalesManId"
+                  formControlName="SalesManId"
+                  [(ngModel)]="masterResponse$.SalesManId"
+                  filterBy="Name"
+                  placeholder="Select Sales Person"
+                  [panelStyle]="{ overflow: 'auto' }"
+                  [showClear]="true"
+                  (onChange)="changeSalesMan($event)"
+                >
+                </p-dropdown>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Doc Date</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  formControlName="SaleDate"
+                  [(ngModel)]="masterResponse$.SaleDate"
+                />
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 align-self-center">
+              <div class="checkbox">
+                <input
+                  type="checkbox"
+                  id="lock"
+                  class="form-checkbox"
+                  formControlName="IsLocked"
+                  name="IsLocked"
+                  [(ngModel)]="masterResponse$.IsLocked"
+                />
+                <label class="form-check-label" for="lock">Locked</label>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Document Type</label>
+                <select
+                  class="form-select"
+                  formControlName="SaleType"
+                  [(ngModel)]="saleTypeResponse$.SalesManId"
+                  (change)="changeSaleType($event)"
+                >
+                  <option
+                    *ngFor="let user of saleTypeResponse$; let i = index"
+                    [ngValue]="user"
+                    [value]="user?.SaleTypeCode"
+                  >
+                    {{ user.SaleType }}
+                  </option>
+                </select>
+              </div>
+            </div>
+            <div class="col-lg-12">
+              <div class="d-flex align-items-center gap-2">
+                <button
+                  type="button"
+                  class="btn-update"
+                  [disabled]="IsLocked"
+                  (click)="openCopyDocument()"
+                  [disabled]="!selectedSaleType"
+                >
+                  Import Data
+                </button>
+                <button
+                  type="button"
+                  class="btn-save"
+                  (click)="openUploadDoc()"
+                >
+                  Upload Document
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="row">
+      <form
+        class="col-lg-12 col-md-12 col-sm-12"
+        style="font-size: small"
+        [formGroup]="Detailform"
+        novalidate
+      >
+        <div class="card-wrapper mb-3">
+          <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Items </label>
+                <div class="d-flex align-items-center gap-2">
+                  <p-dropdown
+                    [options]="storeItemResponse$"
+                    [filter]="true"
+                    optionLabel="ItemName"
+                    optionValue="Code"
+                    [(ngModel)]="detailResponse$.ItemCode"
+                    [ngModelOptions]="{ standalone: true }"
+                    filterBy="ItemName"
+                    placeholder="Select Item"
+                    [panelStyle]="{ overflow: 'auto' }"
+                    [showClear]="true"
+                    (onChange)="changeStoreItem($event)"
+                  >
+                  </p-dropdown>
+                  <button (click)="openNew()" class="btn-dropdown">
+                    <img src="../../.././../assets/icons/plus.svg" alt="" />
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Unit </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="Unit"
+                  [(ngModel)]="detailResponse$.Unit"
+                  [attr.disabled]="true"
+                />
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Unit Sale Price</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  formControlName="SalePrice"
+                  [appDecimal2]="2"
+                  [(ngModel)]="detailResponse$.SalePrice"
+                  (change)="calculateLineTotal()"
+                />
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Qty </label>
+                <input
+                  type="number"
+                  class="form-control"
+                  formControlName="Qty"
+                  [(ngModel)]="detailResponse$.Qty"
+                  (change)="calculateLineTotal()"
+                />
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Line Total</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  formControlName="LineTotal"
+                  [(ngModel)]="detailResponse$.LineTotal"
+                  [appDecimal2]="2"
+                  [attr.disabled]="true"
+                />
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Tax % </label>
+                <input
+                  type="number"
+                  class="form-control"
+                  formControlName="TaxPercentage"
+                  [(ngModel)]="detailResponse$.TaxPercentage"
+                  [appDecimal2]="2"
+                  (change)="calculateTaxPercentage()"
+                />
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Tax Amount</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  formControlName="TaxAmount"
+                  [appDecimal2]="2"
+                  [(ngModel)]="detailResponse$.TaxAmount"
+                  (change)="calculateTaxAmount()"
+                />
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Total Amount With Tax</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  formControlName="TotalAmountWithTax"
+                  [(ngModel)]="detailResponse$.TotalAmountWithTax"
+                  [appDecimal2]="2"
+                  [attr.disabled]="true"
+                />
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Discount%</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  formControlName="DiscountPercentage"
+                  [(ngModel)]="detailResponse$.DiscountPercentage"
+                  [appDecimal2]="2"
+                  (change)="calculateDiscountPercentage()"
+                />
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Discount Amount</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  formControlName="DiscountAmount"
+                  [(ngModel)]="detailResponse$.DiscountAmount"
+                  [appDecimal2]="2"
+                  (change)="calculateDiscountAmount()"
+                />
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Net Total</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="NetTotal"
+                  [(ngModel)]="detailResponse$.NetTotal"
+                  [appDecimal2]="2"
+                  [attr.disabled]="true"
+                />
+              </div>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12">
+              <div class="d-flex align-items-center gap-2">
+                <button
+                  [disabled]="isUpdate"
+                  type="button"
+                  class="btn-save"
+                  (click)="addorUpdateDetail()"
+                >
+                  Save
+                </button>
+                <button
+                  [disabled]="!isUpdate"
+                  type="button"
+                  class="btn-update"
+                  (click)="onRowEditSave()"
+                >
+                  Update
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="row">
+      <form [formGroup]="POform">
+        <p-dialog
+          [(visible)]="prdialog"
+          [style]="{ width: '900px' }"
+          [header]="'Copy From PO'"
+          [modal]="true"
+          styleClass="p-fluid"
+          [closable]="true"
+        >
+          <ng-template pTemplate="content">
+            <div class="row mb-3">
+              <div class="col-12 md:col-4">
+                <div class="p-inputgroup">
+                  <input
+                    type="text"
+                    pInputText
+                    placeholder="Enter PO No#"
+                    formControlName="PONo"
+                  />
+                  <button
+                    type="button"
+                    pButton
+                    pRipple
+                    icon="pi pi-search"
+                    styleClass="p-button-warn"
+                    [disabled]="IsLocked"
+                    (click)="loadPendingPO()"
+                  ></button>
+                </div>
+              </div>
+            </div>
+            <p-table
+              #dt
+              [value]="poResponse$"
+              [rows]="5"
+              class="datatable-width"
+              [paginator]="poResponse$.length > 5 ? true : false"
+              styleClass="p-datatable-sm"
+              responsiveLayout="stack"
+              [breakpoint]="'960px'"
+              [rowHover]="true"
+              dataKey="id"
+              currentPageReportTemplate="{first} to {last} of {totalRecords} entries"
+              [showCurrentPageReport]="true"
+            >
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>Sr#</th>
+                  <th>Item Code</th>
+                  <th>Item Name</th>
+                  <th>Unit</th>
+                  <th>PO Qty</th>
+                  <th>Balance To Rcv</th>
+                  <th style="width: 15%; padding-left: 8px">Add To GRN</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-m let-rowData>
+                <tr *ngFor="let item of rowData; let i = index">
+                  <td>{{ m.POSrNo }}</td>
+                  <td>{{ m.ItemCode }}</td>
+                  <td>{{ m.ItemName }}</td>
+                  <td>{{ m.Unit }}</td>
+                  <td>{{ m.POQty }}</td>
+                  <td>{{ m.BalToRcvQty }}</td>
+                  <td>
+                    <input
+                      pInputText
+                      type="number"
+                      [ngModelOptions]="{ standalone: true }"
+                      [(ngModel)]="m.GRNQty"
+                      (blur)="getObjonBlur(m)"
+                    />
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </ng-template>
+
+          <ng-template pTemplate="footer">
+            <button
+              pButton
+              pRipple
+              label="Cancel"
+              icon="pi pi-times"
+              class="p-button-text"
+              [disabled]="IsLocked"
+              (click)="hideCopyDemand()"
+            ></button>
+            <button
+              pButton
+              pRipple
+              label="Shift All"
+              icon="pi pi-arrow-up-right"
+              class="p-button-text"
+              [disabled]="IsLocked"
+              (click)="shiftDetail()"
+            ></button>
+            <button
+              pButton
+              pRipple
+              label="Add To Purchase Order"
+              icon="pi pi-check"
+              class="p-button-text"
+              [disabled]="IsLocked"
+              (click)="changeExp()"
+            ></button>
+          </ng-template>
+        </p-dialog>
+      </form>
+    </div>
+
+    <!--copy document-->
+    <p-dialog
+      [(visible)]="prdialogCopy"
+      [style]="{ width: '60%' }"
+      [header]="'Copy From Invoice'"
+      [modal]="true"
+      styleClass="p-fluid"
+      [closable]="true"
+    >
+      <ng-template pTemplate="content">
+        <form
+          class="col-lg-12 col-md-12 col-sm-12"
+          [formGroup]="CopySaleform"
+          novalidate
+        >
+          <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-12">
+              <div class="form-group d-flex align-items-center gap-2">
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter Document No#"
+                  formControlName="SaleInvoiceNo"
+                />
+                <button
+                  class="btn-save text-nowrap"
+                  (click)="loadPendingCopy()"
+                  [disabled]="IsLocked"
+                >
+                  Load Data
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+        <div
+          class="table-responsive card-wrapper custom-table"
+          *ngIf="docCopyResponse$.length > 0"
+        >
+          <table
+            class="table table-striped table-borderless"
+            *ngIf="!isLoadingData"
+          >
+            <thead>
+              <tr>
+                <th class="text-nowrap">SrNo#</th>
+                <th class="text-nowrap">Item Code</th>
+                <th class="text-nowrap">Unit Code</th>
+                <th class="text-nowrap">Item Name</th>
+                <th class="text-nowrap">Sale Price</th>
+                <th class="text-nowrap">Tax %</th>
+                <th class="text-nowrap">Tax Amount</th>
+                <th class="text-nowrap">Discount %</th>
+                <th class="text-nowrap">Discount Amount</th>
+                <th class="text-nowrap">Total Amount With Tax</th>
+                <th class="text-nowrap">Qty</th>
+                <th class="text-nowrap">Imported Qty</th>
+                <th class="text-nowrap">Bal Qty</th>
+                <th class="text-nowrap">Add To Invoice</th>
+              </tr>
+            </thead>
+            <hr />
+            <tbody>
+              <tr
+                *ngFor="let item of docCopyResponse$; let odd = odd"
+                [ngClass]="{ 'odd-row': odd }"
+              >
+                <td>{{ item.SaleInvoiceSrNo }}</td>
+                <td>{{ item.ItemCode }}</td>
+                <td>{{ item.ItemUnitCode }}</td>
+                <td>{{ item.ItemName }}</td>
+                <td>{{ item.SalePrice }}</td>
+                <td>{{ item.TaxPercentage }}</td>
+                <td>{{ item.TaxAmount }}</td>
+                <td>{{ item.DiscountPercentage }}</td>
+                <td>{{ item.DiscountAmount }}</td>
+                <td>{{ item.TotalAmountWithTax }}</td>
+                <td>{{ item.Qty }}</td>
+                <td>{{ item.AlreadyImpQty }}</td>
+                <td>{{ item.BalQty }}</td>
+                <td>
+                  <input
+                    pInputText
+                    type="text"
+                    [(ngModel)]="item.textBoxValue"
+                    (keyup)="getObjonBlur(item)"
+                  />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div *ngIf="isLoadingData">
+            <app-table-loader></app-table-loader>
+          </div>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="footer">
+        <button
+          pButton
+          pRipple
+          label="Cancel"
+          icon="pi pi-times"
+          class="p-button-text"
+          [disabled]="IsLocked"
+          (click)="hideCopyDocument()"
+        ></button>
+        <button
+          pButton
+          pRipple
+          label="Shift All"
+          icon="pi pi-arrow-up-right"
+          class="p-button-text"
+          [disabled]="IsLocked"
+          (click)="shiftDetail()"
+        ></button>
+        <button
+          pButton
+          pRipple
+          label="Add To Invoice"
+          icon="pi pi-check"
+          class="p-button-text"
+          [disabled]="IsLocked"
+          (click)="changeExpCopy()"
+        ></button>
+      </ng-template>
+    </p-dialog>
+
+    <!--upload documents -->
+
+    <!-- <p-dialog header="Document Viewer" [(visible)]="displayDocumentDialog" [modal]="true" [responsive]="true"
+      [baseZIndex]="10000" (onHide)="closeDocumentViewDialog()" [style]="{ width: '950px', height: '600px' }">
+      <div *ngIf="imagePathOnServer">
+        <img [src]="imagePathOnServer" alt="Document" style="width: 100%" />
+      </div>
+    </p-dialog> -->
+
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 mt-3">
+        <div class="table-responsive card-wrapper custom-table">
+          <table
+            class="table table-striped table-borderless"
+            *ngIf="!isLoadingData"
+          >
+            <thead>
+              <tr>
+                <th scope="col">Sr#</th>
+                <th scope="col">Item Name</th>
+                <th scope="col">Unit</th>
+                <th scope="col">Sale Price</th>
+                <th scope="col">Qty</th>
+                <th scope="col">Tax Amount</th>
+                <th scope="col">Dis Amount</th>
+                <th scope="col">Net Total</th>
+                <th scope="col" class="text-center">Action</th>
+              </tr>
+            </thead>
+            <hr />
+            <tbody>
+              <tr
+                *ngFor="let item of tableResponse$; let odd = odd"
+                [ngClass]="{ 'odd-row': odd }"
+              >
+                <td>{{ item.SaleInvoiceSrNo }}</td>
+                <td>{{ item.ItemName }}</td>
+                <td>{{ item.ItemUnit }}</td>
+                <td>{{ item.SalePrice }}</td>
+                <td>{{ item.Qty }}</td>
+                <td>{{ item.TaxAmount }}</td>
+                <td>{{ item.DiscountAmount }}</td>
+                <td>{{ item.NetTotal }}</td>
+                <td>
+                  <div class="dropdown text-center">
+                    <button
+                      class="three-dots"
+                      type="button"
+                      id="table-action-menu"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      <i class="fa fa-ellipsis-v"></i>
+                    </button>
+                    <ul
+                      class="dropdown-menu"
+                      aria-labelledby="table-action-menu"
+                    >
+                      <li>
+                        <a
+                          class="dropdown-item edit cursor-hover cursor-pointer"
+                          (click)="onRowEditInit(item)"
+                          >Edit</a
+                        >
+                      </li>
+                      <li>
+                        <a
+                          [class]="
+                            IsLocked
+                              ? 'disabled-link'
+                              : 'dropdown-item delete cursor-hover cursor-pointer'
+                          "
+                          (click)="deleteSaleDetail(item.SaleInvoiceSrNo)"
+                          >Delete</a
+                        >
+                      </li>
+                    </ul>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div *ngIf="isLoadingData">
+            <app-table-loader></app-table-loader>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 mt-3 mb-2">
+        <div class="card-wrapper">
+          <div class="row">
+            <div class="col-lg-8 col-md-8 col-sm-12">
+              <div class="row">
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                  <div class="form-group">
+                    <label>Discount Amount</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Enter Your Discount Amount"
+                      [formControl]="DiscountAmount"
+                      [(ngModel)]="masterResponse$.DiscountAmount"
+                      (change)="calculateReceivableAmount()"
+                    />
+                  </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                  <div class="form-group">
+                    <label>Discount Percentage</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Enter Your Discount Percentage"
+                      [formControl]="DiscountPercentage"
+                      [(ngModel)]="masterResponse$.DiscountPercentage"
+                      (change)="calculateReceivablePercentage()"
+                    />
+                  </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                  <div class="form-group">
+                    <label>Payment Mode</label>
+                    <select
+                      class="form-select"
+                      [formControl]="InstrumentTypeId"
+                      [(ngModel)]="masterResponse$.InstrumentTypeId"
+                    >
+                      <option
+                        *ngFor="let x of instrumentResponse$; let i = index"
+                        [ngValue]="x"
+                        [value]="x?.InstrumentTypeId"
+                        [selected]="i == instrumentResponse$.length - 1"
+                      >
+                        {{ x.InstrumentTypeName }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                  <div class="form-group">
+                    <label>Print Page</label>
+                    <select
+                      class="form-select"
+                      [(ngModel)]="selectedPrintPage"
+                      (ngModelChange)="onSelectPrintPage($event)"
+                    >
+                      <option value="1">A4</option>
+                      <option value="2">3 Inches</option>
+                      <option value="3">4 Inches</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-lg-12">
+                  <div class="d-flex align-items-center gap-2">
+                    <button
+                      type="button"
+                      class="btn-update"
+                      [disabled]="IsLocked"
+                      (click)="updateMaster()"
+                    >
+                      Update
+                    </button>
+                    <button
+                      type="button"
+                      class="btn-save"
+                      [disabled]="IsLocked"
+                      (click)="goToPage()"
+                    >
+                      New
+                    </button>
+                    <button
+                      type="button"
+                      class="btn-save"
+                      [disabled]="IsLocked"
+                    >
+                      Post
+                    </button>
+                    <button
+                      type="button"
+                      class="btn-save"
+                      (click)="SalesInvoiceReportpdf()"
+                    >
+                      Preview / Print
+                    </button>
+                    <!-- <button type="button" class="btn-save" >Email</button> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-12">
+              <div class="row">
+                <div class="col-lg-12 col-md-6 col-sm-12">
+                  <div
+                    class="d-flex align-items-center justify-content-between"
+                  >
+                    <label class="total-label">Gross Amount</label>
+                    <span class="amount">{{ GrossAmount }}</span>
+                  </div>
+                </div>
+                <div class="col-lg-12 col-md-6 col-sm-12">
+                  <div
+                    class="d-flex align-items-center justify-content-between"
+                  >
+                    <label class="total-label">Tax Amount</label>
+                    <span class="amount">{{ TaxAmount }}</span>
+                  </div>
+                </div>
+                <div class="col-lg-12 col-md-6 col-sm-12">
+                  <div
+                    class="d-flex align-items-center justify-content-between"
+                  >
+                    <label class="total-label">Line Discount</label>
+                    <span class="amount">{{ LineDiscount }}</span>
+                  </div>
+                </div>
+                <div class="col-lg-12 col-md-6 col-sm-12">
+                  <div
+                    class="d-flex align-items-center justify-content-between"
+                  >
+                    <label class="total-label">Net Total</label>
+                    <span class="amount">{{ NetTotal }}</span>
+                  </div>
+                </div>
+                <div class="col-lg-12 col-md-6 col-sm-12">
+                  <div
+                    class="d-flex align-items-center justify-content-between"
+                  >
+                    <label class="total-label">Receivable</label>
+                    <span class="amount"> {{ Receivable }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- item-popup start  -->
+<p-dialog
+  [(visible)]="mainDialog"
+  [style]="{ width: '1050px', height: '600px' }"
+  [header]="mainHeader"
+  [modal]="true"
+  styleClass="p-fluid"
+  [closable]="false"
+>
+  <app-new-chartofitem></app-new-chartofitem>
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      pRipple
+      label="Cancel"
+      icon="pi pi-times"
+      class="p-button-text"
+      (click)="hideDialog()"
+    ></button>
+    <!-- <button
+      pButton
+      pRipple
+      label="Save"
+      icon="pi pi-check"
+      class="p-button-text"
+    ></button> -->
+  </ng-template>
+  <!-- item-popup end  -->
+
+  <!-- Size Form -->
+  <!-- <form [formGroup]="formSize">
+      <p-dialog
+        [(visible)]="innerDialogSize"
+        [style]="{ width: '450px' }"
+        [header]="innerHeader"
+        [modal]="true"
+        styleClass="p-fluid"
+        [closable]="true"
+      >
+        <ng-template pTemplate="content">
+          <div class="row mb-3">
+            <div class="col-md-8">
+              <label class="">Item Size</label>
+              <ng-container *ngIf="!isInnerUpdate">
+                <input
+                  type="text"
+                  formControlName="ItemSize"
+                  pInputText
+                  required
+                  autofocus
+                />
+              </ng-container>
+              <ng-container *ngIf="isInnerUpdate">
+                <input
+                  type="text"
+                  formControlName="ItemSize"
+                  [(ngModel)]="sizeModel$.ItemSize"
+                  pInputText
+                  required
+                  autofocus
+                />
+              </ng-container>
+            </div>
+            <div class="col-md-4">
+              <label class="float-md-left d-flex float-sm-left mb-3"
+                >Is Active</label
+              >
+              <ng-container *ngIf="!isInnerUpdate">
+                <input
+                  type="checkbox"
+                  style="margin-left: 23%"
+                  formControlName="IsActive"
+                  required
+                  autofocus
+                />
+              </ng-container>
+              <ng-container *ngIf="isInnerUpdate">
+                <input
+                  type="checkbox"
+                  style="accent-color: blue"
+                  formControlName="IsActive"
+                  [(ngModel)]="sizeModel$.IsActive"
+                  required
+                  autofocus
+                />
+              </ng-container>
+            </div>
+          </div>
+          <p-table
+            #dt
+            [value]="sizeResponse$"
+            [rows]="3"
+            class="datatable-width"
+            [paginator]="true"
+            styleClass="p-datatable-sm"
+            responsiveLayout="stack"
+            [breakpoint]="'960px'"
+            [rowHover]="true"
+            dataKey="id"
+            currentPageReportTemplate="{first} to {last} of {totalRecords} entries"
+            [showCurrentPageReport]="true"
+          >
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Code#</th>
+                <th>Item Size</th>
+                <th>Is Active</th>
+                <th>Edit/Delete</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-m>
+              <tr>
+                <td>{{ m.ItemSizeCode }}</td>
+                <td>{{ m.ItemSize }}</td>
+                <td>{{ m.IsActive }}</td>
+                <td>
+                  <button
+                    pButton
+                    pRipple
+                    icon="pi pi-pencil"
+                    class="p-button-rounded p-button-success p-button-sm p-mr-2 mx-1"
+
+                  ></button>
+                  <button
+                    pButton
+                    pRipple
+                    icon="pi pi-trash"
+                    class="p-button-rounded p-button-danger p-button-sm mx-1"
+
+                  ></button>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </ng-template>
+
+        <ng-template pTemplate="footer">
+          <button
+            pButton
+            pRipple
+            label="Cancel"
+            icon="pi pi-times"
+            class="p-button-text"
+
+          ></button>
+          <button
+            pButton
+            pRipple
+            [label]="innerBtn"
+            icon="pi pi-check"
+            class="p-button-text"
+
+          ></button>
+        </ng-template>
+      </p-dialog>
+    </form> -->
+</p-dialog>
+<!-- customer-popup start-->
+<p-dialog
+  [(visible)]="productDialog"
+  [style]="{ width: '1050px', height: '600px' }"
+  [header]="headerCustomer"
+  [modal]="true"
+  styleClass="p-fluid"
+  [closable]="false"
+>
+  <app-addnewvariable></app-addnewvariable>
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      pRipple
+      label="Cancel"
+      icon="pi pi-times"
+      class="p-button-text"
+      (click)="hideDialogCustomer()"
+    ></button>
+    <!-- <button
+      pButton
+      pRipple
+      label="Save"
+      icon="pi pi-check"
+      class="p-button-text"
+    ></button> -->
+  </ng-template>
+  <!-- item-popup end  -->
+
+  <!-- Size Form -->
+  <!-- <form [formGroup]="formSize">
+      <p-dialog
+        [(visible)]="innerDialogSize"
+        [style]="{ width: '450px' }"
+        [header]="innerHeader"
+        [modal]="true"
+        styleClass="p-fluid"
+        [closable]="true"
+      >
+        <ng-template pTemplate="content">
+          <div class="row mb-3">
+            <div class="col-md-8">
+              <label class="">Item Size</label>
+              <ng-container *ngIf="!isInnerUpdate">
+                <input
+                  type="text"
+                  formControlName="ItemSize"
+                  pInputText
+                  required
+                  autofocus
+                />
+              </ng-container>
+              <ng-container *ngIf="isInnerUpdate">
+                <input
+                  type="text"
+                  formControlName="ItemSize"
+                  [(ngModel)]="sizeModel$.ItemSize"
+                  pInputText
+                  required
+                  autofocus
+                />
+              </ng-container>
+            </div>
+            <div class="col-md-4">
+              <label class="float-md-left d-flex float-sm-left mb-3"
+                >Is Active</label
+              >
+              <ng-container *ngIf="!isInnerUpdate">
+                <input
+                  type="checkbox"
+                  style="margin-left: 23%"
+                  formControlName="IsActive"
+                  required
+                  autofocus
+                />
+              </ng-container>
+              <ng-container *ngIf="isInnerUpdate">
+                <input
+                  type="checkbox"
+                  style="accent-color: blue"
+                  formControlName="IsActive"
+                  [(ngModel)]="sizeModel$.IsActive"
+                  required
+                  autofocus
+                />
+              </ng-container>
+            </div>
+          </div>
+          <p-table
+            #dt
+            [value]="sizeResponse$"
+            [rows]="3"
+            class="datatable-width"
+            [paginator]="true"
+            styleClass="p-datatable-sm"
+            responsiveLayout="stack"
+            [breakpoint]="'960px'"
+            [rowHover]="true"
+            dataKey="id"
+            currentPageReportTemplate="{first} to {last} of {totalRecords} entries"
+            [showCurrentPageReport]="true"
+          >
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Code#</th>
+                <th>Item Size</th>
+                <th>Is Active</th>
+                <th>Edit/Delete</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-m>
+              <tr>
+                <td>{{ m.ItemSizeCode }}</td>
+                <td>{{ m.ItemSize }}</td>
+                <td>{{ m.IsActive }}</td>
+                <td>
+                  <button
+                    pButton
+                    pRipple
+                    icon="pi pi-pencil"
+                    class="p-button-rounded p-button-success p-button-sm p-mr-2 mx-1"
+
+                  ></button>
+                  <button
+                    pButton
+                    pRipple
+                    icon="pi pi-trash"
+                    class="p-button-rounded p-button-danger p-button-sm mx-1"
+
+                  ></button>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </ng-template>
+
+        <ng-template pTemplate="footer">
+          <button
+            pButton
+            pRipple
+            label="Cancel"
+            icon="pi pi-times"
+            class="p-button-text"
+
+          ></button>
+          <button
+            pButton
+            pRipple
+            [label]="innerBtn"
+            icon="pi pi-check"
+            class="p-button-text"
+
+          ></button>
+        </ng-template>
+      </p-dialog>
+    </form> -->
+</p-dialog>
+
+<!--upload documents -->
+<p-dialog
+  [(visible)]="uploadDoc"
+  [style]="{ width: '900px' }"
+  [header]="'Upload Documents'"
+  [modal]="true"
+  styleClass="p-fluid"
+  [closable]="true"
+>
+  <ng-template pTemplate="content">
+    <form [formGroup]="UploadDocform" novalidate>
+      <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-10">
+          <div class="row">
+            <!-- <div class="col-lg-4 col-md-6 col-sm-12 mb-12">
+              <div class="form-group">
+                <label>Document Id<span class="astrik">*</span></label>
+                <input type="number" class="form-control" formControlName="DocumentId" name="DocumentId"
+                  [(ngModel)]="documentMaxId[0].DocumentId" [attr.disabled]="true" />
+              </div>
+            </div> -->
+            <div class="col-lg-8 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Description <span class="astrik">*</span></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="Description"
+                  placeholder="Enter Description "
+                />
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Documents</label>
+                <input
+                  type="file"
+                  class="form-control"
+                  formControlName="ImagePath"
+                  id="fileUpload"
+                  (change)="selectFiles($event)"
+                  multiple
+                  accept="image/jpeg,image/gif,image/png,application/pdf,image/x-eps"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="d-flex align-items-center gap-2">
+              <button
+                type="button"
+                id="btnsave"
+                class="btn-save"
+                (click)="saveDocument()"
+              >
+                Save
+              </button>
+              <button
+                type="button"
+                id="btnupdate"
+                class="btn-update"
+                (click)="HideUploadDoc()"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <p-table
+      #dt
+      [value]="documentResponse"
+      class="datatable-width"
+      styleClass="p-datatable-sm"
+      responsiveLayout="stack"
+      [breakpoint]="'960px'"
+      [rowHover]="true"
+      dataKey="id"
+      currentPageReportTemplate="{first} to {last} of {totalRecords} entries"
+      [showCurrentPageReport]="true"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th>DocumentId#</th>
+          <th>Description</th>
+          <th>ImagePath</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-m>
+        <tr>
+          <td>{{ m.DocumentId }}</td>
+          <td>{{ m.Description }}</td>
+          <td>{{ m.AttachmentPath }}</td>
+          <td>
+            <button
+              pButton
+              icon="pi pi-eye"
+              class="p-button p-button-outlined p-button-rounded p-button-primary GridEditButton mx-1"
+              (click)="ViewDocuments(m)"
+            ></button>
+            <button
+              pButton
+              icon="pi pi-trash"
+              class="p-button p-button-outlined p-button-rounded p-button-danger custom-button-success p-mr-2 mx-1"
+              (click)="deleteDoc(m)"
+            ></button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      pRipple
+      label="Cancel"
+      icon="pi pi-times"
+      class="p-button-text"
+      (click)="HideUploadDoc()"
+    ></button>
+  </ng-template>
+</p-dialog>
+
+<p-dialog
+  header="Document Viewer"
+  [(visible)]="displayDocumentDialog"
+  [modal]="true"
+  [responsive]="true"
+  [baseZIndex]="10000"
+  (onHide)="closeDocumentViewDialog()"
+  [style]="{ width: '950px', height: '600px' }"
+>
+  <div *ngIf="imagePathOnServer">
+    <img [src]="imagePathOnServer" alt="Document" style="width: 100%" />
+  </div>
+</p-dialog>

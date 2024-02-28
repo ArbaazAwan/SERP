@@ -1,0 +1,60 @@
+.btnCheckBox {
+  width: 6.5rem;
+  /* background-color: white; */
+  margin-top: 21px;
+  border-radius: 12px;
+  font-size: 12px;
+  height: 30px;
+  padding: 5px;
+  border: 1px solid #ced4da;
+}
+
+.btnCheckBox:hover {
+  background-color: white;
+  color: black;
+  border: 1px solid #ced4da !important;
+}
+
+.chk {
+  border: 1px solid #ced4da !important;
+}
+
+.form-check {
+  padding-left: 0.5rem !important;
+}
+
+.form-check-inline {
+  align-items: center !important;
+  margin-right: 0px !important;
+}
+
+.labelChk {
+  margin-left: 18px;
+  margin-top: 0px;
+}
+
+.p-button {
+  margin-left: 20px !important;
+}
+
+::ng-deep .p-datatable .p-datatable-thead > tr > th,
+::ng-deep .p-datatable .p-datatable-tbody > tr > td,
+::ng-deep .p-datatable .p-paginator {
+  border: none !important;
+}
+
+hr {
+  margin-top: 0;
+}
+
+.error-field {
+  color: red;
+  font-size: 10px;
+  position: absolute;
+}
+
+.table-custom {
+  th td {
+    width: 140px;
+  }
+}

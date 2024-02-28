@@ -1,0 +1,70 @@
+<div class="mt-2 mb-2 form-title bg-gray-100">
+  <p class="mx-1 my-1">Assets Identifications</p>
+</div>
+<div class="container mt-1" style="width: 75%; float: right">
+  <div class="card">
+    <p-table
+      [value]="Assetscharth"
+      [rows]="10"
+      class="datatable-width"
+      [paginator]="true"
+      styleClass="p-datatable-sm"
+      [rowHover]="true"
+      dataKey="id"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+      [showCurrentPageReport]="true"
+      [alwaysShowPaginator]="false"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="min-width: 200px">ItemCode</th>
+          <th style="min-width: 150px">ItemName</th>
+          <th style="min-width: 150px">LevelCode</th>
+
+          <th style="min-width: 150px">IsCapex</th>
+          <th style="min-width: 150px">IsOpex</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-product>
+        <tr>
+          <td>{{ product.ItemCode }}</td>
+          <td>{{ product.ItemName }}</td>
+          <td>{{ product.LevelCode }}</td>
+
+          <td>
+            <ng-container *ngIf="product.IsCapex">
+              <input type="checkbox" checked disabled />
+            </ng-container>
+            <ng-container *ngIf="!product.IsCapex">
+              <input type="checkbox" disabled />
+            </ng-container>
+          </td>
+          <td>
+            <ng-container *ngIf="product.IsOpex">
+              <input type="checkbox" checked disabled />
+            </ng-container>
+            <ng-container *ngIf="!product.IsOpex">
+              <input type="checkbox" disabled />
+            </ng-container>
+          </td>
+          <td [style]="'right-padding: 0'">
+            <!-- <button
+            pButton
+            pRipple
+            icon="pi pi-pencil"
+            class="p-button-rounded p-button-success p-mr-2 mx-1"
+            (click)="getRow()"
+          ></button>
+          <button
+            pButton
+            pRipple
+            icon="pi pi-trash"
+            class="p-button-rounded p-button-danger mx-1"
+            (click)="deleteChartItem()"
+          ></button> -->
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>

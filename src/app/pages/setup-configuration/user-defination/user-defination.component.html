@@ -1,0 +1,319 @@
+<p-confirmDialog #cd [style]="{ width: '30vw' }">
+  <ng-template pTemplate="footer">
+    <button
+      type="button"
+      pButton
+      icon="pi pi-times"
+      label="No"
+      class="p-button-success"
+      (click)="cd.reject()"
+    ></button>
+    <button
+      type="button"
+      pButton
+      icon="pi pi-check"
+      label="Yes"
+      class="p-button-danger"
+      (click)="cd.accept()"
+    ></button>
+  </ng-template>
+</p-confirmDialog>
+
+<div class="main-container">
+  <div class="container">
+    <app-store-project
+      [showInput2]="false"
+      [showInput1]="false"
+      [componentName]="componentName"
+      [hide]="false"
+    ></app-store-project>
+    <!-- <div class="col-lg-12 col-md-12 col-sm-12 mb-2 FormsHeading">
+      <p class="mx-1 my-1">User Defination</p>
+    </div> -->
+  </div>
+  <div class="">
+    <div class="row">
+      <form class="col-lg-12 col-md-12 col-sm-12" [formGroup]="form" novalidate>
+        <div class="row align-item-center">
+          <div class="col-lg-12 col-md-12 col-sm-10">
+            <div class="card-wrapper">
+              <div
+                class="row align-items-stretch d-flex justify-content-between;"
+              >
+                <!-- <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+                  <label class="float-md-left d-flex float-sm-left mb-1 ml-1"
+                    >Branch
+                    <span class="astrik">*</span>
+                  </label>
+                  <div class="group-gap">
+                    <div class="d-block my-1">
+                      <div class="mb-3">
+                        <select
+                          class="form-select"
+                          (change)="changeBranch($event)"
+                          formControlName="BranchCode"
+                        >
+                          <div
+                            *ngIf="
+                              form.controls['BranchCode'].invalid &&
+                              form.controls['BranchCode'].touched
+                            "
+                            style="color: red"
+                          >
+                            Field Required
+                          </div>
+                          <option
+                            *ngFor="let b of Branches"
+                            [ngValue]="b"
+                            [value]="b?.BranchCode"
+                          >
+                            {{ b.BranchName }}
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div> -->
+
+                <div
+                  class="col-lg-2 col-md-6 col-sm-12 mb-3 pe-lg-1 ps-lg-0 w-md-100 fields-width"
+                >
+                  <label class="float-md-left d-flex float-sm-left mb-1 ml-1"
+                    >User Name
+                    <span class="astrik">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    style="font-size: small"
+                    placeholder="Enter User Name "
+                    formControlName="Username"
+                    name="Username"
+                  />
+                  <div
+                    class="error-field"
+                    *ngIf="
+                      form.controls['Username'].invalid &&
+                      form.controls['Username'].touched
+                    "
+                  >
+                    Field Required
+                  </div>
+                </div>
+
+                <div
+                  class="col-lg-2 col-md-6 col-sm-12 mb-3 pe-lg-1 ps-lg-0 width-md-100 fields-width"
+                >
+                  <label class="float-md-left d-flex float-sm-left mb-1 ml-1"
+                    >Password
+                    <span class="astrik">*</span>
+                  </label>
+                  <input
+                    type="password"
+                    class="form-control"
+                    style="font-size: small"
+                    placeholder="Enter Password"
+                    formControlName="Password"
+                    name="Password"
+                  />
+                  <div
+                    class="error-field"
+                    *ngIf="
+                      form.controls['Password'].invalid &&
+                      form.controls['Password'].touched
+                    "
+                  >
+                    Password Must be 8 Character
+                  </div>
+                </div>
+                <div
+                  class="col-lg-2 col-md-6 col-sm-12 pe-lg-0 ps-lg-0 w-md-100 fields-width"
+                >
+                  <label class="float-md-left d-flex float-sm-left mb-1 ml-1"
+                    >Confirm Password
+                    <span class="astrik">*</span>
+                  </label>
+                  <input
+                    type="password"
+                    class="form-control"
+                    style="font-size: small"
+                    placeholder="Confirm Password"
+                    formControlName="ConfirmPassword"
+                    name="ConfirmPassword"
+                  />
+                  <div
+                    class="error-field"
+                    *ngIf="
+                      form.get('ConfirmPassword')!.hasError('not_matching')
+                    "
+                  >
+                    Password did't Match
+                  </div>
+                </div>
+                <div
+                  class="col-lg-2 col-md-6 col-sm-12 pe-lg-0 ps-lg-1 w-md-100 fields-width"
+                >
+                  <label class="float-md-left d-flex float-sm-left mb-1 ml-1"
+                    >Employee
+                  </label>
+                  <p-dropdown
+                    [options]="employeeTableResponse"
+                    optionValue="EmployeeCode"
+                    optionLabel="EmployeeName"
+                    formControlName="EmployeeCode"
+                    [filter]="true"
+                    filterBy="EmployeeName,EmployeeCode"
+                    placeholder="Select Employee"
+                    (change)="changeEmployee($event)"
+                  ></p-dropdown>
+
+                  <!-- <select
+                    class="form-select"
+                    placeholder="Select Employee"
+                    formControlName="EmployeeCode"
+                    (change)="changeEmployee($event)"
+                  >
+                    <ng-container
+                      *ngIf="employeeTableResponse.length > 0; else noResult"
+                    >
+                      <option
+                        *ngFor="let employee of employeeTableResponse"
+                        [ngValue]="employee"
+                        [value]="employee?.EmployeeCode"
+                      >
+                        {{ employee.EmployeeName }}
+                      </option>
+                    </ng-container>
+                    <ng-template #noResult>
+                      <option value="" selected disabled hidden>
+                        Select Employee
+                      </option>
+                      <option value="" disabled>No Results</option>
+                    </ng-template>
+                  </select> -->
+                </div>
+                <div
+                  class="col-lg-2 col-md-6 col-sm-12 mt-4 pe-lg-0 ps-lg-1 w-md-100 fields-width"
+                  style="width: 20%"
+                >
+                  <div class="form-check form-check-inline">
+                    <input
+                      type="checkbox"
+                      class="form-check-label mt-1"
+                      formControlName="IsActive"
+                      name="IsActive"
+                      [value]="true"
+                      style="float: left"
+                    />
+                    <label class="float-md-left d-flex float-sm-left mb-1 mx-2"
+                      >Active
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Buttons-Start -->
+
+              <div class="row align-items-stretch">
+                <div class="col-sm-4"></div>
+                <div
+                  class="row justify-content-center"
+                  style="align-items: flex-end"
+                >
+                  <ng-container>
+                    <button
+                      type="button"
+                      id="btnsave"
+                      Class="btn btn-outline-success btnFix mx-1"
+                      (click)="addorUpdate()"
+                      [disabled]="isUpdate"
+                    >
+                      Save
+                    </button>
+                    <button
+                      type="button"
+                      id="btnsave"
+                      Class="btn btn-outline-success btnFix"
+                      (click)="addorUpdate()"
+                      [disabled]="!isUpdate"
+                    >
+                      Update
+                    </button>
+                  </ng-container>
+                  <Button
+                    type="button"
+                    id="btnRefresh"
+                    class="btn primary-button-color btnFix mx-1"
+                    (click)="refresh()"
+                    >Refresh</Button
+                  >
+                </div>
+              </div>
+
+              <!-- Buttons-End -->
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="row mt-3">
+      <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="table-responsive card-wrapper custom-table">
+          <p-table
+            [value]="userdefinationResponse$"
+            [paginator]="true"
+            [alwaysShowPaginator]="false"
+            [rows]="4"
+            class="datatable-width"
+            styleClass="p-datatable-sm"
+            responsiveLayout="stack"
+            [breakpoint]="'960px'"
+            [rowHover]="true"
+          >
+            <ng-template pTemplate="header">
+              <tr>
+                <!-- <th style="min-width: 150px">Branch Code</th> -->
+                <th style="width: 150px">User Name</th>
+                <th style="width: 200px">Employee Name</th>
+                <th style="width: 100px">Active</th>
+                <th style="width: 100px">Action</th>
+              </tr>
+              <tr>
+                <td colspan="4">
+                  <hr />
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-m>
+              <tr>
+                <td>
+                  <span class="ml-2">{{ m.Username }}</span>
+                </td>
+                <td>
+                  <span class="ml-2">{{ m.EmployeeName }}</span>
+                </td>
+                <td>
+                  <span class="ml-2">{{ m.IsActive | yesNo }}</span>
+                </td>
+                <td>
+                  <button
+                    pButton
+                    icon="pi pi-pencil"
+                    class="p-button p-button-outlined p-button-rounded p-button-success p-mr-2 mx-1 custom-button-success"
+                    (click)="getSelectedRow(m)"
+                  ></button>
+                  <button
+                    pButton
+                    icon="pi pi-trash"
+                    class="p-button p-button-outlined p-button-rounded p-button-danger GridDelButton mx-1"
+                    (click)="deleteUser(m.UserId)"
+                  ></button>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

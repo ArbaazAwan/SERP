@@ -1,0 +1,194 @@
+<div
+  class="container align-items-center py-4 vh-100"
+  style="width: 75%; float: right"
+>
+  <div class="row justify-content-flex-start">
+    <div class="row text-center" style="font-size: small">
+      <div class="col-xl-3 col-sm-6 col-12 mb-3">
+        <div class="card">
+          <div class="card-content">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start">
+                <div class="d-flex flex-column">
+                  <h3 class="mb-0 text-start">100,000</h3>
+                  <span class="mt-2">Account Receivable</span>
+                </div>
+                <div
+                  class="rounded d-flex justify-content-center align-items-center"
+                  style="
+                    background-color: #ffe0b2;
+                    width: 2.5rem;
+                    height: 2.5rem;
+                  "
+                >
+                  <i class="fa-regular fa-folder-closed fa-xl"></i>
+                </div>
+              </div>
+              <div class="progress mt-1 mb-0" style="height: 7px">
+                <div
+                  class="progress-bar bg-primary"
+                  role="progressbar"
+                  style="width: 50%"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xl-3 col-sm-6 col-12 mb-3">
+        <div class="card">
+          <div class="card-content">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start">
+                <div class="d-flex flex-column">
+                  <h3 class="mb-0 text-start">100,000</h3>
+                  <span class="mt-2">Account Receivable</span>
+                </div>
+                <div
+                  class="rounded d-flex justify-content-center align-items-center"
+                  style="
+                    background-color: #bbdefb;
+                    width: 2.5rem;
+                    height: 2.5rem;
+                  "
+                >
+                  <i class="fa-solid fa-file-invoice fa-xl"></i>
+                </div>
+              </div>
+              <div class="progress mt-1 mb-0" style="height: 7px">
+                <div
+                  class="progress-bar bg-primary"
+                  role="progressbar"
+                  style="width: 50%"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xl-3 col-sm-6 col-12 mb-3">
+        <div class="card">
+          <div class="card-content">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start">
+                <div class="d-flex flex-column">
+                  <h3 class="mb-0 text-start">100,000</h3>
+                  <span class="mt-2">Account Receivable</span>
+                </div>
+                <div
+                  class="rounded d-flex justify-content-center align-items-center"
+                  style="
+                    background-color: #bbdefb;
+                    width: 2.5rem;
+                    height: 2.5rem;
+                  "
+                >
+                  <i class="fa-solid fa-file-invoice fa-xl"></i>
+                </div>
+              </div>
+              <div class="progress mt-1 mb-0" style="height: 7px">
+                <div
+                  class="progress-bar bg-primary"
+                  role="progressbar"
+                  style="width: 50%"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xl-3 col-sm-6 col-12 mb-3">
+        <div class="card">
+          <div class="card-content">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start">
+                <div class="d-flex flex-column">
+                  <h3 class="mb-0 text-start">100,000</h3>
+                  <span class="mt-2">Account Receivable</span>
+                </div>
+                <div
+                  class="rounded d-flex justify-content-center align-items-center"
+                  style="
+                    background-color: #bbdefb;
+                    width: 2.5rem;
+                    height: 2.5rem;
+                  "
+                >
+                  <i class="fa-solid fa-file-invoice fa-xl"></i>
+                </div>
+              </div>
+              <div class="progress mt-1 mb-0" style="height: 7px">
+                <div
+                  class="progress-bar bg-primary"
+                  role="progressbar"
+                  style="width: 50%"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xl-6 col-sm-6 col-12">
+        <div class="card">
+          <div class="card-content">
+            <div class="card-body">
+              <h5>Recent Sales</h5>
+              <p-table
+                [value]="[{}]"
+                [paginator]="true"
+                [rows]="5"
+                responsiveLayout="scroll"
+              >
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th pSortableColumn="name">
+                      Name <p-sortIcon field="name"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="price">
+                      Price <p-sortIcon field="price"></p-sortIcon>
+                    </th>
+                    <th>View</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-product>
+                  <tr>
+                    <td style="width: 25%; min-width: 7rem">
+                      {{ product.name }}
+                    </td>
+                    <td style="width: 25%; min-width: 8rem">
+                      {{ product.price | currency : "USD" }}
+                    </td>
+                    <td style="width: 10%">
+                      <button
+                        pButton
+                        pRipple
+                        type="button"
+                        icon="pi pi-search"
+                        class="p-button p-component p-button-text p-button-icon-only"
+                      ></button>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xl-6 col-sm-6 col-12">
+        <div class="card">
+          <div class="card-content">
+            <div class="card-body">
+              <h5>Sales Overview</h5>
+              <p-chart type="bar" [data]="data" [options]="options"></p-chart>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

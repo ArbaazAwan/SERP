@@ -1,0 +1,101 @@
+<div class="main-container">
+  <div class="container">
+    <app-store-project [showInput2]="true" [showInput1]="true" [componentName]="componentName"
+      [hide]="false"></app-store-project>
+
+    <div class="form-container">
+      <!-- <h2 class="margin">Documents Path</h2> -->
+      <form [formGroup]="documentPathForm">
+        <div class="row form-group">
+          <label for="Sales" class="col-sm-2 col-form-label">Sales</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control" id="Sales" placeholder="Enter Sales Path"
+              formControlName="SalesPath" />
+          </div>
+        </div>
+        <div class="row form-group">
+          <label for="Vouchers" class="col-sm-2 col-form-label">Vouchers</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control" id="Vouchers" placeholder="Enter Vouchers Path"
+              formControlName="VouchersPath" />
+          </div>
+        </div>
+        <div class="row form-group">
+          <label for="Demand" class="col-sm-2 col-form-label">Demand</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control" id="Demand" placeholder="Enter Demand Path"
+              formControlName="DemandPath" />
+          </div>
+        </div>
+        <div class="row form-group">
+          <label for="PR" class="col-sm-2 col-form-label">Purchase Requisition</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control" id="PR" placeholder="Enter Purchase Requisition Path"
+              formControlName="PurchaseRequisitionPath" />
+          </div>
+        </div>
+        <div class="row form-group">
+          <label for="PR" class="col-sm-2 col-form-label">Comparative Statement</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control" id="PR" placeholder="Enter Comparative Statement Path"
+              formControlName="CSPath" />
+          </div>
+        </div>
+        <div class="row form-group">
+          <label for="PurchaseOrder" class="col-sm-2 col-form-label">Purchase Order</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control" id="PurchaseOrder" placeholder="Enter Purchase Order Path"
+              formControlName="PurchaseOrderPath" />
+          </div>
+        </div>
+        <div class="row form-group">
+          <label for="GRN" class="col-sm-2 col-form-label">Good Reciept Note</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control" id="GRN" placeholder="Enter GRN Path" formControlName="GRNPath" />
+          </div>
+        </div>
+        <div class="row form-group">
+          <label for="GRN" class="col-sm-2 col-form-label">Inspection Reciept Note</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control" id="GRN" placeholder="Enter IRN Path" formControlName="IRNPath" />
+          </div>
+        </div>
+
+        <div class="row form-group">
+          <label for="colFormLabelExample" class="col-sm-2 col-form-label">Lead</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control" id="colFormLabelExample" placeholder="Enter Lead Path"
+              formControlName="LeadsPath" />
+          </div>
+        </div>
+
+        <div class="row form-group">
+          <label for="colFormLabelExample" class="col-sm-2 col-form-label">Purchase Invoice</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control" id="colFormLabelExample" placeholder="Enter Purchase Invoice Path"
+              formControlName="PurchaseInvoicePath" />
+          </div>
+        </div>
+
+        <div class="row form-group">
+          <label for="colFormLabelExample" class="col-sm-2 col-form-label">Purchase Payment</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control" id="colFormLabelExample" placeholder="Enter Purchase Payment Path"
+              formControlName="PurchasePaymentPath" />
+          </div>
+        </div>
+
+        <div class="row mt-3 form-group">
+          <div class="d-flex align-center gap-2">
+            <button type="submit" id="btnsave" class="btn btnFix save-btn btn-save"  *ngIf="!documentPaths" (click)="save()">
+              Save
+            </button>
+            <button type="submit" id="btnsave" class="btn btnFix save-btn btn-save" *ngIf="documentPaths" (click)="update()">
+              Update
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

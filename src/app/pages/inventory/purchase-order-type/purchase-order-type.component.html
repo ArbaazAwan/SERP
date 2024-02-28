@@ -1,0 +1,107 @@
+<ngx-loading-bar [includeSpinner]="false" [height]="'3px'"></ngx-loading-bar>
+<app-confirm-dialog></app-confirm-dialog>
+
+<div class="main-container">
+
+  <app-store-project [showInput2]="true" [showInput1]="true" [componentName]="componentName"
+    [hide]="false"></app-store-project>
+
+
+  <div class="">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card-wrapper">
+          <form [formGroup]="prTypeForm">
+            <div class="row">
+
+              <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="form-group">
+                  <label> Name
+                    <span class="astrik">*</span>
+                  </label>
+                  <input type="text" class="form-control" formControlName="POTypeName" placeholder="Enter Name" />
+                </div>
+              </div>
+
+              <div class="col-lg-6 col-md-8 col-sm-3">
+                <div class="d-flex align-items-center gap-4 isactive">
+                  <div class="checkbox">
+                    <input type="checkbox" class="form-checkbox" formControlName="IsActive" />
+                    <label class="form-check-label">
+                      Active
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row mt-2">
+              <div class="d-flex align-items-center gap-2">
+                <button type="button" id="btnsave" Class="btn-save" (click)="save()" [disabled]="isUpdate || prTypeForm.invalid">
+                  Save
+                </button>
+                <button type="button" id="btnsave" Class="btn-update" (click)="update()" [disabled]="!isUpdate || prTypeForm.invalid">
+                  Update
+                </button>
+                <button type="button" id="btnRefresh" class="btn-refresh" (click)="refresh()">
+                  <img src="../../../../assets/icons/btn-refresh.svg" alt="" />
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="col-lg-12 col-md-12 mt-3">
+        <div class="table-responsive card-wrapper custom-table">
+
+          <table class="table table-striped table-borderless" *ngIf="!isLoadingData">
+            <thead>
+              <tr>
+                <th scope="col">Type No</th>
+                <th scope="col">Name</th>
+                <th scope="col">Active</th>
+                <th scope="col" class="text-center">Action</th>
+              </tr>
+            </thead>
+            <hr />
+            <tbody>
+              <tr *ngFor="let item of poTypesList; let odd = odd" [ngClass]="{ 'odd-row': odd }">
+                <td>{{ item.POTypeNo }}</td>
+                <td>{{ item.POTypeName }}</td>
+                <td>
+                  <span [class]="
+                          item.IsActive == true ? 'success-badge' : 'danger-badge'
+                        ">{{ item.IsActive | yesNo }}</span>
+                </td>
+
+                <td>
+                  <div class="dropdown text-center">
+                    <button class="three-dots" type="button" id="table-action-menu" data-bs-toggle="dropdown"
+                      aria-expanded="false">
+                      <i class="fa fa-ellipsis-v"></i>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="table-action-menu">
+                      <li>
+                        <a class="dropdown-item edit cursor-hover cursor-pointer"
+                          (click)="getSelectedRow(item)">Edit</a>
+                      </li>
+                      <li>
+                        <a class="dropdown-item delete cursor-hover cursor-pointer"
+                          (click)="delete(item.POTypeNo)">Delete</a>
+                      </li>
+                    </ul>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div *ngIf="isLoadingData">
+                <app-table-loader></app-table-loader>
+              </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</div>

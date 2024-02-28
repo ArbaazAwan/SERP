@@ -1,0 +1,34 @@
+
+::ng-deep{
+  .p-dropdown-panel .p-dropdown-header .p-dropdown-filter{
+    height:30px !important;
+    font-size:12px !important;
+    }
+    .p-inputtext{
+      height: 30px !important;
+      font-size: 12px;
+    }
+
+  .p-multiselect-panel {
+    height: 30px !important;
+    width: 100% !important;
+  }
+  .p-multiselect {
+    width: 100% !important;
+
+}
+}
+
+.inputSetting{
+  height: 32px;
+  padding: 0px;
+}
+
+.sticky-header{
+  background: white;
+  top : -18px
+}
+
+.custom-table{
+  height: 400px;
+}

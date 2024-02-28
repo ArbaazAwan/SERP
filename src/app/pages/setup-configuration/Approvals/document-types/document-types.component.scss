@@ -1,0 +1,48 @@
+
+// .btnCheckBox{
+//   width: 7.7rem;
+//   /* background-color: white; */
+//   margin-top: 10px;
+//   border-radius: 12px;
+//   font-size: 12px;
+//   height: 30px;
+//   padding: 5px;
+//   // border: 1px solid #ced4da;
+//   border: 0;
+
+// }
+
+// .btnCheckBox:hover{
+//   background-color: white;
+//   // color: black;
+//   // border:  1px solid #ced4da !important;
+//   border: 0;
+
+// }
+.btnCheckBox:active,
+.btn-custom:focus
+{
+  border: white !important;
+  box-shadow: none;
+  outline-color: white;
+}
+
+
+
+
+
+
+.chk{
+  border:  1px solid #ced4da !important;
+}
+.form-check{
+  padding-left: 0.5rem !important;
+}
+.form-check-inline{
+  align-items: center !important;
+  margin-right: 0px !important;
+}
+.labelChk{
+  margin-left: 18px;
+  margin-top: 2px;
+}

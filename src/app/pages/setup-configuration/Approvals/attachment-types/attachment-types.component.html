@@ -1,0 +1,225 @@
+<p-confirmDialog #cd [style]="{ width: '30vw' }">
+  <ng-template pTemplate="footer">
+    <button
+      type="button"
+      pButton
+      icon="pi pi-times"
+      label="No"
+      class="p-button-success"
+      (click)="cd.reject()"
+    ></button>
+    <button
+      type="button"
+      pButton
+      icon="pi pi-check"
+      label="Yes"
+      class="p-button-danger"
+      (click)="cd.accept()"
+    ></button>
+  </ng-template>
+</p-confirmDialog>
+
+<div class="main-container">
+  <div class="container">
+    <app-store-project
+      [showInput2]="false"
+      [showInput1]="false"
+      [componentName]="componentName"
+      [hide]="false"
+    ></app-store-project>
+    <!-- <div class="col-lg-12 col-md-12 col-sm-12 mb-2 FormsHeading">
+      <p class="mx-2 my-1">Attachment Types</p>
+    </div> -->
+  </div>
+
+  <div class="container">
+    <div class="row justify-content-flex-start">
+      <div class="row justify-content-center">
+        <form class="justify-content-center" [formGroup]="form" novalidate>
+          <div class="row text-center" style="font-size: small">
+            <div class="col-lg-12 col-md-12 col-sm-10">
+              <div class="card p-3">
+                <div class="row align-items-stretch">
+                  <div class="col-lg-3" style="text-align: left; height: 4rem">
+                    <label class="float-md-left d-flex float-sm-left"
+                      >Document Types
+                    </label>
+                    <p-dropdown
+                      [style]="{ height: '38px', width: '230px' }"
+                      [options]="DocTypeResponse$"
+                      [filter]="true"
+                      optionLabel="DocumentTypeName"
+                      optionValue="DocumentTypeId"
+                      [(ngModel)]="AttachmentType.DocumentTypeId"
+                      [ngModelOptions]="{ standalone: true }"
+                      filterBy="DocumentTypeName,DocumentTypeId"
+                      [showClear]="false"
+                      placeholder="Select Document Type"
+                      [panelStyle]="{ overflow: 'auto' }"
+                      [showClear]="true"
+                      (onChange)="changeDocType($event)"
+                      appendTo="body"
+                    >
+                      <ng-template let-option pTemplate="item">
+                        <div class="option-item">
+                          <div style="float: left; width: 30%">
+                            {{ option.DocumentTypeId }}
+                          </div>
+                          <div style="float: left; width: 70%">
+                            {{ option.DocumentTypeName }}
+                          </div>
+                        </div>
+                      </ng-template>
+                    </p-dropdown>
+                  </div>
+                  <div
+                    class="col-lg-3 col-md-6 col-sm-12 mb-3"
+                    style="height: 4rem"
+                  >
+                    <label class="float-md-left d-flex float-sm-left"
+                      >Code</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      style="height: 33px"
+                      formControlName="AttachmentTypeId"
+                      [(ngModel)]="AttachmentType.AttachmentTypeId"
+                      [value]="this.MaxAttachmentTypeId"
+                      [attr.disabled]="true"
+                    />
+                  </div>
+                  <div
+                    class="col-lg-3 col-md-6 col-sm-12 mb-3"
+                    style="height: 4rem"
+                  >
+                    <label class="float-md-left d-flex float-sm-left"
+                      >Attachment Type Name
+                      <span class="astrik">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      style="height: 33px"
+                      placeholder="Enter Attachment Type Name"
+                      formControlName="AttachmentTypeTitle"
+                      [(ngModel)]="AttachmentType.AttachmentTypeTitle"
+                    />
+                    <div
+                      *ngIf="
+                        form.controls['AttachmentTypeTitle'].invalid &&
+                        form.controls['AttachmentTypeTitle'].touched
+                      "
+                      style="color: red; display: flex"
+                    >
+                      Field Required
+                    </div>
+                  </div>
+                  <div class="col-lg-3 col-md-6 mt-2 d-flex">
+                    <button
+                      class="btn btnCheckBox"
+                      style="border: 0 !important"
+                      (click)="IsCompulsory()"
+                    >
+                      <div class="form-check form-check-inline d-flex">
+                        <input
+                          type="checkbox"
+                          style="accent-color: blue"
+                          formControlName="IsCompulsory"
+                          [(ngModel)]="AttachmentType.IsCompulsory"
+                          style="float: left"
+                        />
+                        <label class="float-md-left d-flex float-sm-left mx-2"
+                          >Compulsory</label
+                        >
+                      </div>
+                    </button>
+                  </div>
+                </div>
+                <!-- Buttons-Start -->
+                <div class="row align-items-stretch">
+                  <div class="col-sm-4"></div>
+                  <div
+                    class="row justify-content-center"
+                    style="align-items: flex-end"
+                  >
+                    <ng-container>
+                      <Button
+                        type="button"
+                        id="btnsave"
+                        Class="btn btn-outline-success btnFix mx-1"
+                        (click)="addorUpdate()"
+                        [disabled]="isUpdate"
+                        >Save</Button
+                      >
+                      <Button
+                        type="button"
+                        id="btnsave"
+                        Class="btn btn-outline-success btnFix"
+                        (click)="addorUpdate()"
+                        [disabled]="!isUpdate"
+                        >Update</Button
+                      >
+                    </ng-container>
+                    <Button
+                      type="button"
+                      id="btnRefresh"
+                      class="btn primary-button-color mx-1 btnFix"
+                      (click)="refresh()"
+                      >Refresh</Button
+                    >
+                  </div>
+                </div>
+                <!-- Buttons-End -->
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <p-table
+      [value]="AttachmentTyperesponse$"
+      [paginator]="AttachmentTyperesponse$.length > 4 ? true : false"
+      [rows]="10"
+      class="datatable-width"
+      styleClass="p-datatable-sm"
+      responsiveLayout="stack"
+      [breakpoint]="'960px'"
+      [rowHover]="true"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="min-width: 150px">Document Type</th>
+          <th style="min-width: 150px">Code</th>
+          <th style="min-width: 100px">Name</th>
+          <th style="min-width: 100px">Action</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-m>
+        <tr>
+          <td>{{ m.DocumentTypeName }}</td>
+          <td>{{ m.AttachmentTypeId }}</td>
+          <td>{{ m.AttachmentTypeTitle }}</td>
+          <td>
+            <button
+              pButton
+              icon="pi pi-pencil"
+              class="p-button p-button-outlined p-button-rounded p-button-warning GridEditButton p-mr-2 mx-1"
+              (click)="getSelectedRow(m)"
+            ></button>
+            <button
+              pButton
+              icon="pi pi-trash"
+              class="p-button p-button-outlined p-button-rounded p-button-danger GridDelButton mx-1"
+              (click)="
+                delete(m.BranchCode, m.DocumentTypeId, m.AttachmentTypeId)
+              "
+            ></button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+  <!-- Grid-End -->
+</div>

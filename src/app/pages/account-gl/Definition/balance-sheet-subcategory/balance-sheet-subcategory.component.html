@@ -1,0 +1,140 @@
+<ngx-loading-bar [includeSpinner]="false" [height]="'3px'"></ngx-loading-bar>
+
+<app-confirm-dialog></app-confirm-dialog>
+
+
+<div class="main-container" (scroll)="onMainContainerScroll($event)">
+  <div [class]="isSticky ? 'sticky-header': ''">
+    <app-store-project [componentName]="componentName" [showInput2]="false" [showInput1]="false"
+      [hide]="false"></app-store-project>
+  </div>
+  <div class="">
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="card-wrapper">
+          <form [formGroup]="form" novalidate>
+            <div class="row">
+              <div class="col-lg-3 col-md-6 col-sm-12" style="margin-top: 7px;">
+                <div class="form-group text-xs">
+                  <label>Balance Sheet Category
+                  </label>
+                  <p-dropdown [disabled]="isUpdate" [options]="CategoryResponse$" [filter]="true"
+                    optionLabel="BalanceSheetName" optionValue="BalanceSheetCode"
+                    [(ngModel)]="SubCategory.BalanceSheetCode" [ngModelOptions]="{ standalone: true }"
+                    filterBy="BalanceSheetName,BalanceSheetCode" [showClear]="false" placeholder="Select Category"
+                    [panelStyle]="{ overflow: 'auto' }" [showClear]="true" (onChange)="changeCategory($event)"
+                    appendTo="body">
+                    <ng-template let-option pTemplate="item">
+                      <div class="option-item">
+                      
+                        <div >
+                          {{ option.BalanceSheetName }}
+                        </div>
+                      </div>
+                    </ng-template>
+                  </p-dropdown>
+                </div>
+              </div>
+              <div class="col-lg-2 col-md-6 col-sm-12  d-none">
+                <label>Code</label>
+                <input type="text" class="form-control" formControlName="BalanceSheetSubCode"
+                  [(ngModel)]="SubCategory.BalanceSheetSubCode" [value]="this.MaxBalanceSheetSubCategoryId"
+                  [attr.disabled]="true" />
+              </div>
+              <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="form-group">
+                  <label>SubCategory Name
+                    <span class="astrik">*</span>
+                  </label>
+                  <input type="text" class="form-control" placeholder="Enter SubCategory Name "
+                    formControlName="BalanceSheetSubCategoryName"
+                    [(ngModel)]="SubCategory.BalanceSheetSubCategoryName" />
+                  <div *ngIf="
+                      form.controls['BalanceSheetSubCategoryName'].invalid &&
+                      form.controls['BalanceSheetSubCategoryName'].touched
+                    " class="input-error">
+                    Field Required
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Buttons-Start -->
+
+            <div class="row mt-2">
+              <div class="buttons-wrapper d-flex align-items-center gap-2">
+                <button type="button" id="btnsave" Class="btn-save" (click)="add()" [disabled]="isUpdate">Save</button>
+                <button type="button" id="btnsave" Class="btn-update" (click)="updateAllow()"
+                  [disabled]="!isUpdate">Update</button>
+                <button type="button" id="btnRefresh" class="btn-refresh" (click)="refresh()">
+                  <img src="../../../../assets/icons/btn-refresh.svg" alt="">
+                </button>
+              </div>
+            </div>
+            <!-- Buttons-End -->
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-12 col-md-12 mt-3">
+        <div class="table-responsive card-wrapper custom-table">
+          <table class="table table-striped table-borderless" *ngIf="!isLoadingData">
+            <thead>
+              <tr>
+
+
+                <!-- <th scope="col">Balance Sheet Code</th> -->
+                <!-- <th scope="col">Balance Sheet Sub Code</th> -->
+                <th scope="col">Balance Sheet Category Name</th>
+                <th scope="col">Balance Sheet SubCategory Name</th>
+                <th scope="col" class="text-center">Action</th>
+              </tr>
+            </thead>
+            <hr>
+            <tbody>
+              <tr *ngFor="let m of SubCategoryresponse$; let odd = odd" [ngClass]="{ 'odd-row': odd }">
+
+                <!-- <td>{{ m.BalanceSheetCode }}</td> -->
+                <!-- <td>{{ m.BalanceSheetSubCode }}</td> -->
+                <td>{{ m.BalanceSheetName }}</td>
+                <td>{{ m.BalanceSheetSubCategoryName }}</td>
+                <td>
+                  <div class="dropdown text-center">
+                    <button class="three-dots" type="button" id="table-action-menu" data-bs-toggle="dropdown"
+                      aria-expanded="false">
+                      <i class="fa fa-ellipsis-v"></i>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="table-action-menu">
+                      <li><a class="dropdown-item edit cursor-hover cursor-pointer" (click)="getSelectedRow(m)">Edit</a>
+                      </li>
+                      <li><a class="dropdown-item delete cursor-hover cursor-pointer"
+                          (click)="delete(m.BalanceSheetCode, m.BalanceSheetSubCode)">Delete</a></li>
+                    </ul>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div *ngIf="isLoadingData">
+            <app-table-loader></app-table-loader>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Response-Error-Message  -->
+<div class="loading-newpopup" *ngIf="loadingerror">
+  <div class="newpopup">
+    <!---<a><img class="ErrorIcon" src="./assets/icon/error.svg" /></a>-->
+    <div class="Errormessage">
+      <p><strong>Error</strong></p>
+      <p>You are not authorized to perform this Operation</p>
+    </div>
+    <button class="btn btn-danger ErrorClosebtn" (click)="hideErrorPopup()">
+      Cancel
+    </button>
+  </div>
+</div>

@@ -1,0 +1,309 @@
+<p-confirmDialog #cd [style]="{ width: '30vw' }">
+  <ng-template pTemplate="footer">
+    <button
+      type="button"
+      pButton
+      icon="pi pi-times"
+      label="No"
+      class="p-button-success"
+      (click)="cd.reject()"
+    ></button>
+    <button
+      type="button"
+      pButton
+      icon="pi pi-check"
+      label="Yes"
+      class="p-button-danger"
+      (click)="cd.accept()"
+    ></button>
+  </ng-template>
+</p-confirmDialog>
+
+<div class="main-container">
+  <div class="container">
+    <app-store-project
+      [showInput2]="false"
+      [showInput1]="false"
+      [componentName]="componentName"
+      [hide]="false"
+    ></app-store-project>
+  </div>
+
+  <div class="">
+    <div class="row">
+      <form class="col-lg-12 col-md-12 col-sm-10" [formGroup]="form" novalidate>
+        <div class="row text-center" style="font-size: small">
+          <div class="col-lg-12 col-md-12 col-sm-10">
+            <div class="card-wrapper">
+              <div class="row align-items-stretch">
+                <div
+                  class="col-lg-3 col-md-6 col-sm-12"
+                  style="text-align: left"
+                >
+                  <label class="float-md-left d-flex float-sm-left mb-1 ml-1"
+                    >Document Types
+                  </label>
+                  <p-dropdown
+                    [options]="DocTypeResponse$"
+                    [filter]="true"
+                    optionLabel="DocumentTypeName"
+                    optionValue="DocumentTypeId"
+                    [(ngModel)]="ApprovalHirarchy.DocumentTypeId"
+                    [ngModelOptions]="{ standalone: true }"
+                    filterBy="DocumentTypeName,DocumentTypeId"
+                    [showClear]="false"
+                    placeholder="Select Document Types"
+                    [panelStyle]="{ overflow: 'auto' }"
+                    [showClear]="true"
+                    (onChange)="changeDocType($event)"
+                    appendTo="body"
+                  >
+                    <ng-template let-option pTemplate="item">
+                      <div class="option-item">
+                        <div style="float: left; width: 30%">
+                          {{ option.DocumentTypeId }}
+                        </div>
+                        <div style="float: left; width: 70%">
+                          {{ option.DocumentTypeName }}
+                        </div>
+                      </div>
+                    </ng-template>
+                  </p-dropdown>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                  <label class="float-md-left d-flex float-sm-left mb-1 ml-1"
+                    >Priority Level</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    style="height: 33px !important"
+                    formControlName="ApprovalPriorityLevel"
+                    [(ngModel)]="ApprovalHirarchy.ApprovalPriorityLevel"
+                    [value]="this.MaxApprovalHirarchyId"
+                    (change)="priorityLevelValidator($event.target)"
+                  />
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12 mt-3 d-flex">
+                  <button
+                    class="btn btnCheckBox"
+                    style="outline: none; box-shadow: none"
+                    (click)="IsFinalApproval()"
+                  >
+                    <div class="form-check form-check-inline d-flex">
+                      <input
+                        type="checkbox"
+                        style="accent-color: blue"
+                        formControlName="IsFinalApproval"
+                        [(ngModel)]="ApprovalHirarchy.IsFinalApproval"
+                        style="float: left"
+                      />
+                      <label class="float-md-left d-flex float-sm-left mx-2"
+                        >Final Approval</label
+                      >
+                    </div>
+                  </button>
+                </div>
+                <div
+                  class="col-lg-12 col-md-12 col-sm-12 mt-3"
+                  style="text-align: center"
+                >
+                  <ng-container>
+                    <Button
+                      type="button"
+                      id="btnsave"
+                      Class="btn btn-outline-success btnFix mx-2 mt-2"
+                      (click)="addorUpdate()"
+                      [disabled]="isUpdate"
+                      >Save</Button
+                    >
+                    <Button
+                      type="button"
+                      id="btnsave"
+                      Class="btn btn-outline-success btnFix mt-2"
+                      (click)="addorUpdate()"
+                      [disabled]="!isUpdate"
+                      >Update</Button
+                    >
+                  </ng-container>
+                  <Button
+                    type="button"
+                    id="btnRefresh"
+                    class="btn primary-button-color mx-1 btnFix mt-2"
+                    (click)="refresh()"
+                    >Refresh</Button
+                  >
+                </div>
+              </div>
+              <!-- Buttons-End -->
+              <div class="row align-items-stretch">
+                <div class="col-lg-8 col-md-12 col-sm-10 mt-3">
+                  <div class="card p-3">
+                    <div
+                      class="col-lg-12 col-md-12 col-sm-12 mb-2 FormsHeading"
+                    >
+                      <p class="mx-1 my-1">Approval Hierarchy Document</p>
+                    </div>
+                    <p-table
+                      [value]="ApprovalHirarchyresponse$"
+                      [paginator]="
+                        ApprovalHirarchyresponse$.length > 4 ? true : false
+                      "
+                      [rows]="10"
+                      class="datatable-width"
+                      styleClass="p-datatable-sm"
+                      responsiveLayout="stack"
+                      [breakpoint]="'960px'"
+                      [rowHover]="true"
+                    >
+                      <ng-template pTemplate="header">
+                        <tr>
+                          <th style="min-width: 150px">Document Type</th>
+                          <th style="min-width: 150px">Priority Level</th>
+                          <th style="min-width: 100px; text-align: right">
+                            Action
+                          </th>
+                        </tr>
+                      </ng-template>
+                      <ng-template pTemplate="body" let-m let-index="index">
+                        <tr>
+                          <td [class.selected-row]="m.selected">
+                            {{ m.DocumentTypeName }}
+                          </td>
+                          <td [class.selected-row]="m.selected">
+                            {{ m.ApprovalPriorityLevel }}
+                          </td>
+                          <td
+                            style="text-align: right"
+                            [class.selected-row]="m.selected"
+                            (click)="toggleRowSelection(m)"
+                          >
+                            <button
+                              pButton
+                              icon="pi pi-eye"
+                              class="p-button p-button-outlined p-button-rounded p-button-info p-mr-2 mx-1 custom-button-success"
+                              (click)="getUserApprove(m)"
+                            ></button>
+                            <button
+                              [disabled]="
+                                m.ApprovalPriorityLevel !==
+                                ApprovalHirarchyresponse$.length
+                              "
+                              pButton
+                              icon="pi pi-trash"
+                              class="p-button p-button-outlined p-button-rounded p-button-danger custom-button-success"
+                              (click)="delete(m)"
+                            ></button>
+                          </td>
+                        </tr>
+                      </ng-template>
+                    </p-table>
+                  </div>
+                </div>
+
+                <div class="col-lg-4 col-md-12 col-sm-10 mt-3">
+                  <div class="card p-3">
+                    <div
+                      class="col-lg-12 col-md-12 col-sm-12 mb-2 FormsHeading"
+                    >
+                      <p class="mx-1 my-1">Approval Hierarchy User</p>
+                    </div>
+                    <div>
+                      <form
+                        [formGroup]="formuser"
+                        class="col-lg-12 col-md-12 col-sm-12"
+                      >
+                        <div class="row">
+                          <div class="col-lg-10">
+                            <p-dropdown
+                              [style]="{ height: '38px', width: '230px' }"
+                              [options]="userlist$"
+                              [filter]="true"
+                              optionLabel="Username"
+                              optionValue="UserId"
+                              formControlName="UserId"
+                              [(ngModel)]="ApprovalHirarchy.UserId"
+                              filterBy="Username,UserId"
+                              [showClear]="false"
+                              placeholder="Select User Name"
+                              [panelStyle]="{ overflow: 'auto' }"
+                              [showClear]="true"
+                              (onChange)="changeUsers($event)"
+                              appendTo="body"
+                            >
+                              <ng-template let-option pTemplate="item">
+                                <div class="option-item">
+                                  <div style="float: left; width: 30%">
+                                    {{ option.UserId }}
+                                  </div>
+                                  <div style="float: left; width: 70%">
+                                    {{ option.Username }}
+                                  </div>
+                                </div>
+                              </ng-template>
+                            </p-dropdown>
+                          </div>
+                          <div class="col-lg-2">
+                            <ng-container>
+                              <button
+                                type="button"
+                                class="btn btn-outline-success btnFix searchbutton"
+                                (click)="saveuser()"
+                              >
+                                <i class="fas fa-plus"></i>
+                              </button>
+                            </ng-container>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                    <p-table
+                      [value]="GetUserByDocumentTypeId$"
+                      [paginator]="
+                        GetUserByDocumentTypeId$.length > 4 ? true : false
+                      "
+                      [rows]="10"
+                      class="datatable-width"
+                      styleClass="p-datatable-sm"
+                      responsiveLayout="stack"
+                      [breakpoint]="'960px'"
+                      [rowHover]="true"
+                    >
+                      <ng-template pTemplate="header">
+                        <tr>
+                          <th style="min-width: 150px">Users</th>
+                          <th style="min-width: 100px; text-align: right">
+                            Action
+                          </th>
+                        </tr>
+                      </ng-template>
+                      <ng-template pTemplate="body" let-m let-index="index">
+                        <tr>
+                          <td>{{ m.Username }}</td>
+                          <td style="text-align: right">
+                            <button
+                              pButton
+                              icon="pi pi-trash"
+                              class="p-button p-button-outlined p-button-rounded p-button-danger custom-button-success"
+                              (click)="DeleteApprovalHirarchyUsers(m)"
+                            ></button>
+                          </td>
+                        </tr>
+                      </ng-template>
+                    </p-table>
+                  </div>
+
+                  <div class="row align-items-stretch">
+                    <div class="col-sm-4"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <!--this is old-->
+  </div>
+  <!-- Grid-End -->
+</div>

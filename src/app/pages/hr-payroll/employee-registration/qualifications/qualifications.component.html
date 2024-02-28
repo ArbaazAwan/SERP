@@ -1,0 +1,306 @@
+<div class="card-wrapper">
+  <div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-10">
+      <form
+        class="col-lg-12 col-md-12 col-sm-12"
+        [formGroup]="form"
+        (ngSubmit)="addorUpdate()"
+      >
+        <div class="row">
+          <div class="col-lg-3 col-md-6 col-sm-12">
+            <div class="form-group">
+              <label
+                >Qualification Level
+                <span class="astrik">*</span>
+              </label>
+
+              <p-dropdown [style]="{ width: '245px' }" [options]="qualificationLevelList" [filter]="true"
+              formControlName="QualificationLevelCode" optionLabel="LevelName" optionValue="QualificationLevelCode"
+              filterBy="LevelName" placeholder="Select Qualification" [panelStyle]="{ overflow: 'auto' }"
+              [showClear]="true" appendTo="body" (onChange)="qualification(qualificationLevelList)">
+          </p-dropdown>
+              <small
+                *ngIf="
+                  form.controls['QualificationLevelCode'].invalid &&
+                  form.controls['QualificationLevelCode'].touched
+                "
+                class="text-danger text-xs"
+              >
+                Qualification Level is Required
+              </small>
+              <small
+                *ngIf="duplicateData"
+                class="text-danger text-xs"
+              >
+              Qualification with the same name already exists!
+              </small>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6 col-sm-12">
+            <div class="form-group">
+              <label
+                >Degree Title
+                <span class="astrik">*</span>
+              </label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Enter Degree Title"
+                formControlName="DegreeTitle"
+                name="DegreeTitle"
+              />
+              <small
+                *ngIf="
+                  form.controls['DegreeTitle'].invalid &&
+                  form.controls['DegreeTitle'].touched
+                "
+                class="text-danger text-xs"
+              >
+                Degree Title is Required
+              </small>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6 col-sm-12">
+            <div class="form-group">
+              <label
+                >Institution
+                <span class="astrik">*</span>
+              </label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Enter Institute"
+                formControlName="InstitutionName"
+                name="InstitutionName"
+              />
+              <small
+                *ngIf="
+                  form.controls['InstitutionName'].invalid &&
+                  form.controls['InstitutionName'].touched
+                "
+                class="text-danger text-xs"
+              >
+                Institution Name is Required
+              </small>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6 col-sm-12">
+            <div class="form-group">
+              <label>Board/University <span class="astrik">*</span></label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Enter Board/Uni"
+                formControlName="BoardOrUniversityName"
+                name="BoardOrUniversityName"
+              />
+              <small
+                *ngIf="
+                  form.controls['BoardOrUniversityName'].invalid &&
+                  form.controls['BoardOrUniversityName'].touched
+                "
+                class="text-danger text-xs"
+              >
+                Board Or University Name is Required
+              </small>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6 col-sm-12">
+            <div class="form-group">
+              <label>Subject <span class="astrik">*</span></label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Enter Subject"
+                formControlName="Subject"
+                name="Subject"
+              />
+              <small
+                *ngIf="
+                  form.controls['Subject'].invalid &&
+                  form.controls['Subject'].touched
+                "
+                class="text-danger text-xs"
+              >
+                Subject is Required
+              </small>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6 col-sm-12">
+            <div class="form-group">
+              <label>Passing Year</label>
+              <input
+                type="number"
+                class="form-control"
+                placeholder="Enter Passing Years"
+                formControlName="PassingYear"
+                name="PassingYear"
+                maxlength="4"
+              />
+              <small
+                *ngIf="
+                  form.controls['PassingYear'].invalid &&
+                  form.controls['PassingYear'].touched
+                "
+                class="text-danger text-xs"
+              >
+                Passing Year is Required
+              </small>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6 col-sm-12">
+            <div class="form-group">
+              <label>Division/Grade </label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Enter  Division/Grade"
+                formControlName="DivisionOrGrade"
+                name="DivisionOrGrade"
+              />
+              <small
+                *ngIf="
+                  form.controls['DivisionOrGrade'].invalid &&
+                  form.controls['DivisionOrGrade'].touched
+                "
+                class="text-danger text-xs"
+              >
+                Division Or Grade is Required
+              </small>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6 col-sm-12">
+            <div class="form-group">
+              <label>Employee Documents </label>
+              <input
+                type="file"
+                class="form-control"
+                id="fileUpload"
+                formControlName="DocumentsPath"
+                (change)="selectFile($event)"
+                accept="image/jpeg, image/png, image/gif, application/pdf, image/x-eps, image/webp"
+              />
+              <p>{{ fileName }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="row float-end">
+          <div class="d-flex align-items-center gap-2">
+            <button
+              type="submit"
+              id="btnsave"
+              class="btn-save"
+              [disabled]="isUpdate"
+            >
+              Save
+            </button>
+            <button
+              type="submit"
+              id="btnupdate"
+              class="btn-update"
+              [disabled]="!isUpdate"
+            >
+              Update
+            </button>
+            <button
+              type="button"
+              id="btnRefresh"
+              class="btn-refresh"
+              (click)="refresh()"
+            >
+              <img src="../../../../assets/icons/btn-refresh.svg" alt="" />
+            </button>
+          </div>
+          <div class="col-lg-4"></div>
+        </div>
+      </form>
+
+      <div class="table-responsive custom-table">
+        <p-table
+          class="table table-striped table-borderless"
+          [value]="qualificationList"
+          [paginator]="true"
+          [alwaysShowPaginator]="false"
+          [rows]="3"
+          [globalFilterFields]="globalFilterFields"
+          [columns]="cols"
+        >
+          <ng-template pTemplate="header" let-columns>
+            <tr class="table-fixed">
+              <th class="text-nowrap"
+                *ngFor="let col of columns"
+                [pSortableColumn]="col.field"
+                pResizableColumn
+              >
+                {{ col.header }}
+                <p-sortIcon
+                  [field]="col.field"
+                  *ngIf="col.header !== 'Action'"
+                ></p-sortIcon>
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template
+            pTemplate="body"
+            let-rowData
+            let-columns="columns"
+            let-odd
+          >
+            <tr [ngClass]="{ 'odd-row': odd }">
+              <td *ngFor="let col of columns">
+                <ng-container [ngSwitch]="col.field">
+                  <ng-container *ngSwitchCase="'DocumentsPath'">
+                    {{ rowData[col.field] | extractFileName }}
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'action'">
+                    <button
+                      class="three-dots"
+                      type="button"
+                      id="table-action-menu"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      <i class="fa fa-ellipsis-v"></i>
+                    </button>
+                    <ul
+                      class="dropdown-menu"
+                      aria-labelledby="table-action-menu"
+                    >
+                      <li>
+                        <a
+                          class="dropdown-item edit cursor-hover cursor-pointer"
+                          (click)="getSelectedRow(rowData)"
+                          >Edit</a
+                        >
+                      </li>
+                      <li>
+                        <a
+                          class="dropdown-item edit cursor-hover cursor-pointer"
+                          (click)="downloadDocuments(rowData)"
+                          >View</a
+                        >
+                      </li>
+                      <li>
+                        <a
+                          class="dropdown-item delete cursor-hover cursor-pointer"
+                          (click)="onDelete(rowData.QualificationCode)"
+                          >Delete</a
+                        >
+                      </li>
+                    </ul>
+                  </ng-container>
+                  <ng-container *ngSwitchDefault>
+                    {{ rowData[col.field] }}
+                  </ng-container>
+                </ng-container>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-confirm-dialog></app-confirm-dialog>

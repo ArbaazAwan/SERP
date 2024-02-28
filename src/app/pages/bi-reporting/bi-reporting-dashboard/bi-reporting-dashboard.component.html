@@ -1,0 +1,14 @@
+<ng-container *ngIf="isBiReportingDashboardRoute()">
+  <div
+    class="d-flex align-items-center justify-content-end col-lg-8 col-md-8 col-sm-8"
+    style="height: 80vh"
+  >
+    <img src="./assets/logo/black-logo.png" alt="logo" class="logo" />
+  </div>
+</ng-container>
+
+<p-sidebar [visible]="true" [modal]="false" [showCloseIcon]="false">
+  <img src="./assets/logo/black-logo.png" class="navbar-logo" alt="..." />
+  <p-panelMenu [model]="bireportingItems" [multiple]="false"></p-panelMenu>
+</p-sidebar>
+<router-outlet></router-outlet>

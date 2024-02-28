@@ -1,0 +1,43 @@
+.card-wrapper {
+  width: 780px;
+}
+
+.scrollable-table-container {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.odd {
+  background-color: #ebf5fd;
+}
+
+.checkbox {
+  width: 17px;
+  height: 20px;
+}
+
+.custom-row {
+  flex-shrink: 0;
+  border-radius: 20px;
+  background: var(--Secondary-Colors-white, #FFF);
+}
+
+.total-per-wrapper {
+  .total-perc {
+    color: var(--Secondary-Colors-grey-text, #8C8C8C);
+    text-align: center;
+    font-family: Manrope;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 120%;
+  }
+
+  display: inline-flex;
+  padding: 9px 6px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  border-radius: 6px;
+  border: 1px solid #E1E1E1;
+}

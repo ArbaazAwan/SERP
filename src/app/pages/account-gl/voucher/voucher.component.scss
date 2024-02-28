@@ -1,0 +1,47 @@
+
+
+.btn-save {
+    background: #32A0EF !important;
+    color: white !important;
+    transition: 0.3s all !important;
+    border: 0 !important;
+    padding:5px;
+    &:hover {
+      background: #32A0EF;
+      color: white;
+    }
+  
+    &:disabled {
+      cursor: not-allowed;
+      pointer-events: none !important;
+      background: #bfbfbf !important;
+      border: 0 !important;
+      color: white;
+    }
+  }
+  
+  :host ::ng-deep {
+    .p-toolbar {
+      padding: 5px;
+      background: white;
+      border: 0;
+    }
+    .p-button-label {
+      font-size: 12px;
+    }
+    .p-button .p-button-icon-left {
+      margin-right: 2px;
+    }
+    .p-toolbar-group-left {
+      width: 100%
+    }
+  }
+  .btn-margin{
+    margin-right: 750px;
+  }
+  .pd{
+    padding: 0px;
+  }
+  ::ng-deep .p-dialog .p-dialog-header .p-dialog-header-icon {
+    color: white !important;
+}

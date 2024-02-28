@@ -1,0 +1,50 @@
+<div class="main-container">
+  <div class="container" style="height: 50vh">
+    <!-- <video #videoElement autoplay controls></video> -->
+    <vg-player>
+      <video
+        [vgMedia]="$any(media)"
+        #media
+        id="video"
+        preload="auto"
+        crossorigin
+      >
+        <!-- <source [src]="videoSource" type="application/x-rtsp" /> -->
+      </video>
+      <vg-controls>
+        <vg-play-pause></vg-play-pause>
+        <vg-time-display
+          vgProperty="current"
+          vgFormat="mm:ss"
+        ></vg-time-display>
+        <vg-time-display vgProperty="total" vgFormat="mm:ss"></vg-time-display>
+      </vg-controls>
+      <vg-overlay-play></vg-overlay-play>
+      <vg-buffering></vg-buffering>
+    </vg-player>
+  </div>
+  <!-- ===Table-Start=== -->
+  <div class="container">
+    <p-table [value]="socketData">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Column-A</th>
+          <th>Column-B</th>
+          <th>Column-C</th>
+          <th>Column-D</th>
+          <th>Column-E</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData>
+        <tr>
+          <td>{{ rowData.property1 }}</td>
+          <td>{{ rowData.property2 }}</td>
+          <td>{{ rowData.property2 }}</td>
+          <td>{{ rowData.property2 }}</td>
+          <td>{{ rowData.property2 }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+  <!-- ===Table-End=== -->
+</div>

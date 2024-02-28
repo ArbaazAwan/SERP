@@ -1,0 +1,182 @@
+<ngx-loading-bar [includeSpinner]="false" [height]="'3px'"></ngx-loading-bar>
+
+<app-confirm-dialog></app-confirm-dialog>
+
+<div class="main-container" (scroll)="onMainContainerScroll($event)">
+  <div [class]="isSticky ? 'sticky-header' : ''">
+    <app-store-project
+      [componentName]="componentName"
+      [hide]="false"
+    ></app-store-project>
+  </div>
+
+  <!-- Interview Status Data Entry Row -->
+  <div class="row">
+    <form
+      class="col-lg-12 col-md-12 col-sm-12"
+      [formGroup]="form"
+      (ngSubmit)="onSubmit()"
+    >
+      <div class="card-wrapper">
+        <div class="row align-items-center">
+          <div class="col-lg-3 col-md-6 col-sm-12 mb-12">
+            <div class="form-group">
+              <label class="ml-1 mb-1">
+                Interview Status
+                <span class="astrik">*</span>
+              </label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Enter Interview Status Name"
+                formControlName="InterviewStatusText"
+              />
+              <div
+                class="input-error"
+                *ngIf="
+                  form.controls['InterviewStatusText'].invalid &&
+                  form.controls['InterviewStatusText'].touched
+                "
+              >
+                Field Required
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6 col-sm-12">
+            <div class="checkbox-wrapper d-flex w-100 mt-2 ml-3">
+              <div class="checkbox">
+                <input
+                  class="form-checkbox chk"
+                  type="checkbox"
+                  formControlName="IsActive"
+                />
+                <label class="form-check-label" style="line-height: 21px"
+                  >Active</label
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interview Status Buttons Row -->
+        <div class="col-lg-12 mt-3">
+          <div class="buttons-wrapper d-flex align-items-center gap-2">
+            <button
+              type="submit"
+              id="btnsave"
+              Class="btn-save"
+              [disabled]="isUpdate"
+            >
+              Save
+            </button>
+            <button
+              type="submit"
+              id="btnsave"
+              Class="btn-update"
+              [disabled]="!isUpdate"
+            >
+              Update
+            </button>
+            <button
+              type="button"
+              id="btnRefresh"
+              class="btn-refresh"
+              (click)="clearForm()"
+            >
+              <img src="../../../../assets/icons/btn-refresh.svg" alt="" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- Interview Status Data Table -->
+  <div class="row">
+    <div class="col-lg-12 col-md-12 mt-3">
+      <div class="table-responsive card-wrapper custom-table">
+        <p-table
+          *ngIf="!isLaodingTable"
+          class="datatable-width"
+          styleClass="p-datatable-sm"
+          responsiveLayout="stack"
+          [breakpoint]="'960px'"
+          [value]="interviewStatusList"
+          [paginator]="true"
+          [alwaysShowPaginator]="false"
+          [rows]="10"
+          [rowHover]="true"
+          [globalFilterFields]="['InterviewStatusText']"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th pSortableColumn="InterviewStatusText" class="text-nowrap">
+                Interview Status Name
+                <p-sortIcon field="InterviewStatusText"></p-sortIcon>
+              </th>
+              <th class="text-nowrap">Active</th>
+              <th scope="col" class="text-center">Action</th>
+            </tr>
+            <tr>
+              <td colspan="3">
+                <hr />
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-item>
+            <tr>
+              <td>
+                <span class="ml-2">
+                  {{ item.InterviewStatusText }}
+                </span>
+              </td>
+              <td>
+                <span
+                  class="ml-2"
+                  [class]="
+                    item.IsActive == true ? 'success-badge' : 'danger-badge'
+                  "
+                >
+                  {{ item.IsActive | yesNo }}
+                </span>
+              </td>
+              <td>
+                <div class="dropdown text-center ml-2">
+                  <button
+                    class="three-dots"
+                    type="button"
+                    id="table-action-menu"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    <i class="fa fa-ellipsis-v"></i>
+                  </button>
+                  <ul class="dropdown-menu" aria-labelledby="table-action-menu">
+                    <li>
+                      <a
+                        class="dropdown-item edit cursor-hover cursor-pointer"
+                        (click)="edit(item)"
+                        >Edit</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        class="dropdown-item delete cursor-hover cursor-pointer"
+                        (click)="delete(item.InterviewStatusCode)"
+                        >Delete</a
+                      >
+                    </li>
+                  </ul>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+        <div class="no-record-found" *ngIf="interviewStatusList.length == 0">
+          <p class="no-data">No Data Found</p>
+        </div>
+        <app-table-loader *ngIf="isLaodingTable"></app-table-loader>
+      </div>
+    </div>
+  </div>
+</div>

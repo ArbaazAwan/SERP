@@ -1,0 +1,181 @@
+<ngx-loading-bar [includeSpinner]="false" [height]="'3px'"></ngx-loading-bar>
+<app-confirm-dialog></app-confirm-dialog>
+
+<div class="main-container" (scroll)="onMainContainerScroll($event)">
+  <div [class]="isSticky ? 'sticky-header' : ''">
+    <app-store-project
+      [componentName]="'Holiday Type'"
+      [showInput2]="false"
+      [showInput1]="false"
+      [hide]="false"
+    ></app-store-project>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+      <form [formGroup]="Holidayform" novalidate>
+        <div class="card-wrapper">
+          <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Holiday Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter Holiday Name"
+                  formControlName="HolidayName"
+                />
+                <small
+                  *ngIf="
+                    Holidayform.get('HolidayName')?.invalid &&
+                    Holidayform.get('HolidayName')?.touched
+                  "
+                  class="text-danger text-xs"
+                >
+                  Holiday Name is Required
+                </small>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>Holiday Date</label>
+                <p-calendar
+                  class="form-control inputSetting"
+                  formControlName="HolidayDate"
+                  [dateFormat]="formatDateForInput"
+                  [placeholder]="formatDateForInput"
+                ></p-calendar>
+                <small
+                  *ngIf="
+                    Holidayform.get('HolidayDate')?.invalid &&
+                    Holidayform.get('HolidayDate')?.touched
+                  "
+                  class="text-danger text-xs"
+                >
+                  Holiday Date is Required
+                </small>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-12">
+              <div class="d-flex align-items-center gap-2 isactive">
+                <div class="checkbox">
+                  <input
+                    type="checkbox"
+                    id="active"
+                    class="form-checkbox"
+                    formControlName="IsActive"
+                  />
+                  <label class="form-check-label" for="active">Active</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="d-flex align-items-center gap-2">
+              <button
+                type="button"
+                id="btnsave"
+                class="btn-save"
+                (click)="addorUpdateHolidayType()"
+                [disabled]="isUpdate"
+              >
+                Save
+              </button>
+              <button
+                type="button"
+                id="btnupdate"
+                class="btn-update"
+                (click)="addorUpdateHolidayType()"
+                [disabled]="!isUpdate"
+              >
+                Update
+              </button>
+              <button
+                type="button"
+                id="btnRefresh"
+                class="btn-refresh"
+                (click)="refresh()"
+              >
+                <img src="../../../../assets/icons/btn-refresh.svg" alt="" />
+              </button>
+            </div>
+            <div class="col-lg-4"></div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="col-lg-12 col-md-12 col-sm-12 mt-3">
+      <div class="table-responsive card-wrapper custom-table">
+        <table
+          class="table table-striped table-borderless"
+          *ngIf="!isLoadingData"
+        >
+          <thead>
+            <tr>
+              <!-- <th scope="col">HolidayTypeCode</th> -->
+              <th scope="col">Holiday Name</th>
+              <th scope="col">Holiday Date</th>
+              <th scope="col">Active</th>
+              <th scope="col" class="text-center">Action</th>
+            </tr>
+          </thead>
+          <hr />
+          <tbody>
+            <tr
+              *ngFor="let item of Holidayresponse$; let odd = odd"
+              [ngClass]="{ 'odd-row': odd }"
+            >
+              <!-- <td>{{ item.HolidayTypeCode }}</td> -->
+              <td>{{ item.HolidayName }}</td>
+              <td>{{ item.HolidayDate | date : "yyyy-MM-dd" }}</td>
+              <td>
+                <span
+                  [class]="
+                    item.IsActive == true ? 'success-badge' : 'danger-badge'
+                  "
+                  >{{ item.IsActive | yesNo }}</span
+                >
+              </td>
+              <td>
+                <div class="dropdown text-center">
+                  <button
+                    class="three-dots"
+                    type="button"
+                    id="table-action-menu"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    <i class="fa fa-ellipsis-v"></i>
+                  </button>
+                  <ul class="dropdown-menu" aria-labelledby="table-action-menu">
+                    <li>
+                      <a
+                        class="dropdown-item edit cursor-hover cursor-pointer"
+                        (click)="getRowHolidayType(item)"
+                        >Edit</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        class="dropdown-item delete cursor-hover cursor-pointer"
+                        (click)="deleteHolidayType(item.HolidayTypeCode)"
+                        >Delete</a
+                      >
+                    </li>
+                  </ul>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div *ngIf="isLoadingData">
+          <app-table-loader></app-table-loader>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

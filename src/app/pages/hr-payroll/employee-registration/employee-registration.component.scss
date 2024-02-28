@@ -1,0 +1,135 @@
+::ng-deep .p-dialog .p-dialog-content {
+  padding: 0 !important;
+}
+
+.tab-heading {
+  font-size: 13px;
+}
+
+::ng-deep {
+  .p-tabview .p-tabview-nav li .p-tabview-nav-link {
+    background: #ffffff;
+    color: #495057;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+  }
+
+  .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+    background: #ffffff;
+    border-color: #32A0EF #32A0EF #ffffff #32A0EF;
+    color: #495057;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+  }
+
+  .p-tabview .p-tabview-nav li .p-tabview-nav-link:not(.p-disabled):focus {
+    outline: 0 none;
+    outline-offset: 0;
+    box-shadow: none;
+  }
+
+  li.p-highlight {
+    .tab-heading {
+      color: #32A0EF
+    }
+
+    i {
+      color: #32A0EF;
+    }
+  }
+
+  .p-tabview .p-tabview-panels {
+    padding: 1rem 0;
+  }
+}
+
+:host ::ng-deep .p-tabview {
+  display: flex;
+}
+
+// :host ::ng-deep .p-tabview-nav-container {
+// 	width: 300px;
+// }
+:host ::ng-deep .p-tabview-nav-container {
+  flex: 1;
+  border-radius: 5px;
+  margin-right: 15px;
+  max-width: 200px;
+}
+
+:host ::ng-deep .p-tabview-nav {
+  flex-direction: column;
+}
+
+:host ::ng-deep .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+  border-color: #32A0EF;
+}
+
+:host ::ng-deep .p-tabview .p-tabview-nav li .p-tabview-nav-link {
+  border: solid;
+  border-width: 1px;
+  border-color: #ffffff;
+  background: #ffffff;
+  color: #6c757d;
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  border-radius: 4px;
+  margin: 0 0 0 0;
+}
+
+::ng-deep .text-xs {
+  font-size: 0.65rem !important;
+}
+
+.container-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+::ng-deep .form-screen .p-dialog {
+  width: 60vw;
+  height: 50vh;
+  max-height: 100%;
+  border-radius: 0%;
+}
+
+.input-container {
+  position: relative;
+  display: inline-block;
+  width: 330px;
+}
+
+.input-container input {
+  padding-left: 30px;
+}
+
+.input-container i {
+  position: absolute;
+  left: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+::ng-deep .p-dialog .p-dialog-header .p-dialog-header-icon {
+  color: white!important;
+}
+
+.table-fix{
+  overflow: auto; 
+  height: 230px
+}
+
+.clear-button {
+  position: absolute;
+  top: 50%;
+  right: 10px; /* Adjust this value to align the button as per your design */
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.search-icon {
+  position: absolute;
+  top: 50%;
+}

@@ -1,0 +1,60 @@
+/* Style for the file upload container */
+.upload-label {
+    cursor: pointer;
+    display: inline-block;
+    border: 2px dashed #ccc;
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+    align-items: center;
+    text-align: center;
+    width: 100px;
+    height: 100px;
+    position: relative;
+  }
+
+  .text-upload {
+    position: relative;
+    top: 50%;
+    transform: translate(5%, -50%);
+  }
+
+  /* Style for the file preview container */
+  .preview-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border: 2px solid #ccc;
+    width: 100px;
+    height: 100px;
+    position: relative;
+  }
+
+  .img-container {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  /* Style for image previews */
+  .image-preview {
+    width: 100%;
+    object-fit: contain;
+    height: 100%;
+  }
+
+  /* Style for file name and file icon */
+  .file-name, .fa-file {
+    margin-top: 7px;
+    font: 11px;
+  }
+
+  /* Style for the remove (cross) button */
+  .remove-button {
+    position: absolute;
+    top: 0px;
+    right: 3px;
+    cursor: pointer;
+  }

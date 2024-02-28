@@ -1,0 +1,262 @@
+<p-confirmDialog #cd [style]="{ width: '30vw' }">
+  <ng-template pTemplate="footer">
+    <button
+      type="button"
+      pButton
+      icon="pi pi-times"
+      label="No"
+      class="p-button-success"
+      (click)="cd.reject()"
+    ></button>
+    <button
+      type="button"
+      pButton
+      icon="pi pi-check"
+      label="Yes"
+      class="p-button-danger"
+      (click)="cd.accept()"
+    ></button>
+  </ng-template>
+</p-confirmDialog>
+
+<div class="main-container">
+  <div class="container">
+    <app-store-project
+      [showInput2]="false"
+      [showInput1]="false"
+      [componentName]="componentName"
+      [hide]="false"
+    ></app-store-project>
+    <!-- <div class="col-lg-12 col-md-12 col-sm-12 mb-2 FormsHeading">
+      <p class="mx-2 my-1">Document Types</p>
+    </div> -->
+  </div>
+
+  <div class="container">
+    <div class="row justify-content-flex-start">
+      <form class="col-lg-12 col-md-12 col-sm-10" [formGroup]="form" novalidate>
+        <div class="row text-center" style="font-size: small">
+          <div class="col-lg-12 col-md-12 col-sm-10">
+            <div class="card p-3">
+              <div class="row align-items-stretch">
+                <div class="col-lg-3 col-md-6 col-sm-12" style="height: 4rem">
+                  <label class="float-md-left d-flex float-sm-left">Code</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="DocumentTypeId"
+                    [(ngModel)]="DocumentTypes.DocumentTypeId"
+                    [attr.disabled]="true"
+                  />
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12" style="height: 4rem">
+                  <label class="float-md-left d-flex float-sm-left"
+                    >Document Type Name
+                    <span class="astrik">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Enter Document Type Name"
+                    formControlName="DocumentTypeName"
+                    [(ngModel)]="DocumentTypes.DocumentTypeName"
+                  />
+                  <span
+                    class="d-flex"
+                    *ngIf="
+                      form.controls['DocumentTypeName'].invalid &&
+                      form.controls['DocumentTypeName'].touched
+                    "
+                    style="color: red"
+                  >
+                    Field Required
+                  </span>
+                </div>
+                <div
+                  class="col-lg-1 col-md-3 col-sm-12 mt-3 d-flex align-center justify-content-center"
+                >
+                  <button
+                    class="btn btnCheckBox d-flex"
+                    style="outline: none; box-shadow: none"
+                    (click)="IsActive()"
+                  >
+                    <div class="form-check form-check-inline d-flex">
+                      <input
+                        type="checkbox"
+                        formControlName="IsActive"
+                        [(ngModel)]="DocumentTypes.IsActive"
+                      />
+                      <label style="margin-left: 9px">Active</label>
+                    </div>
+                  </button>
+                </div>
+                <div
+                  class="col-lg-1 col-md-3 col-sm-12 mt-3 d-flex ps-0 align-center"
+                >
+                  <button
+                    class="btn btnCheckBox d-flex"
+                    style="outline: none; box-shadow: none"
+                    (click)="IsStoreWise()"
+                  >
+                    <div
+                      class="form-check form-check-inline d-flex"
+                      style="padding-left: 0 !important"
+                    >
+                      <input
+                        type="checkbox"
+                        formControlName="IsStorewise"
+                        [(ngModel)]="DocumentTypes.IsStoreWise"
+                      />
+                      <label style="margin-left: 9px">Store Wise</label>
+                    </div>
+                  </button>
+                </div>
+                <div
+                  class="col-lg-1 col-md-3 col-sm-12 mt-3 mx-lg-2 d-flex align-center"
+                >
+                  <button
+                    class="btn btnCheckBox d-flex"
+                    style="outline: none; box-shadow: none"
+                    (click)="IsProjectWise()"
+                  >
+                    <div
+                      class="form-check form-check-inline d-flex"
+                      style="padding-left: 0 !important"
+                    >
+                      <input
+                        type="checkbox"
+                        formControlName="IsProjectWise"
+                        [(ngModel)]="DocumentTypes.IsProjectWise"
+                      />
+                      <label style="margin-left: 9px">Project wise</label>
+                    </div>
+                  </button>
+                </div>
+              </div>
+              <!-- <div class="row mt-3">
+                <div class="d-flex align-items-center gap-2">
+                  <button
+                    type="button"
+                    id="btnsave"
+                    class="btn-save"
+                    (click)="addorUpdate()"
+                    [disabled]="isUpdate"
+                  >
+                    Save
+                  </button>
+                  <button
+                    type="button"
+                    id="btnupdate"
+                    class="btn-update"
+                    (click)="addorUpdate()"
+                    [disabled]="!isUpdate"
+                  >
+                    Update
+                  </button>
+                  <button
+                    type="button"
+                    id="btnRefresh"
+                    class="btn-refresh"
+                    (click)="refresh()"
+                  >
+                    <img
+                      src="../../../../assets/icons/btn-refresh.svg"
+                      alt=""
+                    />
+                  </button>
+                </div>
+                <div class="col-lg-4"></div>
+              </div> -->
+              <!-- Buttons-Start -->
+              <div class="row align-items-stretch mt-3">
+                <div class="col-sm-4"></div>
+                <div
+                  class="row justify-content-center"
+                  style="align-items: flex-end"
+                >
+                  <ng-container>
+                    <Button
+                      type="button"
+                      id="btnsave"
+                      Class="btn btn-outline-success btnFix mx-1"
+                      (click)="addorUpdate()"
+                      [disabled]="isUpdate"
+                      >Save</Button
+                    >
+                    <!-- Class="btn btn-outline-success btnFix" -->
+                    <Button
+                      type="button"
+                      id="btnsave"
+                      class="btn btn-outline-success btnFix"
+                      (click)="addorUpdate()"
+                      [disabled]="!isUpdate"
+                      >Update</Button
+                    >
+                    <!-- [disabled]="!isUpdate" -->
+                  </ng-container>
+                  <Button
+                    type="button"
+                    id="btnRefresh"
+                    class="btn primary-button-color mx-1 btnFix"
+                    (click)="refresh()"
+                    >Refresh</Button
+                  >
+                </div>
+              </div>
+              <!-- Buttons-End -->
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <p-table
+      [value]="DocumentTypesresponse$"
+      [paginator]="DocumentTypesresponse$.length > 4 ? true : false"
+      [rows]="10"
+      class="datatable-width"
+      styleClass="p-datatable-sm"
+      responsiveLayout="stack"
+      [breakpoint]="'960px'"
+      [rowHover]="true"
+      #dt
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="min-width: 150px" pSortableColumn="DocumentTypeId">
+            Code <p-sortIcon field="DocumentTypeId"></p-sortIcon>
+          </th>
+          <th style="min-width: 100px" pSortableColumn="DocumentTypeName">
+            Document Types <p-sortIcon field="DocumentTypeName"></p-sortIcon>
+          </th>
+          <th style="min-width: 100px" pSortableColumn="IsActive">
+            Active <p-sortIcon field="IsActive"></p-sortIcon>
+          </th>
+          <th style="min-width: 100px">Action</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-m>
+        <tr>
+          <td>{{ m.DocumentTypeId }}</td>
+          <td>{{ m.DocumentTypeName }}</td>
+          <td>{{ m.IsActive }}</td>
+          <td>
+            <button
+              pButton
+              icon="pi pi-pencil"
+              class="p-button p-button-outlined p-button-rounded p-button-warning GridEditButton p-mr-2 mx-1"
+              (click)="getSelectedRow(m)"
+            ></button>
+            <button
+              pButton
+              icon="pi pi-trash"
+              class="p-button p-button-outlined p-button-rounded p-button-danger GridDelButton mx-1"
+              (click)="delete(m.BranchCode, m.DocumentTypeId)"
+            ></button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+  <!-- Grid-End -->
+</div>

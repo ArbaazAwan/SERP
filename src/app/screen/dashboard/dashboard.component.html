@@ -1,0 +1,36 @@
+<div class="page-holder align-items-center py-4 vh-100 bg-gray-100">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4 col-xl-3" *ngFor="let a of menuItems">
+        <div
+          class="card order-card"
+          [routerLink]="a.route"
+          (click)="a.func ? goToURL() : ''"
+        >
+          <div class="card-block">
+            <p
+              class="text-right font-weight-bold text-white mb-5"
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+              "
+            >
+              <i [ngClass]="a.icon"></i>
+              <ng-container *ngIf="a.locked">
+                <i class="fa fa-lock" style="font-size: 1rem"></i>
+              </ng-container>
+              <ng-container *ngIf="!a.locked">
+                <i class="fa fa-unlock" style="font-size: 1rem"></i>
+              </ng-container>
+            </p>
+
+            <p class="m-b-0 font-weight-bold text-white">
+              <span class="f-right">{{ a.name }}</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

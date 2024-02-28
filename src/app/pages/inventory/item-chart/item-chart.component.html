@@ -1,0 +1,262 @@
+<ngx-loading-bar [includeSpinner]="false" [height]="'3px'"></ngx-loading-bar>
+<p-toast></p-toast>
+<app-confirm-dialog></app-confirm-dialog>
+
+<div class="main-container account-chart">
+  <div class="container mt-1">
+    <app-store-project
+      [showInput2]="false"
+      [showInput1]="false"
+      [componentName]="componentName"
+      [hide]="false"
+    ></app-store-project>
+    <div class="card">
+      <p-toolbar>
+        <ng-template pTemplate="left">
+          <button pButton pRipple label="Add Category" icon="pi pi-plus-circle one" class="btn-save"
+          (click)="addNewCategoryDialog()"></button>
+          <button pButton pRipple label="Add Item" icon="pi pi-plus-circle one" class="btn-save ml-2"
+            (click)="openNew(null, 'add')"></button>
+          <button pButton pRipple label="Preview / Print" icon="pi pi-print" class="btn-update ml-2"
+          (click)="openPrintCategoryDialog()"></button>
+        </ng-template>
+        <ng-template pTemplate="right">
+          <label class="inline-radio">
+            <input type="radio" value="Code" [(ngModel)]="selectedRadio" />
+            Code
+          </label>
+          <label class="inline-radio">
+            <input type="radio" value="Title" [(ngModel)]="selectedRadio" />
+            Title
+          </label>
+
+          <span class="p-input-icon-left">
+            <i class="pi pi-search"></i>
+            <input
+              pInputText
+              type="text"
+              (input)="filterGlobal($event)"
+              (click)="getRadioControl()"
+              (blur)="clearFilter($event)"
+              placeholder="Search..."
+            />
+          </span>
+        </ng-template>
+      </p-toolbar>
+
+      <p-treeTable
+        #dt
+        [value]="chartResponse"
+        [rowHover]="true"
+        [globalFilterFields]="['ItemCode', 'ItemName', 'HasDetail', 'IsDetail']"
+      >
+        >
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="min-width: 200px" field="ItemCode">Item Code</th>
+            <th style="min-width: 200px" field="ItemName">Item Name</th>
+            <th style="min-width: 150px" field="HasDetail">Category Acc</th>
+            <th style="min-width: 150px" field="IsDetail">Transaction Acc</th>
+            <th style="min-width: 200px">Actions</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
+          <tr [ttRow]="rowNode">
+            <td>
+              <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+              {{ rowData.ItemCode }}
+            </td>
+
+            <td>{{ rowData.ItemName }}</td>
+
+            <td>
+              <ng-container *ngIf="rowData.HasDetail">
+                <input type="checkbox" checked disabled />
+              </ng-container>
+              <ng-container *ngIf="!rowData.HasDetail">
+                <input type="checkbox" disabled />
+              </ng-container>
+            </td>
+            <td>
+              <ng-container *ngIf="rowData.IsDetail">
+                <input type="checkbox" checked disabled />
+              </ng-container>
+              <ng-container *ngIf="!rowData.IsDetail">
+                <input type="checkbox" disabled />
+              </ng-container>
+            </td>
+
+            <td [style]="'right-padding: 0'">
+              <div class="dropdown">
+                <button
+                  class="three-dots"
+                  type="button"
+                  id="table-action-menu"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <i class="fa fa-ellipsis-v"></i>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="table-action-menu">
+                  <li>
+                    <a
+                      class="dropdown-item edit cursor-hover cursor-pointer"
+                      (click)="GetDataByItemCode(rowData.ItemCode, rowData.HasDetail)"
+                      >Edit</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      class="dropdown-item delete cursor-hover cursor-pointer"
+                      (click)="deleteChartItem(rowData.ItemCode, rowData.HasDetail)"
+                      >Delete</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-treeTable>
+    </div>
+  </div>
+
+  <form [formGroup]="form">
+    <p-dialog
+      [(visible)]="mainDialog"
+      [style]="{ width: '950px', height: '600px' }"
+      [header]="mainHeader"
+      [modal]="true"
+      styleClass="p-fluid"
+      [closable]="true"
+    >
+      <app-new-chartofitem
+        [isUpdate]="isUpdate"
+        [selectedRow]="selectedRow"
+        (saveSuccess)="toggleMainDialog(false); loadAllChartItem()"
+      ></app-new-chartofitem>
+      <ng-template pTemplate="footer">
+        <!-- <button
+          pButton
+          pRipple
+          label="Cancel"
+          icon="pi pi-times"
+          class="p-button-text"
+          (click)="hideDialog()"
+        ></button> -->
+        <!-- <button
+          pButton
+          pRipple
+          [label]="mainBtn"
+          icon="pi pi-check"
+          class="p-button-text"
+          (click)="addorUpdate()"
+        ></button> -->
+      </ng-template>
+    </p-dialog>
+  </form>
+</div>
+
+<!-- Response-Error-Message  -->
+<div class="loading-newpopup" *ngIf="loadingerror">
+  <div class="newpopup">
+    <!---<a><img class="ErrorIcon" src="./assets/icon/error.svg" /></a>-->
+    <div class="Errormessage">
+      <p><strong>Error</strong></p>
+      <p>You are not authorized to perform this Operation</p>
+    </div>
+    <button class="btn btn-danger ErrorClosebtn" (click)="hideErrorPopup()">
+      Cancel
+    </button>
+  </div>
+</div>
+
+
+
+<p-dialog [header]="mainHeaderCategory" [(visible)]="categoryDialog" [modal]="true" [style]="{ width: '50vw' }"
+    styleClass="p-fluid" [closable]="true">
+    <form class="justify-content-center" [formGroup]="addNewCategory">
+      <div class="row">
+        <div class="col-lg-3 col-md-6 col-sm-12">
+          <div class="form-group">
+            <label for="description" class="">Category <span class="astrik">*</span></label>
+            <ng-container>
+              <p-dropdown appendTo="body"  [options]="parentCodeResponse$" [filter]="true" optionLabel="ItemName"
+                optionValue="ItemCodeWithSeperator" filterBy="ItemName" placeholder="Parent Code"
+                formControlName="ItemCodeWithSeperator" [panelStyle]="{ overflow: 'auto' }" [showClear]="true"
+                (onChange)="changeParentCode($event)">
+              </p-dropdown>
+            </ng-container>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-sm-12">
+          <div class="form-group">
+            <label>Category Code <span class="astrik">*</span></label>
+            <input type="text" class="form-control" placeholder="Category Code" formControlName="ItemCode" 
+            [readOnly]="subCat"/>
+            <!-- <div class="input-error"
+              *ngIf=" addNewItemform.controls['ItemCode'].invalid && addNewItemform.controls['ItemCode'].touched">
+              Field Required
+            </div> -->
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-sm-12">
+          <div class="form-group">
+            <label class="float-left">Category Name <span class="astrik">*</span></label>
+            <input type="text" class="form-control" placeholder="Category Name" formControlName="ItemName" required />
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12 align-self-center">
+          <div class="checkbox">
+            <ng-container>
+              <input
+                type="checkbox"
+                class="form-checkbox"
+                id="hasDetail"
+                formControlName="HasDetail"
+                name="HasDetail"
+              />
+            </ng-container>
+
+            <label class="form-check-label" for="hasDetail"> HasDetail </label>
+          </div>
+        </div>
+      </div>
+    </form>
+    <ng-template pTemplate="footer">
+        <button type="button" Class="btn-update"
+            (click)="closeCategoryDialog()">Cancel</button>
+        <button type="button" Class="btn btn-save" (click)="addCategory()" [disabled]="isUpdateCategory">Create</button>
+        <!-- <button type="button" Class="btn btn-update" (click)="addCategory()" [disabled]="!isUpdateCategory">Update</button> -->
+    </ng-template>
+</p-dialog>
+
+
+
+
+<p-dialog header="Select Category" [(visible)]="printCategoryDialog" [modal]="true" [style]="{ width: '25vw' }"
+    styleClass="p-fluid" [closable]="true">
+    <form class="justify-content-center" [formGroup]="printCategory">
+      <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+          <div class="form-group">
+            <label for="description" class="">Category <span class="astrik">*</span></label>
+            <ng-container>
+              <p-dropdown appendTo="body"  [options]="parentCodeResponse$" [filter]="true" optionLabel="ItemName"
+                optionValue="ItemCodeWithSeperator" filterBy="ItemName" placeholder="Select category"
+                formControlName="ItemCodeWithSeperator" [panelStyle]="{ overflow: 'auto' }" [showClear]="true"
+                (onChange)="changeParentCode($event)">
+              </p-dropdown>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </form>
+    <ng-template pTemplate="footer">
+        <button type="button" Class="btn-update"
+            (click)="closePrintCategoryDialog()">Cancel</button>
+        <button type="button" Class="btn-save" (click)="printitemListReport()">Print</button>
+    </ng-template>
+</p-dialog>

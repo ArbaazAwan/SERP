@@ -1,0 +1,198 @@
+<ngx-loading-bar [includeSpinner]="false" [height]="'3px'"></ngx-loading-bar>
+
+<app-confirm-dialog></app-confirm-dialog>
+
+<div class="main-container" (scroll)="onMainContainerScroll($event)">
+  <div [class]="isSticky ? 'sticky-header' : ''">
+    <app-store-project
+      [showInput2]="false"
+      [showInput1]="false"
+      [hide]="false"
+      [componentName]="componentName"
+    >
+    </app-store-project>
+  </div>
+  <div class="">
+    <div class="row party-setup-cross-icon" *ngIf="!PartysetupForm()">
+      <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="row">
+          <div class="col-lg-12">
+            <p-toolbar>
+              <ng-template pTemplate="left">
+                <button
+                  pButton
+                  pRipple
+                  label="Add New"
+                  icon="pi pi-plus-circle one"
+                  class="btn-save"
+                  style="margin-right: 4px"
+                  (click)="openNew(null, 'add')"
+                ></button>
+                <button
+                  pButton
+                  pRipple
+                  label="Preview / Print"
+                  icon="pi pi-print"
+                  class="btn-update"
+                  (click)="pintPartyReport()"
+                ></button>
+              </ng-template>
+            </p-toolbar>
+            <p-dialog
+              [(visible)]="mainDialog"
+              [style]="{ width: '65%', height: '500px' }"
+              [header]="mainHeader"
+              [modal]="true"
+              styleClass="p-fluid"
+              [closable]="true"
+              (onHide)="hideDialog()"
+            >
+              <ng-template pTemplate="content">
+                <app-customer-detail
+                  *ngIf="customerDetail"
+                  [id]="selectCustomerId"
+                ></app-customer-detail>
+                <app-addnewvariable
+                  *ngIf="editCustomer"
+                  [isUpdate]="isUpdate"
+                  [selectedRow]="selectedRow"
+                  (saveSuccess)="toggleMainDialog(false)"
+                ></app-addnewvariable>
+              </ng-template>
+              <ng-template pTemplate="footer">
+                <button
+                  *ngIf="customerDetail"
+                  pButton
+                  pRipple
+                  label="Edit"
+                  icon="pi pi-pencil"
+                  class="p-button-text"
+                  (click)="openNew(selectedCustomer, 'edit')"
+                ></button>
+                <!-- <button
+                  pButton
+                  pRipple
+                  label="Cancel"
+                  icon="pi pi-times"
+                  class="p-button-text"
+                  (click)="hideDialog()"
+                ></button> -->
+              </ng-template>
+            </p-dialog>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-sm-12 mt-3">
+            <div class="table-responsive card-wrapper custom-table">
+              <table
+                class="table table-striped table-borderless"
+                *ngIf="!isLoadingData"
+              >
+                <thead>
+                  <tr>
+                    <th>Party Code</th>
+                    <th>Party Name</th>
+                    <th>Short Name</th>
+                    <th>Head office address</th>
+                    <th>Company</th>
+                    <th>Active</th>
+                    <th scope="col" class="text-center">Action</th>
+                  </tr>
+                </thead>
+                <hr />
+                <tbody>
+                  <tr
+                    *ngFor="let item of partyTableResponse$; let odd = odd"
+                    [ngClass]="{ 'odd-row': odd }"
+                  >
+                    <td>{{ item.PartyCode }}</td>
+                    <td>{{ item.PartyName }}</td>
+                    <td>{{ item.ShortName }}</td>
+                    <td>{{ item.HeadOfficeAddress }}</td>
+                    <td>
+                      <span
+                        [class]="
+                          item.IsTrackAsCompany == true
+                            ? 'success-badge'
+                            : 'danger-badge'
+                        "
+                      >
+                        {{ item.IsTrackAsCompany | yesNo }}</span
+                      >
+                    </td>
+                    <td>
+                      <span
+                        [class]="
+                          item.IsActive == true
+                            ? 'success-badge'
+                            : 'danger-badge'
+                        "
+                      >
+                        {{ item.IsActive | yesNo }}</span
+                      >
+                    </td>
+                    <td>
+                      <div class="dropdown text-center">
+                        <button
+                          class="three-dots"
+                          type="button"
+                          id="table-action-menu"
+                          data-bs-toggle="dropdown"
+                          aria-expanded="false"
+                        >
+                          <i class="fa fa-ellipsis-v"></i>
+                        </button>
+                        <ul
+                          class="dropdown-menu"
+                          aria-labelledby="table-action-menu"
+                        >
+                          <li>
+                            <a
+                              class="dropdown-item edit cursor-hover cursor-pointer"
+                              (click)="openNew(item, 'edit'); onEvent($event)"
+                              >Edit</a
+                            >
+                          </li>
+                          <li>
+                            <a
+                              class="dropdown-item delete cursor-hover cursor-pointer"
+                              (click)="delete(item.PartyCode)"
+                              >Delete</a
+                            >
+                          </li>
+                          <li>
+                            <a
+                              class="dropdown-item edit cursor-hover cursor-pointer"
+                              (click)="showUserInfo(item)"
+                              >View User Detail</a
+                            >
+                          </li>
+                        </ul>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div *ngIf="isLoadingData">
+                <app-table-loader></app-table-loader>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Response-Error-Message  -->
+<div class="loading-newpopup" *ngIf="loadingerror">
+  <div class="newpopup">
+    <div class="Errormessage">
+      <p><strong>Error</strong></p>
+      <p>You are not authorized to perform this Operation</p>
+    </div>
+    <button class="btn btn-danger ErrorClosebtn" (click)="hideErrorPopup()">
+      Cancel
+    </button>
+  </div>
+</div>
